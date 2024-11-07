@@ -1,0 +1,52 @@
+/* src/styles/LearningFeed.css */
+
+.learning-feed {
+  padding: 20px;
+}
+
+.learning-item {
+  background-color: #f9f9f9 !important;
+  /* border: 1px solid #ddd !important; */
+  /* border-radius: 8px !important; */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.learning-item-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.learning-item-date {
+  font-weight: bold;
+}
+
+.learning-item-tech {
+  background-color: #eef;
+  color: #007BFF;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.learning-item-title {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 10px 0;
+  color: #333;
+}
+
+.learning-item-content {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.5;
+}

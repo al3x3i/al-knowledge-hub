@@ -1,0 +1,3214 @@
+- date: "17.12.2024"
+  title: "My \"al-knowledge-hub\""
+  hashtag: ["#React", "#TypeScript", "#NodeJS", "#MongoDB", "#Vite"]
+  content:
+  - type: MARKDOWN
+    data:
+      content: |
+        I created a small project to view and edit my daily learnings online. 
+        Previously, I kept all my learnings in one large text document for the past two years. 
+        Now, I can edit and view my daily learnings online on this website.
+        The source code is here: [https://github.com/al3x3i/al-knowledge-hub](https://github.com/al3x3i/al-knowledge-hub)
+        
+        **Technologies Used:**
+        - React with TypeScript for the front end, offering a robust and type-safe user experience.
+        - Node.js with Express for the back end, facilitating server-side operations and API endpoints.
+        - MongoDB with Mongoose for the database, providing a flexible NoSQL solution.
+        - Vite for fast and efficient project development and building processes.
+        
+        **Deployment:**
+          - Client-side deployed using GitHub Pages.
+          - Server-side deployed on Render.
+          - Used MongoDB Atlas for managing MongoDB instances.
+        
+        **Skills Gained:**
+        - Enhanced knowledge of full-stack development integrating front and back-end technologies.
+        - Improved ability to design and implement RESTful APIs.
+        - Gained practical experience with NoSQL databases and ODMs like Mongoose.
+        - Developed proficiency in using modern web development tools like Vite and Bootstrap for rapid development and responsive design.
+
+- date: "30.11.2024"
+  title: "Practical Knowledge in Troubleshooting Elasticsearch"
+  hashtag: ["#Elasticsearch", "#on-call"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Discovered that some nodes in Elasticsearch could not be created due to insufficient memory.
+          Realized that deleting large, outdated indices is a practical way to release memory and free up space for new indices.
+          During my on-call session, I focused on finding the most pragmatic approach to resolve the issue, understanding that the solution might change as I gained more insight into the situation.
+          Other possible solutions could be:
+          1. Optimize Shard Allocation Settings
+          2. Adjust Index Lifecycle Management (ILM)
+          3. Force Merge Indices
+          4. Increase the Shard Limit
+          5. Check for Disk Watermark Issues
+          6. Clear Cache
+
+          Few API request which I used for troubleshooting the problem
+          - Investigated and diagnosed issues with unassigned shards using the `_cat/shards` endpoint:
+            ```bash
+              curl -X GET 'http://localhost:9200/_cat/shards?v'
+            ```
+          - Identified the status and distribution of shards, pinpointing **UNASSIGNED** shards in the `jaeger-span` index.
+          - Used a command to sort shard information by index and shard number:
+            ```bash
+              curl -X GET 'http://localhost:9200/_cat/shards?v&s=index,shard'
+            ```
+          - Attempted to free up memory by deleting older indices (e.g., `jaeger-span-000561`):
+            ```bash
+              curl -X DELETE 'http://localhost:9200/jaeger-span-000561' \
+              -H 'Authorization: Basic <AUTH-TOKEN>'
+            ```
+          - Gained insights into Elasticsearch shard management and permissions.
+
+
+- date: "25.11.2024"
+  title: "Setting Up and Using Sentry"
+  hashtag: ["#Sentry", "#ErrorTracking", "#Monitoring", "#AngularJS", "#NodeJS", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Successfully ran Sentry locally for the first time.  
+            - Running it locally needed a lot of computer resources. It probably wouldn't work with less than 32GB of RAM.  
+          - Got more familiar with the Sentry UI, making it easier to use for monitoring projects.  
+          - Fixed an issue where extra permissions were needed during installation.
+          - Read about different Sentry configurations.  
+          - Learned how to create a new project in Sentry and adapt an existing one for it.  
+          - Learned how to resolve issues in Sentry, including fixing permission problems.  
+          - Added Sentry to an **AngularJS** project and a **Node.js** project to track and monitor errors. 
+
+- date: "17.11.2024"
+  title: "Tool to merge multiple PDFs into one PDF"
+  hashtag:
+    - "#Shell"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I had split PDF documents and wanted to combine them into one.
+          This shell script show an efficient way to do it:
+          ```shell
+            sudo pacman -S poppler
+
+            pdfunite 3_0.pdf 3_1.pdf translated_3.pdf
+          ```
+
+- date: "14.11.2024"
+  title: "Learning MongoDB and Mongoose"
+  hashtag:
+    - "#MongoDB"
+    - "#Mongoose"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          It is my personal project using the MongoDB database with Mongoose. It was a great chance to gain practical experience working with this technology stack.
+
+          I want to give an example of how I generated a MongoDB schema.  
+          In MongoDB, which is a NoSQL database, the data is stored in a flexible, JSON-like format.
+          ```javascript
+          import mongoose from 'mongoose';
+
+          const LearningSchema = new mongoose.Schema({
+              date: { type: Date, required: true },
+              title: { type: String, required: true, default: 'No Title' },
+              hashtag: { type: [String], required: true },
+              content: [
+                  {
+                      type: { type: String, required: true },
+                      access_level: { type: String, required: true },
+                      data: {
+                          content: { type: String, required: true },
+                          language: { type: String, required: true },
+                          description: { type: String, required: true },
+                      },
+                  },
+              ],
+          });
+
+          const Learning = mongoose.model('Learning', LearningSchema);
+          ```
+
+- date: "01.11.2024"
+  title: "I have completed a LinkedIn course on AWS S3."
+  hashtag:
+    - "#AWS SDK"
+    - "#S3"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In this course, I learned about the AWS CLI and how to use the SDK in Python and Java.  
+          Git repository with files: [https://github.com/al3x3i/aws-s3-management-sandbox](https://github.com/al3x3i/aws-s3-management-sandbox)
+
+- date: "27.08.2024"
+  title: "How to measure the total number of Kafka messages consumed by a Flink cluster."
+  hashtag:
+    - "#Prometheus"
+    - "#Kafka"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In my work, I needed to find out the total number of messages consumed by Flink.  
+          I am already familiar with two Prometheus queries that can be used for this purpose. To reinforce my understanding, I decided to write a brief overview of them.
+
+          (1) This query computes the average rate of messages consumed per second over the last hour, providing insights into message consumption trends.
+          ```prometheus
+            sum(rate(flink_taskmanager_job_task_operator_KafkaSourceReader_topic_partition_committedOffset{topic="TOPIC_NAME"}[1h]))
+          ```
+          Output: 24205
+
+          (2) This query calculates the total number of messages consumed from the Kafka topic over the last hour.
+          ```prometheus
+            sum(increase(flink_taskmanager_job_task_operator_KafkaSourceReader_topic_partition_committedOffset{topic="TOPIC_NAME"}[1h]))
+          ```
+          Output: 87140662
+
+          87140662 / 3600 = 24205 messages per second
+
+- date: "23.10.2024"
+  title: "Retrieved Logs from All Running Docker Containers"
+  hashtag:
+    - "#Docker"
+    - "#Shell"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I had trouble running my Docker containers because they stopped very quickly, and I couldn’t get logs from them to fix the issues. 
+
+          The following command returns all logs from all running Docker containers. I ran this command many times to get the logs from the crashing containers.
+
+          ```shell
+          docker ps -q | xargs -I {} docker logs {}
+          ```
+
+- date: "23.10.2024"
+  title: "Configured ulimits for Docker Containers in Testcontainers"
+  hashtag:
+    - "#Kafka"
+    - "#Testcontainers"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I had a memory error while running tests with a Kafka container.  
+          This happened because the number of allowed file connections was too low. I fixed it by increasing the nofile limit to 65536, which solved the problem.
+
+          ```java
+            public static final KafkaContainer KAFKA_CONTAINER = new KafkaContainer(
+                DockerImageName.parse("confluentinc/cp-kafka").withTag(CONFLUENT_VERSION))
+                .withEmbeddedZookeeper()
+                .withReuse(true)
+                .withCreateContainerCmdModifier(cmd -> {
+                    // Set ulimits for nofile
+                    cmd.getHostConfig().withUlimits(
+                        List.of(new Ulimit("nofile", 65536, 65536))
+                    );
+                });
+          ```
+
+- date: "20.10.2024"
+  title: "Efficiently converting multiple JPEG images into a single PDF file"
+  hashtag:
+    - "#Shell"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Use this script to convert multiple JPEG images to one PDF file:
+
+          ```shell
+            sudo pacman -S img2pdf      
+
+            img2pdf *.jpg -o image_%d.pdf
+          ```
+
+- date: "18.10.2024"
+  title: "Finished 'TypeScript Essential Training' LinkedIn course."
+  hashtag:
+    - "#TypeScript"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In this course, I enhanced my existing skills:
+
+          - Integration: Learned to add TypeScript to my projects easily.
+          - Type Safety: Improved my understanding of basic types, interfaces, and generics.
+          - Advanced Types: Learned about union types and `keyof`/`typeof` operators.
+          - Decorators: Discovered how to use method and class decorators.
+          - Module Management: Enhanced my skills in importing/exporting code and using ambient modules.
+
+- date: "15.10.2024"
+  title: "Use `shared_buffers` to Enhance PostgreSQL Performance."
+  hashtag:
+    - "#PostgreSQL"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          One of our databases was having performance issues, and it was not clear at first why it was slow. We tried different steps to improve it, such as increasing memory and removing CPU limits in Kubernetes for the pod.
+          One big improvement was changing the `shared_buffers` setting from the default 128MB to 1GB. This change increased the cache hit ratio from about 56% to 92.77%. As a result, queries ran faster, and the system read less data from the disk.
+
+          This SQL query shows the cache hit ratio:
+
+          ```sql
+          SELECT round(100.0 * sum(blks_hit) / (sum(blks_hit) + sum(blks_read)), 2) as cache_hit_ratio 
+          FROM pg_stat_database;
+          ```
+
+- date: "30.08.2024"
+  title: "Optimized Git repository management on my computer"
+  hashtag:
+    - "#GIT"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          One way to improve Git performance for operations is to compress the database. After compression, Git operations may become faster, especially for large repositories, and use less disk space.
+
+          I needed this because, in one of my projects, the Git Graph VC extension was very slow.
+
+          ```sh
+          # Show memory usage, before
+            du -sh .git
+
+          # Compress the git database
+            git gc
+
+          # Show memory usage, after
+            du -sh .git
+          ```
+
+- date: "29.08.2024"
+  title: "Use profiles in docker-compose"
+  hashtag:
+    - "#Docker"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In my team, we use various operating systems, and not all Docker images are compatible with every OS.  
+          I added a profile to the Docker Compose file to manage the execution of specific services based on the operating system by passing a designated parameter.
+
+          Example:
+          ```yaml
+            version: "3.8"
+
+            services:
+              hbase:
+                image: harisekhon/hbase:1
+                hostname: hbase-master
+                container_name: hbase-master
+                ports:
+                - "16000:16000"
+                - "16010:16010"
+                - "16020:16020"
+                - "16030:16030"
+                volumes:
+                - hbase-data:/hbase-data
+                network_mode: host
+                ulimits:
+                  nofile:
+                    soft: 65536
+                    hard: 65536
+                depends_on:
+                - zookeeper
+                profiles:
+                - linux
+
+              akhq:
+                image: tchiotludo/akhq:0.25.1
+                container_name: job-akhq
+                environment:
+                  AKHQ_CONFIGURATION: |
+                    akhq:
+                      connections:
+                        mykafka:
+                          properties:
+                            bootstrap.servers: "kafka:19092"
+                          schema-registry:
+                            url: "http://schema-registry:8082"
+                ports:
+                - "8000:8080"
+
+            volumes:
+              hbase-data:
+          ```
+
+          Command:
+          `docker-compose --profile linux up`
+
+- date: "20.08.2024"
+  title: "Mastered JPA primary key generation strategies. GenerationType.IDENTITY vs GenerationType.SEQUENCE"
+  hashtag:
+    - "#Hibernate"
+    - "#database"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I learned the difference between key generation strategies and explored the difference between `GenerationType.IDENTITY` and `GenerationType.SEQUENCE`.
+
+          `GenerationType.IDENTITY`: Uses database auto-increment for ID generation after each insert, which can lead to performance issues with batch inserts, limited caching, and potential database locking in high-concurrency environments.
+
+          `GenerationType.SEQUENCE`: Utilizes a pre-defined sequence to generate IDs before the insert, supporting efficient batch operations, better caching, and reducing locking issues, with greater flexibility and control over ID generation.
+
+          The official documentation is here:
+          [Hibernate User Guide](https://docs.jboss.org/hibernate/orm/5.6/userguide/html_single/Hibernate_User_Guide.html#identifiers-generators-identity)
+
+          Example:
+
+          ```java
+            # Create key in database
+            CREATE SEQUENCE custom_seq INCREMENT BY 1;
+
+            # Use in the code
+            @Id
+            @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_seq_generator")
+            @SequenceGenerator(name = "custom_seq_generator", sequenceName = "custom_seq", allocationSize = 1)
+            private Long id;   
+          ```
+
+- date: "12.08.2024"
+  title: "Create custom plugin for Kubernetes to format JSON logs"
+  hashtag:
+    - "#kubernetes"
+    - "#shell"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I learned from a colleague how to create a Kubernetes plugin to structure logs from running pods.  
+          This solution works well for logs with a predefined JSON structure. However, it can be applied to different log formats by updating the parser script.
+
+          Given (log example):
+          ```json
+            {"@timestamp":"2024-08-12T10:11:44.61+02:00","message":"custom-pod: partitions assigned: []","log":{"level":"INFO","logger":"org.springframework.kafka.listener.KafkaMessageListenerContainer"},"process":{"thread":{"name":"org.springframework.kafka.KafkaListenerEndpointContainer#1-1-C-1"}},"error":{"root_cause":{}}}
+          ```
+
+          Script (`kubelogjq.sh`):
+          `chmod +x kubelogjq.sh`
+          ```sh
+            #!/bin/bash
+
+            jq -rR '
+                . as $json |
+                try (fromjson | "\u001b[34m\(.["@timestamp"]) \u001b[32m\(.log.level)\u001b[0m \(.message)")
+                catch ($json)
+            '
+          ```
+
+          -> Parse logs:
+          ```sh
+            k -n namespace-name logs pod-name-5f5858dd77-kcq2k | ./kubelogjq.sh
+          ```
+
+          -> Add this parser in Kubernetes as a plugin:
+          - Copy the file `kubelogjq.sh` to `~/.bin`
+          - Create a new file `kubectl-jq` in `~/.bin` with the following code:
+          ```sh
+            #!/usr/bin/env bash
+            kubectl logs -f -n $1 $2 | ./kubelogjq.sh
+          ```
+          - Make the script executable:
+          `chmod +x ~/bin/kubectl-jq`
+          - Use the script:
+          `k jq namespace-name pod-name-5f5858dd77-kcq2k`
+
+          -> Add the plugin to `k9s`:
+          In `~/.config/k9s`, create a `~/.config/k9s/plugins.yaml`:
+          ```yaml
+            plugins:
+              jqlogs:
+                shortCut: Ctrl-J
+                confirm: false
+                description: "Logs (jq)"
+                scopes:
+                  - po
+                command: sh
+                background: false
+                args:
+                  - -c
+                  - "kubectl jq $NAMESPACE $NAME"
+          ```
+
+          In k9s, navigate to the pod view and press "Ctrl-J". You should see formatted logs.
+
+- date: "05.08.2024"
+  title: "Proxy Middleware in a Node.js Express Application"
+  hashtag:
+    - "#front-end"
+    - "#node.js"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Recently, I worked on a project to migrate PHP middleware to Node.js. The task was to implement the initial setup with all required dependencies, configurations, and Docker build.
+          I prepared scripts for running the server in development mode alongside the front-end to automate the development process using Visual Studio Code or IntelliJ.
+
+          After working on this task, I can say that I gained a good understanding of integrating TypeScript with Node.js and Express.js, effectively managing middleware and sessions, handling HTTP requests with axios, and configuring environment variables and HTTP proxies.
+
+          Some code snippets from the basic implementation included:
+
+          1. **User Authentication:**
+          ```ts
+          app.post('/login', (req: Request, res: Response, next) => {
+              passport.authenticate('local', {
+                  successRedirect: '/dashboard',
+                  failureRedirect: '/',
+                  failureFlash: true
+              })(req, res, next);
+          });
+          ```
+
+          2. **Protected Routes:**
+          ```ts
+          const secure = (req: Request, res: Response, next: NextFunction) => {
+              if (!req.isAuthenticated()) {
+                  // Redirect to the login page if not authenticated
+                  res.redirect('/');
+              } else {
+                  // Proceed to the requested route if authenticated
+                  next();
+              }
+          };
+
+          // Apply the secure access to all routes
+          app.all('*', secure);
+          ```
+
+          3. **Dynamic Asset Management:**
+          ```ts
+          if (buildAssetsDir) {
+              app.use(staticFiles(buildAssetsDir, {
+                  setHeaders: (res, path) => {
+                      const cacheLongRegex = new RegExp(`^${buildAssetsDir}/(images|static)`);
+                      if (cacheLongRegex.test(path)) {
+                          res.setHeader('cache-control', 'public, max-age=31536000');
+                      }
+                  }
+              }));
+          }
+          ```
+
+          4. **API Integration:**
+          ```ts
+          const setAuthHeader = (proxyReq: ClientRequest, req: Request) => {
+              const token = req.session.passport?.user.token;
+              if (token) {
+                  proxyReq.setHeader('X-Auth-Token', token);
+              }
+              proxyReq.setHeader('X-SECRET-HEADER', 'SECRET');
+          };
+
+          app.use('/api', createProxyMiddleware({
+              target: process.env.ENV_URL,
+              changeOrigin: true,
+              secure: false,
+              logger: console,
+              on: { proxyReq: setAuthHeader }
+          }));
+          ```
+
+          5. **Configuration and Health Checks:**
+          ```ts
+          export const appPort = (): number | string => process.env.PORT || 3000;
+          export const buildAssetsDir = process.env.BUILD_ASSETS_DIR;
+
+          app.get('/healthz', (_, res: Response) => {
+              res.sendStatus(StatusCodes.OK);
+          });
+          ```
+
+          6. **Dynamic Content Delivery:**
+          ```ts
+          app.get('/language', (req: Request, res: Response) => {
+              const lang = req.query.lang as string;
+              const filePath = lang === 'de' ? deFilePath : enFilePath;
+              
+              if (fs.existsSync(filePath)) {
+                  fs.readFile(filePath, 'utf-8', (err, data) => {
+                      if (err) {
+                          res.status(500).send('Error reading the file.');
+                      } else {
+                          res.type('application/json').send(data);
+                      }
+                  });
+              } else {
+                  res.status(400).send('Invalid language parameter');
+              }
+          });
+          ```
+- date: "19.07.2024"
+  title: "Advanced AngularJS Techniques"
+  hashtag:
+    - "#front-end"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In our team, we work with an older application built using AngularJS (version 1.8) and PHP for proxying requests to REST services. While AngularJS is considered outdated by today's standards, it remains a crucial part of our application.
+
+          Here's a summary of what I have learned and applied while working on this project:
+
+          - **Services vs. Factories:** Understanding the differences and use cases for services and factories in AngularJS.
+          
+          - - Services - Are constructor functions that are instantiated once and used throughout the application. They are singleton objects that provide a way to share data and methods across controllers.
+          
+          - - Factories - Are functions that return an object or function. Factories allow more flexibility in creating and configuring instances, as they can return different types of objects or even functions.
+          
+          - **Service Initialization**
+          - **Shared Services:** Creating and managing shared services for inter-controller communication.
+          - **Dynamic Method Invocation:** Using shared services to dynamically invoke methods across different controllers.
+
+          Example of a shared service:
+          ```js
+            function ReportsFilterSharedService() {
+                'ngInject';
+
+                const availableMethodNames = Object.freeze({
+                    METHOD_UPDATE: 'update',
+                    METHOD_GET_FILTERED_DATE: 'getFilteredData',
+                });
+
+                const methodRegistry = {};
+                const methodNames = new Set();
+
+                return {
+                    getAvailableNames: () => availableMethodNames,
+                    registerMethod: (controllerName, methodName, callBackFn) => {
+                        if (methodNames.has(methodName)) {
+                            return;
+                        }
+                        methodRegistry[controllerName] = {};
+                        methodRegistry[controllerName][methodName] = callBackFn;
+                        methodNames.add(methodName);
+                    },
+                    hasMethod: (methodName) => {
+                        return methodNames.has(methodName);
+                    },
+                    callMethod: (methodName, args) => {
+                        for (const controllerName in methodRegistry) {
+                            if (methodRegistry[controllerName] && methodRegistry[controllerName][methodName]) {
+                                return methodRegistry[controllerName][methodName](args);
+                            }
+                        }
+                        return null;
+                    },
+                    init: ($scope, controllerName) => {
+                        $scope.$on('$destroy', () => {
+                            Object.keys(methodRegistry[controllerName]).forEach(methodName => methodNames.delete(methodName));
+                            delete methodRegistry[controllerName];
+                        });
+                    },
+                };
+            }
+
+            export default ReportsFilterSharedService;
+          ```
+
+          - **Deep Watching with `$scope.$watch`:** Implementing deep watching to detect changes in nested objects and arrays.
+          - **Debouncing:** Applying debounce functionality to optimize performance and reduce unnecessary processing during rapid changes.
+          ```js
+            return {
+                  debounce: function(func, delay) {
+                    let timeout;
+
+                    return function(...args) {
+                      if (timeout) {
+                        $timeout.cancel(timeout);
+                      }
+                      timeout = $timeout(() => func.apply(this, args), delay);
+                    };
+                  }
+            }
+          ```
+
+          - **Using Decorators:** Enhancing service behavior, like intercepting function requests for adding logging without changing the service itself.
+
+- date: "10.07.2024"
+  title: "Resolving NTFS Mounting Issues on Arch Linux"
+  hashtag:
+    - "#linux"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I encountered an issue when mounting an NTFS external drive on Arch Linux. Although mounting the drive in Windows and repairing it initially worked, the problem recurred after the second mount on Linux.
+
+          **Mount External Drive:**
+          ```bash
+            sudo pacman -S ntfs-3g
+            sudo mkdir /mnt/temp-ntfs-drive
+            sudo ntfs-3g /dev/sda1 /mnt/temp-ntfs-drive
+            cd /mnt/temp-ntfs-drive
+          ```
+
+          **Unmount External Drive:**
+          ```bash
+            # If unable to unmount, this will terminate the process IDs (PIDs) of processes using the mount point
+            sudo umount /dev/sda1
+            sudo fuser -km /mnt/temp-ntfs-drive
+            sudo umount /dev/sda1
+          ```
+
+- date: "10.07.2024"
+  title: "Automatically Setting Java Version in IntelliJ Terminal"
+  hashtag:
+    - "#shell"
+    - "#automization"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I wanted to set the correct Java version automatically in IntelliJ. Here’s how to do it:
+
+          **Steps to Automatically Set Java Version in IntelliJ Terminal:**
+          ```bash
+            # 1. Create a .sdkmanrc file in the project directory. Specify the correct Java version in this file, e.g., java=21.0.3-tem
+            sdk env init
+
+            # 2. Add .sdkmanrc to the global .gitignore
+
+            # 3. Create a terminal environment variable in IntelliJ
+            INTELLIJ_SDK=true
+
+            # 4. Automatically set the Java version if the environment variable is set in IntelliJ Terminal
+            if [ -n "$INTELLIJ_SDK" ]; then
+                sdk env
+            fi
+          ```
+
+- date: "05.07.2024"
+  title: "Clean Docker Intermediate '<none>' Images"
+  hashtag:
+    - "#docker"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Sometimes `none` images appear in my Docker. It's a good practice to remove them with a short command:
+
+          **Option 1:**
+          ```bash
+            docker rmi $(docker images -f "dangling=true" -q)
+          ```
+
+          **Option 2:**
+          ```bash
+            docker rmi $(docker images | grep '<none>' | awk '{print $3}') -f
+          ```
+
+- date: "04.07.2024"
+  title: "Learning from Creating CronJob's using Kustomize"
+  hashtag:
+    - "#kubernetes"
+    - "#kustomize"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In my recent project, I worked on compacting HBase tables using cron jobs deployed on Kubernetes. I built a Jenkins CI pipeline, integrated it into ArgoCD, implemented part of the new application, and created Kubernetes deployments.
+
+          Here's a folder structure for organizing your Kustomize configuration and CronJobs:
+
+          **Folder Structure:**
+          ```plaintext
+            k8s/
+            ├── base/
+            │   ├── configmap-common-env.yaml
+            │   ├── cronjobs/
+            │   │   ├── example-cronjob.yaml
+            │   │   ├── ....
+            │   ├── cronjob-patch.yaml
+            │   ├── kustomization.yaml
+            ├── overlays/
+            │   ├── dev/
+            │   │   ├── kustomization.yaml
+            │   ├── prod/
+            │   │   ├── kustomization.yaml
+            ```
+
+            **dev kustomization.yaml**
+            ```yaml
+            apiVersion: kustomize.config.k8s.io/v1beta1
+            kind: Kustomization
+
+            namespace: hbase-work
+            namePrefix: dev-
+
+            commonLabels:
+              app.kubernetes.io/instance: dev-hbase-compaction-task
+              app.y6b.de/env: dev
+
+            resources:
+            - ../../base/
+
+            configMapGenerator:
+            - name: hbase-compaction-task-env
+              behavior: merge
+              literals:
+              - SPRING_PROFILES_ACTIVE=dev
+
+            patches:
+            - target:
+                group: batch
+                kind: CronJob
+              patch: |-
+                - op: replace
+                  path: /spec/suspend
+                  value: true
+          ```
+
+          **base kustomization.yaml**
+          ```yaml
+            apiVersion: kustomize.config.k8s.io/v1beta1
+            kind: Kustomization
+
+            commonLabels:
+              app.kubernetes.io/part-of: hbase-compaction-task
+
+            resources:
+            - configmap-common-env.yaml
+            - cronjobs/task-cronjob.yaml
+            # - cronjobs/.... many other Cron Jobs
+
+            patches:
+            - path: cronjob-patch.yaml
+              target:
+                kind: CronJob
+                name: ".*-task-cronjob$"
+          ```
+
+          **cronjob-patch.yaml**
+          ```yaml
+            apiVersion: batch/v1
+            kind: CronJob
+            metadata:
+              name: hbase-compaction-task
+              labels:
+                app.kubernetes.io/component: hbase-compaction-task
+                app.kubernetes.io/part-of: hbase-compaction-task
+              annotations:
+                argocd.argoproj.io/sync-wave: "1"
+            spec:
+              suspend: false
+              successfulJobsHistoryLimit: 1
+              failedJobsHistoryLimit: 2
+              concurrencyPolicy: Forbid
+              jobTemplate:
+                spec:
+                  backoffLimit: 0 # no retry in case of failure
+                  template:
+                    metadata:
+                      labels:
+                        app.kubernetes.io/component: hbase-compaction-task
+                        app.kubernetes.io/part-of: hbase-compaction-task
+                        app.kubernetes.io/name: hbase-compaction-task
+                        svc.y6b.de/hadoop-access: "true"
+                    spec:
+                      activeDeadlineSeconds: 600 # run should take longer than 10 minutes
+                      restartPolicy: Never
+                      imagePullSecrets:
+                      - name: # Secret
+                      containers:
+                      - name: hbase-compaction-task
+                        image: # Secret
+                        imagePullPolicy: IfNotPresent
+                        envFrom:
+                        - configMapRef:
+                            name: configmap-common-env
+                        resources:
+                          requests:
+                            cpu: '1'
+                            memory: 2Gi
+                          limits:
+                            memory: 2Gi
+          ```
+
+          **task-cronjob.yaml**
+          ```yaml
+            apiVersion: batch/v1
+            kind: CronJob
+            metadata:
+              name: example-task-cronjob
+            spec:
+              schedule: "0 2 * * SUN,TUE,THU,SAT"  # Run at 2:00 AM every Sunday, Tuesday, Thursday, and Saturday.
+              jobTemplate:
+                spec:
+                  template:
+                    spec:
+                      containers:
+                      - name: hbase-compaction-task
+                        args:
+                        - connections # Each CronJob is passing a job task argument
+          ```
+
+- date: "31.06.2024"
+  title: "Visited Spring IO conference"
+  hashtag:
+    - "#Conference"
+    - "#Spring IO"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I attended the Spring IO Conference in Barcelona. It was interesting to travel with my team. 
+          At the conference, I got an overview of the Spring ecosystem's current state and future.
+          I connected with other developers and shared my experience.
+          The conference had many interesting presentations, and I want to mention one of them
+          which impressed me the most. The presentation is about how to build 
+          a high-performance solution (~5k orders/second, single) in a Java application:
+          
+          [Watch the presentation](https://www.youtube.com/watch?v=BKVWr65z8dQ&t=125s&ab_channel=SpringI%2FO)
+
+- date: "27.06.2024"
+  title: "Useful Docker Commands for Managing Volumes"
+  hashtag:
+    - "#Docker"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I have learned and used for my work two docker commands:
+          
+          1) **Listing and Sorting Docker Volumes by Creation Date**
+          ```shell
+            docker volume ls --quiet | xargs docker volume inspect --format '{{ .CreatedAt }} {{ .Name }}' | sort
+          ```
+
+          2) **Removing Docker Volumes Associated with a Specific Pattern**
+          ```shell
+            docker volume rm $(docker volume ls | grep zookeeper | awk '{print $2}')
+          ```
+
+- date: "25.06.2024"
+  title: "Using `read` in Shell Script"
+  hashtag:
+    - "#Shell"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Use `read` command in my shell scripts to prompt input and assign it to a variable. 
+          It is a clear and user-friendly way to collect input in an interactive script.
+          Note: Does not work in 'zsh'
+          
+          **Explanation of flags:**
+          - `-r`: treats backslashes literally, rather than as escape characters. 
+          - `-p`: displays text before reading input.
+
+          **Example Script:**
+          ```shell
+              #!/bin/bash
+              # Prompt the user for Bitbucket user and repo information
+
+              # Read Bitbucket user
+              read -r -p 'Bitbucket user: ' BB_USER
+              # Read Bitbucket repo
+              read -r -p 'Bitbucket repo: ' BB_REPO
+
+              # Output the input values
+              echo -e "\n"
+              echo "Input user: $BB_USER"
+              echo "Input repo: $BB_REPO"
+
+          ```
+
+- date: "21.06.2024"
+  title: "Understanding @Commit and @Rollback(false) in Spring Boot Testing"
+  hashtag:
+  - "#Java"
+  - "#Spring Boot"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          By default, `@DataJpaTest` prevents data from being persisted to the database by rolling back transactions after each test. 
+          To override this behavior and commit data to the database, I used these annotations:
+          
+          - `@Commit`: commits the changes made during the test to the database.
+          - `@Rollback(false)`: prevents the default rollback behavior of tests.
+
+- date: "19.06.2024"
+  title: "Using Functions in PostgreSQL `CHECK` Constraints"
+  hashtag:
+    - "#PostgreSQL"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I learned how to use functions in PostgreSQL `CHECK` constraints for complex data validation. 
+          It's great to see a practical usage of SQL functions.
+
+          **Example:**
+          ```sql
+            -- How to use
+            CREATE TABLE IF NOT EXISTS public.demo
+            (
+                id bigint NOT NULL,
+                technology_validlist bigint[] NOT NULL DEFAULT '{}'::bigint[],
+                CONSTRAINT technologies_exist_constraint CHECK (techn_exist(technology_validlist))
+            )
+
+            -- Function
+            CREATE OR REPLACE FUNCTION public.techn_exist(tech_ids bigint[])
+                RETURNS boolean
+                LANGUAGE sql
+                COST 100
+                IMMUTABLE STRICT PARALLEL UNSAFE
+            AS $$
+            SELECT (SELECT count(id) FROM technology WHERE id = ANY(tech_ids)) = array_length(tech_ids, 1)
+            $$;
+          ```
+
+          The `techn_exist` function checks if all IDs in the given array exist in the `technology` table.
+
+- date: "17.06.2024"
+  title: "Measure Command Execution Time"
+  hashtag:
+    - "#Shell"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Sometimes when working on application optimization, I need to measure execution time precisely and in a well-formatted way. 
+          To address this, I created a small script that calculates and displays the exact execution time of a command in nanoseconds, seconds, and minutes.
+
+          **Script:**
+          ```bash
+            #!/bin/bash
+
+            run_command() {
+                # Place your command here:
+                curl -XPOST localhost:9876/actuator/autoconfigureAdslots/
+            }
+
+            print_execution_time() {
+                end_time=$(date +%s%N)
+                elapsed_time_ns=$((end_time - start_time))
+                elapsed_time_s=$(echo "scale=9; $elapsed_time_ns / 1000000000" | bc)
+                elapsed_time_m=$(echo "scale=9; $elapsed_time_s / 60" | bc)
+                
+                # Colors
+                RED='\033[0;31m'
+                GREEN='\033[0;32m'
+                YELLOW='\033[0;33m'
+                NC='\033[0m' # No Color
+
+                echo -e "${YELLOW}Elapsed time: ${RED}${elapsed_time_ns} ${GREEN}nanoseconds${NC}"
+                echo -e "${YELLOW}Elapsed time: ${RED}${elapsed_time_s} ${GREEN}seconds${NC}"
+                echo -e "${YELLOW}Elapsed time: ${RED}${elapsed_time_m} ${GREEN}minutes${NC}"
+            }
+
+            echo "Start time: $(date +"%T")"
+            start_time=$(date +%s%N)
+
+            echo -e "\nRunning command...\n"
+            run_command
+
+            echo -e "\n----------------------"
+            echo -e "End time: $(date +"%T")"
+
+            print_execution_time
+          ```
+
+          **Highlights:**
+          - Measures execution time in nanoseconds, seconds, and minutes.
+          - Displays output with clear formatting using color codes for better readability.
+          - Useful for debugging or optimizing scripts and commands.
+
+          **Example Usage:**
+          Replace the `run_command` function's content with the specific command you want to measure. 
+          The script provides a detailed breakdown of execution time after the command runs.
+
+- date: "10.06.2024"
+  title: "Hibernate Optimization in Spring Boot"
+  hashtag: ["#hibernate", "#spring-boot", "#optimization"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I discovered a powerful optimization technique for Hibernate in a Spring Boot application. 
+          By setting `hibernate.generate_statistics=true`, I was able to get detailed statistics about database operations.
+          Analyzing these statistics helped me understand why a certain operation was taking a lot of time.
+
+          **Before Optimization:**
+          ```plaintext
+            [i.StatisticalLoggingSessionEventListener] Session Metrics {
+                450301 nanoseconds spent acquiring 1 JDBC connections;
+                0 nanoseconds spent releasing 0 JDBC connections;
+                52360384 nanoseconds spent preparing 55086 JDBC statements;
+                19217696047 nanoseconds spent executing 55085 JDBC statements;
+                52564145 nanoseconds spent executing 6 JDBC batches;
+                0 nanoseconds spent performing 0 L2C puts;
+                0 nanoseconds spent performing 0 L2C hits;
+                0 nanoseconds spent performing 0 L2C misses;
+                2570444191 nanoseconds spent executing 1 flushes (flushing a total of 449389 entities and 728742 collections);
+                129757429146 nanoseconds spent executing 139 partial-flushes (flushing a total of 34949256 entities and 34949256 collections)
+            } 
+          ```
+
+          By strategically using `entityManager.setFlushMode(FlushModeType.COMMIT)`, I ensured that database writes occur only at transaction commit, reducing unnecessary database interactions and improving efficiency.
+
+          **After Improvement:**
+          ```plaintext
+            [i.StatisticalLoggingSessionEventListener] Session Metrics {
+                430015 nanoseconds spent acquiring 1 JDBC connections;
+                0 nanoseconds spent releasing 0 JDBC connections;
+                56092621 nanoseconds spent preparing 55085 JDBC statements;
+                19025018969 nanoseconds spent executing 55085 JDBC statements;
+                0 nanoseconds spent executing 0 JDBC batches;
+                0 nanoseconds spent performing 0 L2C puts;
+                0 nanoseconds spent performing 0 L2C hits;
+                0 nanoseconds spent performing 0 L2C misses;
+                0 nanoseconds spent executing 0 flushes (flushing a total of 0 entities and 0 collections);
+                456212 nanoseconds spent executing 139 partial-flushes (flushing a total of 0 entities and 0 collections)
+            }
+          ```
+
+          **Code Snapshot:**
+          ```java
+            wrapInTransaction(dryRun, () -> {
+                try {
+                    // Retrieving Data from a Database Using Batch Streaming
+                    // Run business logic code here
+                } finally {
+                    entityManager.setFlushMode(FlushModeType.AUTO);
+                    entityManager.clear();
+                }
+            }).run();
+
+            private Runnable wrapInTransaction(boolean dryRun, Runnable task) {
+                return () -> new TransactionTemplate(txManager).execute(tx -> {
+                    if (dryRun) {
+                        tx.setRollbackOnly();
+                    }
+                    task.run();
+                    return null;
+                });
+            }
+          ```
+
+          **Key Takeaways:**
+          - Using `hibernate.generate_statistics=true` for profiling Hibernate operations.
+          - Switching the flush mode to `FlushModeType.COMMIT` to optimize database interactions.
+          - The result was a noticeable reduction in time spent on database writes and more efficient database operations.
+
+- date: "04.06.2024"
+  title: "Short Command to Remove Untracked Changes"
+  hashtag: ["#git", "#version-control", "#cleaning"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          To quickly remove untracked files and directories from my working directory, I use the following Git command:
+          ```sh
+            git clean -fd
+          ```
+          This command removes all untracked files (`-f`), and directories (`-d`) in the current repository. It's useful for cleaning up your working directory from unnecessary files and directories that are not tracked by Git.
+
+- date: "28.05.2024"
+  title: "Presentation about Prometheus Adapter and HPA - A Win-Win!"
+  hashtag: ["#Prometheus", "#HPA", "#scaling", "#Kubernetes"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I gave a presentation on the Prometheus Adapter and Horizontal Pod Autoscaler (HPA), focusing on scaling issues in one of our applications. 
+          It was a complex topic, and the presentation was recorded, which added an extra layer of pressure to deliver effectively.
+          Throughout the presentation, I also worked on my soft skills in delivering technical concepts clearly to another team, ensuring everyone understood the importance of efficient scaling solutions.
+
+- date: "22.05.2024"
+  title: "Enhancing Soft Skills to Write GitHub Pull Request Comments"
+  hashtag: ["#soft-skills", "#github", "#pull-requests", "#communication"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Recently, I explored the [Conventional Comments website](https://conventionalcomments.org/) and started applying its suggestions to improve my feedback on GitHub pull requests. 
+          This has enhanced the quality of my comments, strengthened my communication skills, and fostered a more constructive feedback environment within my team.
+          
+          **Example Labels:**
+          - **Praise**: Highlights something positive.
+          - **Nitpick**: Trivial preference-based requests. Non-blocking.
+          - **Suggestion**: Proposes improvements to the current subject. Should be explicit and clear on the suggested improvement. Can be blocking or non-blocking.
+          - **Issue**: Highlights specific problems with the subject under review. Strongly recommended to pair with a suggestion. Can be user-facing or behind the scenes.
+          - **TODO**: Small, trivial, but necessary changes. Distinguished from issues or suggestions to direct attention to comments requiring more involvement.
+          - **Question**: Appropriate for potential concerns where certainty is lacking. Asking for clarification or investigation can lead to quick resolution.
+          - **Thought**: Represents ideas generated during review. Valuable but non-blocking. Can lead to more focused initiatives and mentoring opportunities.
+          - **Chore**: Simple tasks required before the subject can be officially accepted. References common processes. Links to process descriptions are encouraged.
+          - **Note**: Non-blocking comments highlighting something for the reader's attention.
+          - **Typo**: Comments on misspellings.
+          - **Polish**: Suggestions for immediate quality improvement.
+          - **Quibble**: Similar to nitpick, but without the negative connotation.
+
+          **Example Decorations:**
+          - **(non-blocking)**: Indicates comment should not prevent subject acceptance. Helpful for organizations considering comments as blocking by default.
+          - **(blocking)**: Indicates comment should prevent subject acceptance until resolved. Helpful for organizations considering comments as non-blocking by default.
+          - **(if-minor)**: Provides freedom to resolve the comment only if changes end up minor or trivial.
+
+- date: "14.05.2024"
+  title: "Mastering Spring Boot Unit Testing Beyond the Basics: RestTemplate Interception"
+  hashtag: ["#SpringBoot", "#unit-testing", "#RestTemplate", "#testing"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In Spring Boot, RestTemplate interception allows you to validate RESTful service interactions within unit tests by focusing on the request itself, 
+          without being concerned with the actual response payloads. 
+          This differs from using WireMock, which simulates external services and is beneficial when the response payloads also need to be controlled.
+          
+          **Example of RestTemplate Interception:**
+          ```java
+            eventLoggingService.getRestTemplate().getInterceptors().add(new RequestInterceptor(this));
+
+            private static class RequestInterceptor implements ClientHttpRequestInterceptor {
+                EventLoggingServiceTest parent;
+
+                RequestInterceptor(EventLoggingServiceTest parent) {
+                    this.parent = parent;
+                }
+
+                @Override
+                public ClientHttpResponse intercept(
+                    final HttpRequest request,
+                    final byte[] body,
+                    final ClientHttpRequestExecution execution
+                ) {
+                    parent.restTemplateRequestUrl = request.getURI().toString();
+                    parent.restTemplateRequestBody = new String(body, StandardCharsets.UTF_8);
+                    return new MockClientHttpResponse(new byte[] {}, HttpStatus.OK);
+                }
+            }
+          ```
+
+          This approach ensures precise testing and monitoring of HTTP requests while providing a clean testing strategy without needing to mock the responses.
+
+- date: "08.05.2024"
+  title: "JMX Client to Trigger Method"
+  hashtag: ["#JMX", "#Java", "#remotemethod", "#testing"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I developed a JMX client to remotely trigger a method (with the service port forwarded to localhost), 
+          and used it in a loop to perform operations with a timeout for testing purposes.
+
+          **Example Code:**
+          ```java
+            public static void main(String[] args) throws Exception {
+                String host = "localhost";
+                int port = 9001; // The port your application is listening on for JMX connections
+
+                JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/jmxrmi"); // Create JMX service URL
+
+                try (JMXConnector jmxc = JMXConnectorFactory.connect(url)) {    // Connect to the MBean server
+                    MBeanServerConnection mbsc = jmxc.getMBeanServerConnection();
+
+                    ObjectName mbeanName = new ObjectName("<namespace-name>:type=TaskBeans,name=SPECIFIC_BEAN_INSTANCE"); // Define the MBean object name
+
+                    long timestamp = System.currentTimeMillis();
+                    Object[] params = new Object[] { timestamp };
+                    String[] signature = new String[] { "long" }; // The method signature
+
+                    Object result = mbsc.invoke(mbeanName, "process", params, signature);
+                }
+            }
+          ```
+
+- date: "02.05.2024"
+  title: "Kubernetes Job Creation from CronJob"
+  hashtag: ["#Kubernetes", "#CronJob", "#JobCreation", "#devops"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I used the following command to execute a one-time CronJob task in Kubernetes:
+
+          **Command:**
+          ```shell
+          kubectl create job --from=cronjob/dev-custom-cron-job dev-custom-cron-job-28575444 -n dev-namespace
+          ```
+
+- date: "24.04.2024"
+  title: "PromQL Expressions: (A) Extract Day of Week from Timestamp and (B) Find Matching Metric"
+  hashtag: ["#PromQL", "#Kubernetes", "#Metrics", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          **(A)** Extract Day of Week from Timestamp:
+          
+          This expression evaluates to either true or false for each time series based on whether the day of the week matches the current day.
+          I used the `on()` function to perform an operation without considering grouping labels, and the `by()` function to group using labels.
+
+          **Query:**
+          ```promql
+            day_of_week(task_last_completion_time{taskid="hello-world"}) == on() day_of_week()
+          ```
+
+          **(B)** Find Matching Metric:
+
+          In this query, I find the latest status of a metric with an update timestamp by matching it with another metric using the pod label. 
+          This helps me understand my operation's current status, even when different pods update it in varying orders.
+
+          **Query:**
+          ```promql
+            middleware_scheduling_last_execution_success{namespace="namespace-name", taskid="special-task-name"} 
+            and 
+            on(pod) 
+              topk(1, middleware_scheduling_last_completion_time{ namespace="namespace-name", taskid="special-task-name"}) 
+          ```
+          The "One-to-one vector matches" (`<vector expr> <bin-op> ignoring(<label list>) <vector expr>`) helps ensure that the right metric is matched and the latest value is fetched.
+
+- date: "23.04.2024"
+  title: "Actuator Micrometer Measurement Returns NaN Sometimes"
+  hashtag: ["#Micrometer", "#Prometheus", "#Java", "#Metrics", "#GarbageCollection"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          The issue stems from the fact that the **Gauge metric** doesn't maintain a strong reference to objects. 
+          After the **Garbage Collector** cleans up the objects, the **Gauge metric** can become `NaN`.
+
+          **Reference:** [Micrometer - Why is my gauge reporting NaN or disappearing?](https://micrometer.io/docs/concepts#_why_is_my_gauge_reporting_nan_or_disappearing)
+
+          **How to Fix it:**
+          ```java
+            private final Map<String, Long> successMap = new ConcurrentHashMap<>();
+            
+            public void countGauge(String metricsName, String keySuffix, Tags tags, long newValue) {
+                var fullKey = metricsName + "-" + keySuffix;
+                meterRegistry
+                    .gauge(TASK_METRICS_PREFIX + "." + metricsName, tags, successMap, g -> successMap.get(fullKey))
+                    .put(fullKey, newValue);
+            }
+          ```
+
+- date: "22.04.2024"
+  title: "Prometheus Expression Knowledge"
+  hashtag: ["#PromQL", "#Prometheus", "#Metrics", "#DevOps", "#Monitoring"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I expanded my knowledge of **PromQL** with this expression. 
+          
+          This **PromQL** expression combines two checks:
+          
+          1. It verifies the absence or non-existence of the metric `special-task-name_next_day_available` with a value of `1` using `absent(special-task-name_next_day_available == 1)`.
+          
+          2. It compares the adjusted current hour (adding 2 for timezone offset with `hour() + 2`) to a specific value `18`. This checks whether the current time has passed after 18:00.
+
+          The entire expression will evaluate to **true** if `special-task-name_next_day_available` with a value of `1` is missing, and the current time is after 6 PM.
+
+          **Expression:**
+          ```promql
+            absent(special-task-name_next_day_available == 1) == (((hour() + 2) % 24) > bool 18)
+          ```
+
+- date: "18.04.2024"
+  title: "Prometheus JDBC Exporter in My Work"
+  hashtag: ["#Prometheus", "#JDBC", "#Metrics", "#DatabaseMonitoring", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Today, I used the **prometheus-jdbc-exporter** for one of my work tasks. 
+          I used it to fetch metrics from our database via SQL queries, which were then used for **Prometheus** alerts.
+
+          The idea behind the **Prometheus JDBC Exporter** is simple:
+          Prometheus JDBC Exporter is a tool that helps monitor databases using **Prometheus**. 
+          It connects to databases via **JDBC**, runs **SQL queries** to gather metrics, and then exposes those metrics in a format that Prometheus can understand and scrape.
+
+- date: "16.04.2024"
+  title: "Use a Simple Alias to Connect to Postgres Database"
+  hashtag: ["#Postgres", "#Database", "#DevOps", "#SQL", "#CLI"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I used to rely on **pgAdmin** to run my SQL queries. But why not automate this process and use a quicker approach?
+
+          **Create an alias:**
+          ```bash
+            HOST=
+            USERNAME=
+            alias postgres='psql -h ${HOST} -U ${USERNAME} -W'
+          ```
+
+          First command to list all tables:
+          ```
+            /dt
+          ```
+
+- date: "12.04.2024"
+  title: "Backward vs Forward Compatibility"
+  hashtag: ["#Kafka", "#Avro", "#SchemaMigration", "#SoftwareArchitecture", "#Compatibility"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I understood the concept of backward and forward compatibility clearly when I worked on **Avro schema migration** in **Kafka**.
+
+          Here's the important distinction:
+          
+          - **Forward compatibility**: Old code can read records that were written by new code.
+          - **Backward compatibility**: New code can read records that were written by old code.
+
+- date: "09.04.2024"
+  title: "Using 'extra_hosts' Property in Docker Compose File"
+  hashtag: ["#Docker", "#DockerCompose", "#DevOps", "#Containers", "#Networking"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Instead of directly sharing the host's network stack, `extra_hosts` allows me to specify a specific URI for access from the Docker container to host services.
+
+          Adding `"host.docker.internal:host-gateway"` to **extra_hosts** in the **Docker Compose** file lets containers access host services through **host.docker.internal**. 
+          After starting the Docker container, the **host.docker.internal** entry will be defined in the Docker container's `/etc/hosts` file.
+
+          Example Docker Compose snippet:
+          ```yaml
+          chrome:
+            image: selenium/node-chrome:4.11.0-20230801
+            extra_hosts:
+              - "host.docker.internal:host-gateway"
+          ```
+
+- date: "05.04.2024"
+  title: "Querying Custom Metrics in Kubernetes with kubectl"
+  hashtag: ["#Kubernetes", "#kubectl", "#Metrics", "#DevOps", "#CloudNative"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I've gained expertise in using the **kubectl** command and the **Kubernetes API** to retrieve metrics efficiently. 
+          Through my exploration, I've learned how to interact effectively with Kubernetes clusters using **kubectl get** commands. 
+          I applied this knowledge for Kubernetes administration, especially for monitoring the **autoscaling process**.
+
+          The `--raw` flag allows me to fetch raw responses directly from the server without parsing.
+
+          Examples:
+
+          - Fetch specific custom metrics for a pod:
+            ```bash
+              kubectl get --raw /apis/custom.k8s.io/v1beta1/namespaces/default/pods/sample-app-7fbb577cd5-f6jtk/http_requests | jq .
+            ```
+
+          - Get metrics from all pods:
+            ```bash
+              kubectl get --raw /apis/custom.k8s.io/v1beta1/namespaces/default/pods/*/http_requests | jq .
+            ```
+
+          - Use an external metric:
+            ```bash
+              kubectl get --raw "/apis/external.metrics.k8s.io/v1beta1/namespaces/prod-app/app_queue_size" | jq .
+            ```
+
+          **`kubectl get`**: Command-line tool for interacting with Kubernetes clusters.
+
+          **`--raw`**: Flag that retrieves the raw response from the server without attempting to parse it. This is useful when working with APIs directly.
+
+- date: "03.04.2024"
+  title: "Implementing Kubernetes Horizontal Pod Autoscaling (HPA)"
+  hashtag: ["#Kubernetes", "#HPA", "#Prometheus", "#CloudNative", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I achieved a significant milestone by integrating **Kubernetes Prometheus Adapter** external metrics into our system. 
+          Alongside this, I accurately configured **Kubernetes APIService**, **ClusterRole**, and **ClusterRoleBinding** for the "horizontal-pod-autoscaler".
+
+          Here's a draft version of my **Pod Autoscaler** configuration:
+
+          ```yaml
+            apiVersion: v1
+            kind: ConfigMap
+            metadata:
+              name: my-release-prometheus-adapter
+              namespace: default
+            data:
+              config.yaml: |
+                externalRules:
+                  - seriesQuery: service_request_count{namespace!=""}
+                    resources:
+                      overrides:
+                        namespace:
+                          resource: namespace
+                    name:
+                      matches: "^(.*)"
+                      as: "requested_sessions_count"
+                    metricsQuery: |
+                      sum by (<<.GroupBy>>) (
+                        floor(
+                          increase (
+                            <<.Series>>{<<.LabelMatchers>>, component="product", method="POST", status="200", uri="/product/{uuid}"}[5m]
+                          )
+                        )
+                      ) / count(kube_pod_info{<<.LabelMatchers>>, pod=~"product-mng-service-.*"})
+
+            ---
+            kind: HorizontalPodAutoscaler
+            apiVersion: autoscaling/v2
+            metadata:
+              name: product-mng-service
+            spec:
+              scaleTargetRef:
+                apiVersion: apps/v1
+                kind: Deployment
+                name: product-mng-service
+              minReplicas: 1
+              maxReplicas: 5
+              metrics:
+              - type: External
+                external:
+                  metric:
+                    name: requested_sessions_count
+                  target:
+                    type: Value
+                    value: 300
+              behavior:
+                scaleDown:
+                  stabilizationWindowSeconds: 60
+                  policies:
+                  - type: Pods
+                    value: 1
+                    periodSeconds: 15
+                scaleUp:
+                  stabilizationWindowSeconds: 0
+                  policies:
+                  - type: Pods
+                    value: 1
+                    periodSeconds: 15
+          ```
+
+- date: "28.03.2024"
+  title: "Diving into Database Diversity: Relational, Document, and Graph Databases Explained"
+  hashtag: ["#RelationalDatabases", "#DocumentDatabases", "#GraphDatabases", "#Elasticsearch", "#TechExploration"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I have read about three different types of databases: relational, document, and graph databases, and their differences.
+
+          - **Relational databases**, like PostgreSQL and MySQL, organize data into neat tables. They are suitable for structured data with well-defined schemas and complex transactions.
+
+          - **Document databases**, like MongoDB and Couchbase, store data in flexible documents. They are ideal for semi-structured or unstructured data with flexible schemas and scalable architectures.
+
+          - **Graph databases**, like Neo4j and Amazon Neptune, focus on relationships between data points. This type of database is great for handling data that's highly connected, like social networks or recommendation systems.
+
+          A few words about **Elasticsearch**. \
+          In Elasticsearch, data is stored and indexed as JSON documents, similar to how document databases store data. It is primarily focused on searching and analyzing data rather than general-purpose document storage. So, while Elasticsearch shares some similarities with document databases, it is more accurately described as a distributed search and analytics engine that happens to use a document-oriented data model for storing and indexing data.
+
+- date: "21.03.2024"
+  title: "Copy Docker Image from Local Computer to Minikube Docker Registry"
+  hashtag: ["#Docker", "#Kubernetes", "#Minikube"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          The scenario is useful when a Docker image is located in a private repository, and Minikube does not have permission to read from it. In my case, I needed it to test my application locally within a Kubernetes environment.
+
+          ```
+            1. Build Docker image
+            2. docker save -o yams_minikube.tar yams:minikube
+            3. sudo scp -i $(minikube ssh-key) yams_minikube.tar docker@$(minikube ip):/tmp
+            4. minikube ssh
+            5. docker load -i /tmp/yams_minikube.tar
+            6. docker images
+            7. imagePullPolicy: IfNotPresent
+          ```
+
+- date: "21.03.2024"
+  title: "Find Kubernetes Pods by Selector"
+  hashtag: ["#Kubernetes", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Use this to find or delete pods by selector
+          ```shell
+            kubectl get pods --selector=app.kubernetes.io/component=metrics
+            <!-- Delete all pods by selector -->
+            kubectl delete pods --selector=app.kubernetes.io/component=metrics
+          ```
+
+- date: "17.03.2024"
+  title: "Understanding Reliability, Scalability, and Maintainability"
+  hashtag: ["#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I want to make a short note about these three important terms:
+
+          **Reliability** means making systems work correctly, even when faults occur. Faults can be in hardware, software, or human errors.
+
+          **Scalability** means having strategies for maintaining good performance, even as the load increases.
+
+          **Maintainability** has many facets, but at its core, it’s about improving the experience for engineering and operations teams working with the system. 
+          Good abstractions can help reduce complexity and make the system easier to modify and adapt for new use cases. 
+          Good operability means having clear visibility into the system’s health and effective ways to manage it.
+
+- date: "15.03.2024"
+  title: "Exploring @NamedEntityGraph in JPA"
+  hashtag: ["#JPA", "#EntityGraph", "#Performance"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Today, I learned and applied `@NamedEntityGraph` in my programming code. It helped me fetch related data more efficiently.
+          I made interactions with the database more efficient, reducing unnecessary queries and boosting performance.
+
+- date: "12.03.2024"
+  title: "Understanding the N+1 SQL Query Problem"
+  hashtag: ["#SQL", "#NPlusOneProblem", "#Performance", ]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I discovered this issue while analyzing and optimizing SQL queries. \
+          The term "N plus 1" signifies there are N iterations of the loop, plus an additional query for each iteration.
+
+          **Example:** \
+          For each website, fetching dimensions in separate queries causes this problem. \
+          To solve the issue, fetch all data in one query.
+
+- date: "05.03.2024"
+  title: "Finished Reading 'Understanding Distributed Systems' Book"
+  hashtag: ["#Books", "#SystemDesign", "#DataIntensiveApplications"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I finished reading *Understanding Distributed Systems* to understand important concepts about how computer systems work together, communicate, and handle issues. 
+          
+          I like it because I can use this knowledge when reading the second book, *Designing Data-Intensive Applications*, which is more about building applications that handle a lot of data. 
+
+          In other words, I expanded my knowledge of distributed systems, and now this knowledge will help me understand the second book more easily. 
+
+- date: "29.02.2024"
+  title: "Resolving Conflicting Routes for the Same IP Range Using `ip route show`"
+  hashtag: ["#Networking", "#Docker", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I learned how to use the `ip route show` command to fix a network problem with duplicate routes.
+          The issue was caused by Docker. Through this experience, I deepened my understanding of Docker networking intricacies and enhanced my ability to effectively manage and optimize network configurations.
+
+          Example Output of `ip route show`:
+          ```
+            172.25.0.0/16 dev br-4acb700c7808 proto kernel scope link src 172.25.0.1 linkdown 
+            172.25.0.0/16 dev al-vpn-network proto static scope link metric 50 
+          ```
+
+- date: "19.02.2024"
+  title: "JMeter for API Testing"
+  hashtag: ["#JMeter", "#APITesting", "#StressTesting", "#QA"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          While exploring JMeter for API testing, I found it very useful, especially for creating tests with high traffic, including performance and stress testing. 
+          Its versatility is invaluable for QA tasks, making it a universal tool for testing scenarios across different domains.
+
+          JMeter stands out for its efficiency in developing various test cases, performing performance testing, and analyzing results through thorough test cases.
+
+- date: "15.02.2024"
+  title: "Knowledge Sharing Session"
+  hashtag: ["#S3", "#AWSCLI"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Shared personal knowledge on how to configure access to S3 buckets within a Ceph environment using tools like `s3cmd` and `aws cli`.
+
+- date: "08.02.2024"
+  title: "Grafana Alerts and Opsgenie"
+  hashtag: ["#Grafana",  "#Monitoring"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I have configured Grafana alerts for S3 buckets. These alerts are designed to trigger when the maximum usage limit of a bucket is exceeded in various environments. 
+          The integration with Opsgenie ensures that the alerts seamlessly transition into the incident management process.
+
+- date: "07.02.2024"
+  title: "Query and List the Contents of an S3 Bucket on a Specific S3-Compatible Storage Service"
+  hashtag: ["#S3", "#AWSCLI", "#s3cmd"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Query and list the contents of an S3 bucket on a specific S3-compatible storage service using the following methods:
+
+          1. **Using `s3cmd`:**
+          ```shell
+            s3cmd --host='<HOST>' --access_key='<ACCESS_KEY>' --secret_key='<SECRET_KEY>' ls
+          ```
+
+          2. **Using AWS CLI:**
+          Specify a custom endpoint when working with S3-compatible services:
+          ```shell
+            export AWS_ACCESS_KEY_ID=<KEY>
+            export AWS_SECRET_ACCESS_KEY=<SECRET>
+
+            aws s3 ls --endpoint-url="<URL>"
+          ```
+
+- date: "05.02.2024"
+  title: "Learned new tools for work. IntelliJ plugins: AppMaps, Bito"
+  hashtag: ["#IntelliJ"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - **AppMaps Plugin** helps to understand how the code works. 
+            It collects information about the code and presents interactive diagrams such as: `Dependency Map, Sequence Diagram, Trace View, Flame Graph, SQL Performance Analysis`
+          - **Bito AI Plugin** is an AI assistant integrated into IntelliJ, similar to ChatGPT.
+
+- date: "30.01.2024"
+  title: "Exploring Hibernate Envers and Spring Data JPA Audit Annotations"
+  hashtag: ["#JPA", "#Java"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Explored Hibernate Envers and Spring Data JPA audit annotations, focusing on standard annotations such as: `@Audited, @CreatedBy, @LastModifiedBy` 
+            
+            The @CreatedBy automatically populated by Spring Data JPA, but @CreatedBy and @LastModifiedBy require additional configuration. 
+
+- date: "19.01.2024"
+  title: "Finished Reading 'Grokking Algorithms'"
+  hashtag: ["#Algorithms", "#BigO"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Finished reading the book *Grokking Algorithms: An Illustrated Guide for Programmers.*  
+            This is my next step in improving my programming skills and deepening my understanding of fundamental algorithms. 
+            I believe this accomplishment reflects my dedication to continious learning, problem-solving and readiness to take complex challenges. 
+
+          The fundamental skill of understanding Big O is always worth refreshing from time to time:  
+          - **O(log n):**  
+            - Also known as logarithmic time. Example: Binary search.  
+            - Uses a divide-and-conquer strategy and works only with sorted arrays.  
+          - **O(n):**  
+            - Also known as linear time. Example: Simple search.  
+            - Checks each element in the list until it finds the target element.  
+          - **O(n * log n):**  
+            - Example: Fast sorting algorithms, like quicksort.  
+            - The input list is divided into two sub-lists using a pivot element. One sub-list contains elements less than the pivot, and the other contains elements greater than the pivot. This process repeats for each sub-list.  
+          - **O(n²):**  
+            - Example: Slow sorting algorithms, like selection sort.  
+            - Selection sort has a time complexity of O(n²) due to nested loops.  
+          - **O(n!):**  
+            - Example: A very slow algorithm, like the traveling salesperson problem.  
+            - The number of possible routes grows factorially with the number of cities.
+
+- date: "16.01.2024"
+  title: "Familiarized with Prometheus Metrics and PostgreSQL Database Management"
+  hashtag: ["#Prometheus", "#PostgreSQL", "#Kubernetes", "#Monitoring"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Familiarized with the Prometheus metrics provided by the Zalando PostgreSQL Exporter to monitor active database connections in percentage.  
+            This query can be used in Prometheus alerts:  
+            ```shell  
+              sum(pg_stat_activity_count{pod=~"your-label."}) by (pod) / 
+              sum(pg_settings_max_connections{pod=~"your-label-."}) by (pod) * 100
+            ```  
+
+          - Learned how to analyze and manage PostgreSQL database connections using the terminal and SQL queries:  
+            ```shell  
+              psql -U DBNAME DBUSER  
+
+              SELECT datname, pid, usename, application_name, client_addr, state, left(query, 40) FROM pg_stat_activity;  
+
+              SELECT pg_terminate_backend(pid);
+            ```  
+
+          - Learned a great query for calculating the percentage of used storage (PVC = Persistent Volume Claim). These metrics are provided by the `kubelet` component in a Kubernetes cluster:  
+            ```shell
+              kubelet_volume_stats_used_bytes{persistentvolumeclaim=~"your-database-."} / 
+              kubelet_volume_stats_capacity_bytes{persistentvolumeclaim=~"your-database-."} * 100
+            ```
+
+- date: "29.12.2023"
+  title: "Learning to Secure Applications Using Keycloak with Spring Boot"
+  hashtag: ["#Keycloak", "#SpringBoot", "#Security",]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          As the last thing I worked on in the year, I took on a project to learn more about securing applications using Keycloak with Spring Boot.  
+          This new practice gave me insights into building secure applications.  
+          During this exploration, I practiced configuring Spring Security for role-based access control and got into Docker for deploying Keycloak in a containerized environment.  
+          Additionally, I configured Spring Security for both client and resource server applications.  
+
+- date: "20.12.2023"
+  title: "Great Script for Reading Kafka Messages and Deserializing them into Avro Format"
+  hashtag: ["#Kafka", "#Avro", "#Confluent", "#BigData"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Great script for reading Kafka messages and deserializing them into Avro format:  
+          ```shell  
+            BOOSTRAP_URL=localhost:9092  
+            ./confluent-4.1.3/bin/kafka-avro-console-consumer \  
+              --from-beginning \  
+              --topic TOPIC_NAME \  
+              --bootstrap-server $BOOSTRAP_URL \  
+              --group al_group_1 \  
+              --property schema.registry.url=http://localhost:8082  
+          ```
+
+- date: "13.12.2023"
+  title: "Exploring Kubernetes Pods: Optimizing Performance with VisualVM"
+  hashtag: ["#Kubernetes", "#Flink", "#Java", "#Performance"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I used the VisualVM profiling tool to analyze a Flink program. I monitored CPU usage and memory consumption in real-time.  
+          This experience helped me optimize the performance of Java applications.
+
+- date: "12.12.2023"
+  title: "Applied in practice new shell commands to automate Kubernetes operations"
+  hashtag: ["#Kubernetes", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Delete more than one pod at a time:  
+            ```shell
+              POD="flinkJob1 flinkJob2 flinkJob3"  
+              echo $POD | xargs -n1 | xargs kubectl -n namespace-name delete pod  
+            ```
+
+          - Get full information about the currently running processes:  
+            ```shell
+              ps auxww  
+            ```
+
+          - Execute a command inside a running container to display information about the top 1000 largest files in the system:  
+            ```shell
+              kubectl exec -it -n namespace-name name-flink-job-jobmanager-775df75f99-pkk2x -- sh -c "find / -type f -exec du -h {} + | sort -rh | head -n 1000"  
+            ```  
+
+- date: "06.12.2023"
+  title: "Focusing on Organizing Scrum Weekly"
+  hashtag: ["#Scrum"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I focused on organizing Scrum Weekly as part of my personal skill development. Taking on the role of Scrum Master helps develop organizational, communication, and problem-solving skills.
+
+- date: "06.12.2023"
+  title: "Building a Monitoring System Using Docker, Prometheus, and Node.js"
+  hashtag: ["#Monitoring", "#QA"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In my recent practice, I learned how to build a monitoring system using some cool tools. First off, Docker Compose, Prometheus, Prometheus Alert Manager, and a Node.js Express server.
+
+          I built these tools to check Prometheus alerts for my recent QA ticket. Now, whenever there's an alert, the team can use this setup to quickly investigate and respond, making our QA process smoother and more efficient. These tools are a great aid in simulating various scenarios and use cases.
+
+          These tools helped me identify that something important was missing in the code—specifically, "regexMatch" wasn't defined in the Go templates. If we had merged the PR without fixing this, it could have disrupted the Prometheus alert system in Kubernetes.
+
+- date: "04.12.2023"
+  title: "Setting the 'Priority' Property in Prometheus Alerts for Opsgenie"
+  hashtag: ["#Prometheus", "#Opsgenie", "#Alerting", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned how to set a 'priority' property in Prometheus Alerts, which is needed for Opsgenie. \
+
+            `priority`: This annotation determines the priority level of the alert. The priority is assigned based on the value of the namespace label. The logic checks if the namespace is defined (if $labels.namespace -). 
+            If it is, it further checks whether the namespace is one of the specified values ("pr-builds," "pr-tools," "pr-ci-cd") or starts with "p1-" or "p2-". Depending on these conditions, it assigns a priority of either P5 or P4. If the namespace is not defined, it defaults to P4.
+
+            ```yaml
+              - alert: EndpointDown
+                annotations:
+                  message: 'http(s)://{{ $labels.host }}{{ $labels.path }} on {{ $labels.ingress_class_name }}'
+                  priority: >-
+                    {{- if $labels.namespace -}}
+                      {{- if or (eq $labels.namespace "pr-builds") (eq $labels.namespace "pr-tools") (eq $labels.namespace "pr-ci-cd") (eq $labels.namespace "pr-monitoring") (regexMatch "^(p1-|p2-)" $labels.namespace) -}}
+                        P5
+                      {{- else -}}
+                        P4
+                      {{- end -}}
+                    {{- else -}}
+                      P4
+                    {{- end -}}
+              ...
+            ```
+
+- date: "28.11.2023"
+  title: "Resolved Kafka Avro Schema Registration Issue"
+  hashtag: ["#Kafka", "#Avro"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - I successfully resolved a use case where I needed to register the Kafka Avro schema with a specific ID since the existing messages in the topic point to a different Avro schema. \
+            Becasue these messages were cloned from a different Kafka topic.
+
+            1. Set the topic mode to "IMPORT". The mode to IMPORT to ensure that the existing messages in the topic are properly aligned with the new schema. \
+            Note: Before changing, check the current mode. After updating, you will need to set it back. 
+            ```bash
+              curl --location --request PUT 'http://localhost:8083/mode/custom-topic-value' \
+              --header 'Content-Type: application/json' \
+              --data-raw '{
+                  "mode": "IMPORT"
+              }'
+            ```
+
+            2. Create Kafka topic schema with a specific Version and ID
+            ```bash
+              curl -X POST -H "Content-Type: application/json" \
+              --data '{"schemaType": "AVRO", "version":12, "id":24, "schema":"{\"type\":\"record\",\"name\":\"value_a1\",\"namespace\":\"com.mycorp.mynamespace\",\"fields\":[{\"name\":\"field1\",\"type\":\"string\"}]}" }' \
+              http://localhost:8083/subjects/custom-topic-value/versions
+            ```
+
+- date: "20.11.2023"
+  title: "Cleaning Up Untagged Docker Images"
+  hashtag: ["#Docker"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - When constructing a Docker image for a project, an issue arises wherein an anonymous Docker build image is generated without a name or tag. These nameless images occupy extra space on the hard drive and need to be deleted. This command deletes untagged Docker images:
+
+            ```bash
+              docker rmi $(docker images -q -f "dangling=true")
+            ```
+
+            This command uses the `-f` or `--filter` flag with the `dangling=true` filter to show only images that do not have a name or tag.
+
+            Or just simply 
+            ```
+              docker image prune
+            ```
+
+
+- date: "13.11.2023"
+  title: "Managing PostgreSQL with Docker and Kubernetes"
+  hashtag: ["#PostgreSQL", "#Docker", "#Kubernetes", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Gained more knowledge about managing PostgreSQL with Docker, performing database operations like exporting and importing data, 
+          creating and scheduling jobs in Kubernetes, handling secrets via ConfigMaps and Secrets, 
+          and running scripts within containers to interact with databases.
+
+          1. Run PostgreSQL database in Docker:
+          ```bash
+            docker run -d \
+            -e POSTGRES_PASSWORD=ada \
+            --network=host \
+            --name my-postgres \
+            postgres:15.4-alpine
+          ```
+
+          2. Script file exmaple to copy data from exteranl database to a file:
+          ```bash
+            export NAMESPACE_DB_HOST=127.0.0.1
+            export NAMESPACE_DB_PORT=5433
+
+            # Download data to file
+            psql -U ada -d ada -h $NAMESPACE_DB_HOST -p $NAMESPACE_DB_PORT -f ./scripts/dump.sql
+
+            # Import data from file to a database
+            psql -U ada -d ada -h $NAMESPACE_DB_HOST -p $NAMESPACE_DB_PORT -f ./scripts/import.sql 
+          ```
+
+          3. The script `./scripts/dump.sql ` file content:
+          ```sql
+            \COPY (SELECT * FROM adv) TO '~/adv.csv' delimiter ',' csv header;
+          ```
+
+          4. The script `./scripts/import.sql  ` file content:
+          ```sql
+            BEGIN;
+            \COPY adv FROM '~/adv.csv' csv header;
+            COMMIT;
+          ```
+
+          5. Automate Commands in Kubernetes Using a CronJob:\
+          Use kustomize (**draft version!**)
+
+          ```yaml 
+            # kustomization.yaml
+            resources:
+            - configmap-replicate-scripts.yaml
+            - replicate-data-job.yaml
+
+            configMapGenerator:
+            - name: custom-pod-replicate-data-scripts
+              behavior: merge
+              files:
+                - scripts/dump.sql
+                - scripts/import.sql
+
+            # configmap-replicate-scripts.yaml
+            apiVersion: v1
+            kind: ConfigMap
+            metadata:
+              name: custom-pod-replicate-data-scripts
+
+            # replicate-data-job.yaml
+            apiVersion: batch/v1beta1  
+            kind: CronJob  
+            metadata:  
+              name: custom-pod-replicate-data  
+              labels:  
+                app.kubernetes.io/component: test-data-job  
+                app.kubernetes.io/part-of: test-name  
+                app.kubernetes.io/name: postgres-client  
+            spec:  
+              schedule: "* 10 * * *"  
+              concurrencyPolicy: Forbid  
+              jobTemplate:  
+                spec:  
+                  template:  
+                    metadata:  
+                      labels:  
+                        app.kubernetes.io/component: test-data-job  
+                        app.kubernetes.io/part-of: test-name  
+                        app.kubernetes.io/name: postgres-client  
+                    spec:  
+                      volumes:  
+                        - name: replicate-scripts  
+                          configMap:  
+                            name: "shared-volume-location"  # Updated to reflect proper description  
+                      containers:  
+                        - image: postgres:15-alpine  
+                          name: replicate  
+                          volumeMounts:  
+                            - mountPath: /opt/scripts  
+                              name: replicate-scripts  
+                          env:  
+                            - name: TEST_DB_HOST  
+                              value: "Database service URL"  # Updated for clarity  
+                            - name: PGPASSWORD  
+                              valueFrom:  
+                                secretKeyRef:  
+                                  name: "custom-database-settings"  
+                                  key: DATABASE_PASSWORD  
+                            - name: TEST_DB_HOST  
+                              valueFrom:  
+                                configMapKeyRef:  
+                                  name: "custom-database-settings"  
+                                  key: DB_HOSTNAME  
+                            - name: TEST_DB_PASSWORD  
+                              value: "test-psw"  
+                          command:  
+                            - sh  
+                            - -exc  
+                            - |  
+                              psql -U test -d test -h $TEST_DB_HOST -f /opt/scripts/dump.sql  
+                              export PGPASSWORD=$TEST_DB_PASSWORD  
+                              psql -U test -d test -h $TEST_DB_HOST -f /opt/scripts/import.sql  
+                      restartPolicy: Never  
+
+          ```
+
+- date: "09.11.2023"
+  title: "Understanding Timestamp Operations in PostgreSQL"
+  hashtag: ["#PostgreSQL", "#Timestamps", "#Database", "#SQL"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Extracting Epoch from a Date and Timestamp:
+            ```sql
+            SELECT 
+                EXTRACT(EPOCH FROM DATE '2023-11-01 12:43:44+00'),  -- 1698796800
+                EXTRACT(EPOCH FROM TIMESTAMP '2023-11-01 12:43:44+00'); -- 1698842624.000000
+            ```
+          - Epoch Extraction and Milliseconds Calculation:
+            ```sql
+              SELECT EXTRACT(EPOCH FROM TIMESTAMP '2023-11-01 12:43:44') * 1000 AS milliseconds; -- 1698842624000.000000
+            ```
+          - Converting Unix Timestamp (ms) to Timestamp:
+            ```sql
+              SELECT to_timestamp(1421918155000 / 1000); -` 2015-01-22 09:15:55+00
+
+              SELECT to_timestamp(1421918155000 / 1000) AT TIME ZONE 'CET'; -- Germany Timezone
+
+              # WHERE timestamp >= EXTRACT (EPOCH FROM TIMESTAMP '2023-11-01 12:43:44') * 1000
+            ```
+          - Casting Timestamp without Time Zone:
+            ```sql
+              SELECT '2023-11-01 12:43:44+00'::timestamp; -- 2023-11-01 12:43:44
+            ```
+          - Casting Timestamp with Time Zone:
+            ```sql
+              SELECT '2023-11-01 12:43:44+02'::timestamptz; -- 2023-11-01 10:43:44+00
+            ```
+          - Casting Timestamp to Date:
+            ```sql
+              SELECT '2023-11-01 12:43:44+00'::date; -- 2023-11-01
+            ```
+
+- date: "06.11.2023"
+  title: "Scaling Pods with kubectl Command"
+  hashtag: ["#Kubernetes"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Used a new `kubectl` command to scale the number of pods:
+            ```shell
+              kubectl -n test-namespace scale deployment test-app --replicas=1
+            ```
+
+- date: "25.10.2023"
+  title: "Software Migration and User Story Ownership"
+  hashtag: ["#Agile"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Took ownership of a new user story to migrate the old Jobber task application. 
+          Enhanced skills and knowledge in software migration, contributing to personal learning and growth.
+
+- date: "22.10.2023"
+  title: "Exploring WineHQ and Lutris"
+  hashtag: ["#Linux", "#WineHQ", "#Lutris", "#WindowsOnLinux"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I've gained knowledge about WineHQ and Lutris. 
+          It has opened up new possibilities for running Windows application on my Linux
+
+- date: "17.10.2023"
+  title: "Understanding `volatile` and `static` in Multithreading"
+  hashtag: ["#Java", "#Multithreading"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          The `volatile` ensures thread-safe access with immediate visibility.
+          The`static` does not guarantee visibility in a multithreaded context.
+
+- date: "10.10.2023"
+  title: "Restoring a PostgreSQL Database"
+  hashtag: ["#PostgreSQL"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Enhanced practical database management skills to restore a PostgreSQL database quickly:
+            ```shell
+              REMOTE_DB=172.30.99.83
+              pg_dump -h $REMOTE_DB -U ada -d ada --data-only -f source_dump.sql
+              psql -h localhost -p 5432 -U ada -d ada -f source_dump.sql
+            ```
+
+- date: "05.10.2023"
+  title: "Building and Deploying with Kustomize"
+  hashtag: ["#Kustomize"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Used a shell command to build and deploy a Kustomize file to a specific namespace, one line of code:
+            ```shell
+              kustomize build . | kubectl apply -f - -n namespace-name
+            ```
+
+- date: "04.10.2023"
+  title: "Exploring Playwright for E2E Testing"
+  hashtag: ["#Playwright", "#React", "#PrimeFaces"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Explored the **Playwright** open-source Node library to write end-to-end tests.
+          - Created my first Playwright (before I worked with Selenium tests) tests for the **React** application.
+          - Covered "creating a new domain" in the **React** "PrimeFaces" dialog component.
+
+- date: "03.10.2023"
+  title: "Using Optional Chaining in TypeScript"
+  hashtag: ["#TypeScript"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Wrote TypeScript code with **optional chaining**.
+          - Learned how the `?.` operator is used for optional chaining.
+          - If the left-hand side of the `?.` operator is `null` or `undefined`, the entire expression evaluates to `undefined` without throwing an error.
+
+- date: "02.10.2023"
+  title: "Reinforce knowledge of React useMutation Hook"
+  hashtag: ["#React"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Reinforced knowledge of the **React** `useMutation` hook for handling create, update, and delete operations.
+          - Reinforced knowledge of `useQuery` for read operations.
+
+- date: "25.09.2023"
+  title: "Learning Golang: Unit Testing and Mocking"
+  hashtag: ["#Golang"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Gained new knowledge of the **Golang** programming language.
+          - Wrote unit tests, created interfaces, and mocked them using the **Mockery** framework.
+
+- date: "20.09.2023"
+  title: "Implementing a Grafana Dashboard with Prometheus"
+  hashtag: ["#Grafana", "#Prometheus"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Implemented a **Grafana** dashboard to monitor system metrics.
+          - Reinforced knowledge of **Prometheus** and **Grafana**.
+          - Mastered working with Grafana version 9.4.3.
+          - Queries mastered:
+            - **Total increase in valid_data_request_total metric** (last hour, grouped by `status`):
+          ```shell
+          sum(increase(valid_data_request_total{k8s_cluster="$k8s_cluster"}[1h])) by (status)
+          ```
+            - **Batch size processing histograms**, grouped by `le` (selected time range from `$__range`):
+          ```shell
+          sum (increase(batch_size_to_process_bucket{k8s_cluster="$k8s_cluster"}[$__range])) by(le)
+          ```
+            - **Rate of change in batch processing time** (dynamic time from `$__interval`, grouped by `batch_trigger`):
+          ```shell
+          sum by(batch_trigger) (rate(time_to_process_batch_seconds_count{k8s_cluster="$k8s_cluster"}[$__interval]))
+          ```
+
+- date: "03.09.2023"
+  title: "Learning AWS S3 CLI Commands"
+  hashtag: ["#AWS", "#S3"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Learned and practiced **AWS S3 CLI commands**.
+          - Created a shell script to demonstrate basic S3 operations:
+            - Created an S3 bucket.
+            - Uploaded files to the S3 bucket.
+            - Synced a local folder with the S3 bucket (commented for demonstration purposes).
+            - Listed files in the S3 bucket.
+
+          ```bash
+          #!/bin/bash
+
+          # Create bucket
+          aws s3 mb s3://al3x3i0207
+
+          # Create dummy files
+          echo "Hello S3, first time" >> f1.txt
+          echo "Hello S3, second time" >> f2.txt
+
+          # Upload just created files to S3
+          aws s3 cp f1.txt s3://al3x3i0207
+          aws s3 cp f2.txt s3://al3x3i0207
+
+          # Sync all files in folder with the S3
+          # aws s3 sync ./ s3://al3x3i0207
+
+          # List S3 files
+          aws s3 ls s3://al3x3i0207
+          ```
+
+- date: "01.09.2023"
+  title: "Understanding Wrapped Error Handling in Golang"
+  hashtag: ["#Golang"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Gained a deeper understanding of **wrapped error handling** in **Golang**.
+          - Studied how to handle errors with wrapping and unwrapping using `fmt.Errorf`, type assertions, and `errors.As`.
+          - Example function demonstrating error wrapping and checking for timeout errors:
+
+          ```go
+          func checkWrappedError() error {
+            httpClient := &http.Client{Timeout: time.Second * 1}
+            resp, originalError := httpClient.Get("https://httpstat.us/504?sleep=60000")
+            fmt.Printf("RESPONSE: %v \n", resp)
+            if originalError != nil {
+              wrappedError := fmt.Errorf("wrapped error: %w", originalError)
+
+              if err, ok := wrappedError.(net.Error); ok && err.Timeout() {
+                fmt.Println("1 - Timeout error")
+              }
+
+              if err, ok := originalError.(net.Error); ok && err.Timeout() {
+                fmt.Println("2 - Timeout error")
+              }
+
+              var netError net.Error
+              if errors.As(wrappedError, &netError) && netError.Timeout() {
+                fmt.Println("3 - Timeout error")
+              }
+            } else {
+              defer resp.Body.Close()
+            }
+
+            return originalError
+          }
+          ```
+
+- date: "31.08.2023"
+  title: "Understanding Parallelism in Apache Flink"
+  hashtag: ["#ApacheFlink", "#BigData"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Gained a clearer understanding of how to use **parallelism in Apache Flink**.
+          - Learned strategies to optimize processing operations and avoid **backpressure** in data streams.
+
+- date: "30.08.2023"
+  title: "Enhancing Shell Script for Kafka Topic Management"
+  hashtag: ["#Shell", "#Kafka", "#DevOps", "#Automation"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Enhanced proficiency in **shell scripting** by improving a script for managing Kafka topics:
+            - Added functionality to delete a Kafka topic.
+            - Developed a method to remove all messages from a Kafka topic using `kafka-delete-records`.
+
+          ```bash
+          function delete_kafka_topic {
+              TOPIC_NAME=$1
+
+              if topic_exist $TOPIC_NAME; then
+                  docker exec ${KAFKA_BROKER_NAME} /usr/bin/kafka-topics --bootstrap-server ${BOOTSTRAP_SERVER} --delete --topic ${TOPIC_NAME}
+              fi
+          }
+
+          function delete_all_messages_from_topic {
+              TOPIC_NAME=$1
+              if ! topic_exist $TOPIC_NAME; then
+                  return
+              fi
+
+              echo "====="
+              JSON_FILE="records_to_delete.json"
+              JSON_CONTENT='{"partitions":[{"topic":"'"$TOPIC_NAME"'","partition":0,"offset":-1}],"version":1}'
+              
+              # Create config file in docker
+              echo "$JSON_CONTENT" | docker exec -i ${KAFKA_BROKER_NAME} sh -c "cat > ${JSON_FILE}"
+
+              docker exec ${KAFKA_BROKER_NAME} /usr/bin/kafka-delete-records --bootstrap-server ${BOOTSTRAP_SERVER} --offset-json-file /home/appuser/${JSON_FILE}
+
+              docker exec ${KAFKA_BROKER_NAME} rm /home/appuser/${JSON_FILE}
+              echo "====="
+          }
+          ```
+
+- date: "27.08.2023"
+  title: "Deploying AWS Serverless Java Applications"
+  hashtag: ["#AWS", "#Lambda"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Learned how to deploy an **AWS Serverless Java Application**.
+          - Key learnings included:
+            - Uploading and updating serverless applications.
+            - Deploying using a **SAM template**.
+            - Managing logging and monitoring with **X-Ray Traces**.
+            - Optimizing and debugging Lambda applications.
+            - Using the **X-Ray Service Map** for insights.
+            - Customizing request handlers for specific use cases.
+
+- date: "26.08.2023"
+  title: "Allowing Minikube to Access Docker Images Built on Host Machine"
+  hashtag: ["#Minikube", "#Docker", "#Kubernetes"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned how to configure Minikube to access Docker images built on the host machine. Explored three options for achieving this.
+
+          **Option 1:** Use Host Docker Daemon
+          ```bash 
+          # 1. Start Minikube with access to the host Docker daemon:
+          minikube start --driver=docker
+          
+          # 2. Switch to the Minikube shell session:
+          # A) Switch to Minikube:
+          
+          eval $(minikube docker-env)
+          ./gradlew docker   # OR build a Docker image
+          docker build -t my-image:latest .
+          docker images
+          
+          # B) Switch back to the local host session:
+
+          eval $(minikube docker-env -u)
+          ```
+
+          **Option 2:** Push Docker Image to Minikube Docker Registry
+          ```bash
+          # 1. Get information about the Minikube network configuration:
+          
+          docker network inspect minikube
+
+          # Example output:
+          # -> 192.168.49.0/24
+          
+          # 2. Edit the Docker daemon configuration file (`/etc/docker/daemon.json`) to add "insecure-registries":
+          
+          sudo vim /etc/docker/daemon.json
+          
+          # Add:
+
+          {
+              "insecure-registries" : ["docker-registry.company.lan:443", "192.168.1.0/24"]
+          }
+
+          # 3. Reload and restart Docker:
+          
+          sudo systemctl daemon-reload
+          sudo systemctl restart docker
+          
+          # 4. Delete the Minikube cluster:
+          
+          minikube delete
+          
+          # 5. Start Minikube with the insecure registry:
+          
+          minikube start --insecure-registry="192.168.1.0/24"
+          
+          # 6. Check Minikube IP:
+          
+          minikube ip
+          #-> 192.168.49.2
+          
+          # 7. Enable Minikube Addon - Registry:
+          
+          minikube addons enable registry
+          
+          # 8. Tag the Docker image:
+          
+          docker tag yams:latest $(minikube ip):5000/yams:latest
+          
+          # 9. Push the Docker image to the Minikube registry:
+          
+          docker push $(minikube ip):5000/yams:latest
+          
+          # 10. Pull the image in Minikube:
+          
+          minikube ssh
+          docker pull localhost:5000/yams
+          
+
+          # Note:
+          # Set `imagePullPolicy` to `IfNotPresent` or `Never` to prevent Kubernetes from pulling images from the network instead of using the locally built image.
+          ```
+
+          **Option 3:** Minikube Image Load
+          Use the following command to directly load a Docker image into Minikube:
+          ```bash
+          minikube image load yams:latest
+          ```
+
+- date: "24.08.2023"
+  title: "Using Mockery Tool for Generating Mock Objects in Golang"
+  hashtag: ["#Golang", "#Mockery"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Used the `mockery` tool for the first time to generate mock objects for testing purposes in Golang.
+
+- date: "21.08.2023"
+  title: "Completed 'The Pragmatic Programmer (2nd Edition)'"
+  hashtag: ["#Reading", "#SoftwareDevelopment", "#BestPractices"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Finished reading *The Pragmatic Programmer (2nd Edition)* book, gaining insights into programming principles and best practices.
+
+- date: "15.08.2023"
+  title: "Started Learning AWS CLI"
+  hashtag: ["#AWS", "#AWSCLI"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Began learning how to use the AWS CLI for managing AWS resources.
+
+- date: "14.08.2023"
+  title: "Designed Docker Compose for Kafka Topic Initialization"
+  hashtag: ["#DockerCompose", "#Kafka"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Designed and implemented a Docker Compose configuration to automate the process of initializing Kafka topics with data.
+          ```yaml
+          version: '3.8'
+
+          services:
+            init-helper:
+              container_name: init-helper
+              image: here-write-down-registry-url/ci/golang:1.20
+              network_mode: host
+              working_dir: /app
+              volumes:
+              - ../init-kafka-topics:/app/
+              command:
+              - "sh"
+              - "-c"
+              - "cd /app && go run init.go"
+          ```
+
+- date: "12.08.2023"
+  title: "AWS Training on LinkedIn Learning"
+  hashtag: ["#AWS"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Watched AWS training courses on the LinkedIn Learning platform.
+
+- date: "08.08.2023"
+  title: "Redirecting Program Output to a file on Linux"
+  hashtag: ["#Golang", "#Logging"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned new commands for redirecting program output:
+          ```bash
+          # Redirecting stdout
+          go run ./main.go 1>&1 | tee output.log
+
+          # Redirecting stderr
+          go run ./main.go 2>&1 | tee output.log
+          ```
+
+- date: "04.08.2023"
+  title: "Understanding the Supervisor Process Control System"
+  hashtag: ["#Linux"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          It is a powerfull process control system for managing process on a Lynux system.
+          Supervisor is a process control system designed primarily for Unix-like operating systems, including Linux. 
+          It is a Python-based application that provides a client/server architecture for monitoring and controlling processes.
+          - Supervisor include:
+            - **Process Monitoring**: Supervisor monitors processes and restarts them if they crash or terminate unexpectedly.
+            - **Process Control**: Provides commands for starting, stopping, and restarting processes.
+            - **Configuration**: Configured via a file defining processes and settings.
+            - **Logging**: Maintains logs of process activity and status.
+
+- date: "27.08.2023"
+  title: "Attended IT Conference 'WeAreDevelopers 2023'"
+  hashtag: ["#WeAreDevelopers"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Attended the IT conference *WeAreDevelopers 2023* (27.08.2023 - 28.08.2023). \
+          [Link to event](https://worldcongress.app.swapcard.com/event/wearedevelopers-world-congress-2023)
+
+- date: "25.07.2023"
+  title: "Deployed App to Kubernetes and Configured Prometheus ServiceMonitor"
+  hashtag: ["#Kubernetes", "#Prometheus"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Practical Knowledge in deploying applications to the Kubernetes.
+          - Configured Prometheus ServiceMonitor to monitor the application.
+
+- date: "23.07.2023"
+  title: "Parsed JSON File and Retrieved Multiple Properties"
+  hashtag: ["#JSON", "#JQ"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Used `jq` to parse a JSON file and retrieve multiple properties:
+          ```bash
+          cat allservicemonitors.json | jq '.[].metadata | {labels, name}'
+          ```
+
+- date: "22.07.2023"
+  title: "Explored Docker Images Using 'Dive' Program"
+  hashtag: ["#Docker", "#Dive"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Used the `dive` program to explore and analyze Docker images.
+
+- date: "20.07.2023"
+  title: "Deleted Docker Images Without Tags"
+  hashtag: ["#Docker", "#DiskSpace", "#Cleanup"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          This shell script helps to delete dangling Docker images (images without tags):
+          ```bash
+          # List dangling images
+          docker images --filter "dangling=true" --format "{{.ID}}"
+
+          # Delete dangling images
+          docker rmi $(docker images --filter "dangling=true" --format "{{.ID}}") -f
+          ```
+
+- date: "19.07.2023"
+  title: "Used Git Tags for Branch Versioning"
+  hashtag: ["#Git", "#Versioning", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Used Git tags for versioning branches:
+          ```bash
+          TAG=v1.0.8
+          git tag $TAG
+          git push origin $TAG
+
+          # Delete all remote Git tags
+          git push origin -d $(git tag)
+
+          # Delete all local Git tags
+          git tag -d $(git tag)
+
+- date: "18.07.2023"
+  title: "Created GitLab CI/CD Pipeline"
+  hashtag: ["#GitLab", "#CI/CD"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Created a GitLab CI/CD pipeline that can:
+            - Build, test, and lint the code
+            - Perform security checks
+            - Upload the Docker image for the `offlinetracking-processor` project to a remote repository.
+
+- date: "13.07.2023"
+  title: "Used 'nolint:errcheck' to Omit Lint Errors"
+  hashtag: ["#Go", "#Linting", "#CodeQuality"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Used `// nolint:errcheck` to omit lint errors.
+          - Applied it in the test file to bypass specific lint checks.
+
+- date: "12.07.2023"
+  title: "Learned About Makefile for Project Automation"
+  hashtag: ["#Makefile"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned how to use `Makefile` for automating tasks in the project.
+
+- date: "11.07.2023"
+  title: "Read 'Go Style Best Practices' Article"
+  hashtag: ["#Go", "#BestPractices", "#Programming"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Read the article *Go Style Best Practices*: \
+          [Go Style Best Practices](https://google.github.io/styleguide/go/best-practices.html)
+
+- date: "22.06.2023"
+  title: "Learned How to Send Data via gRPC and Built Client-Server in Go"
+  hashtag: ["#Go", "#gRPC", "#ClientServer", "#Programming"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Learned and used gRPC in one of our projects, implementation was in Go.
+          - Build small project for practicing, GitHub: [go-grpc-playground](https://github.com/al3x3i/go-grpc-playground)
+
+- date: "21.06.2023"
+  title: "Learned to Restrict Outgoing Traffic to Specific IP Address"
+  hashtag: ["#Networking", "#iptables"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned how to restrict outgoing traffic to a specific IP address using `iptables`:
+          ```bash
+          # Block YAMS IP
+          # Get IP address
+          IP_ADDRESS=$(dig +short service-name.namespace-name.svc.y6b.de)
+   
+          # Check whether the IP is empty or not
+          if [ -z "$IP_ADDRESS" ]; then echo "Variable is empty"; else echo IP Address is: $IP_ADDRESS; fi
+   
+          # Return REJECT for all requests to the $IP_ADDRESS
+          # Can be used "DROP" instead of "REJECT"
+          # REJECT sends an error response, DROP silently discards the packet
+          sudo iptables -A OUTPUT -p tcp -d $I
+          ```
+- date: "20.06.2023"
+  title: "Kafka Cleanup Policy Adjustment in Flink Job"
+  hashtag: ["#Kafka", "#Flink", "#CleanupPolicy", "#Flink"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Kafka `cleanup.policy=compact` requires messages with keys in the Flink Job.
+          - In Flink Job, I changed the `cleanup.policy` to `delete` for the `FlinkJobError` topic because we publish messages without keys, and Flink fails to send messages if the `cleanup.policy` is set to `compact`.
+
+- date: "16.06.2023"
+  title: "How to Align JSON Text in IntelliJ"
+  hashtag: ["#IntelliJ", "#JSON", "#CodeFormatting"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          To align JSON text in IntelliJ:
+          ```json
+          {
+            "user_id": "undefined",  
+            "transaction_id": "unefined",  
+            "category_child_6": "undefined"
+          }
+          ```
+          1. Select the `:` symbol.
+          2. Press `ALT + J` (multiple times), then press `RIGHT`, followed by `TAB`.
+          3. Press `SHIFT + ALT + INSERT`, select multiple rows.
+          4. Press `SHIFT + CTRL + RIGHT`, adjust the number of spaces to delete and align all rows.
+          ```json
+          {
+            "user_id":            "undefined",
+            "transaction_id":     "undefined",
+            "category_child_6":   "undefined",
+          }
+          ```
+
+- date: "09.06.2023"
+  title: "Started Learning Golang"
+  hashtag: ["#Golang"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Started learning the Go (Golang) programming language.
+
+- date: "08.06.2023"
+  title: "Learned Kafka-UI for Visual Kafka Representation"
+  hashtag: ["#Kafka"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned how to use `Kafka-UI` to get a visual representation of installed Kafka locally and in production
+
+- date: "05.06.2023"
+  title: "Learned About JSON Schema"
+  hashtag: ["#JSON", "#Schema", "#Learning"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned about [JSON Schema](https://json-schema.org/learn/getting-started-step-by-step.html).
+
+- date: "30.05.2023"
+  title: "Started Using `btop` for PC Resource Monitoring"
+  hashtag: ["#btop", "#PCMonitoring", "#Resources"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Started using the `btop` application to monitor PC resources. This application offers many functionalities compared to `htop`.
+
+- date: "27.05.2023"
+  title: "Started Using Simple Screen Recorder"
+  hashtag: ["#ScreenRecording", "#Tools"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Started using Simple Screen Recorder to capture the monitor and save to a file. \
+          Configuration:
+            1. Record the entire screen.
+            2. Container: Matroska (MKV)
+            3. Codec: H.264
+            4. Constant rate factor: 30
+
+          To reduce video file size, compress into another format and convert to mp4:
+          ```bash
+          #!/bin/bash
+          if [ -z "$1" ]; then
+            echo "No screen recording was passed. Exiting."
+            exit 1
+          fi
+          
+          FULL_FILE_NAME=$1
+          FILE_NAME="${FULL_FILE_NAME%.*}"
+          
+          echo "Start compressing: $FULL_FILE_NAME"
+          
+          ffmpeg -i ${FULL_FILE_NAME} -vcodec libx265 -crf 28 ${FILE_NAME}.mp4
+          ```
+
+- date: "25.05.2023"
+  title: "Quick Way to Find Out Which Pods Are Associated with a Service"
+  hashtag: ["#Kubernetes"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Quick way to find out which pods are associated with a service:
+            1. *kubectl -n namespace-name describe svc service-name | grep Endpoints:*
+            2. *kubectl -n namespace-name get endpoints write-down-name*
+            3. *kubectl -n namespace-name get endpoints | grep 11.11.11.11*
+
+- date: "19.05.2023"
+  title: "Learning Curve: How to Generate Base64-encoded SHA-256"
+  hashtag: ["#Java", "#Base64", "#SHA256"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learning curve on how to generate a "base64-encoded SHA-256":
+          ```java
+          byte[] data = "+61212345678".getBytes();
+          MessageDigest digester = MessageDigest.getInstance("SHA-256");
+          digester.update(data);
+          String result = Base64.getEncoder().encodeToString(digester.digest());
+          System.out.println("Encoded:");
+          System.out.println(result);
+          ```
+          ```bash
+          printf +61212345678 | openssl dgst -binary -sha256 | openssl base64 -A
+          ```
+
+- date: "05.04.2023"
+  title: "Started Using New Git Command to Remove Unwanted Files from Working Directory"
+  hashtag: ["#Git"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Started using a new git command to remove unwanted files from the working directory:
+          - `-x` removes ignored files, too
+          - `-d` removes whole directories
+          - `-f` forces the action
+          ```bash
+          git clean -xfd
+          ```
+
+- date: "02.04.2023"
+  title: "Used XOR Efficiently in Code"
+  hashtag: ["#XOR", "#Java"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Used XOR efficiently in code. Example: A car is either diesel or manual, but not both. \
+          **Before:**
+            ```java
+            boolean dieselXorManual = (car.isDiesel() && !car.isManual()) || (!car.isDiesel() && car.isManual());
+            ```
+          **Replace by:**
+            ```java
+            boolean dieselXorManual = car.isDiesel() ^ car.isManual();
+            ```
+
+- date: "29.03.2023"
+  title: "Learned About Firejail"
+  hashtag: ["#Firejail", "#Security", "#Linux"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Learned about [Firejail](https://firejail.wordpress.com/), a sandbox program that reduces the risk of security breaches by isolating applications from your system.
+          - **Examples:**
+            1. **Check processes inside bash:**
+               - *firejail bash*
+               - *htop*
+            2. **Run Chromium without internet access (can be any other application):**
+               - *firejail --net=none chromium*
+            3. **Isolate a program's temporary files:**
+               - *firejail --private bash*
+               - *> test.json*
+               - *exit*
+               - *ls -alh | grep test.json* (after exit, file is deleted)
+            4. **Join different Firejail programs with the same name:**
+               - *firejail --join="name of the key"*
+            5. **Give read-only access to a directory:**
+               - *--read-only=/home/user*
+            6. **Close the sandbox after a set time:**
+               - *firejail --timeout=0:0:5 bash*
+            7. **Emulate network with an inner IP address:**
+               - *firejail --net=docker0 --dns=8.8.8.8 --ip=172.17.1.1 --mtu=1492 bash*
+
+- date: "27.03.2023"
+  title: "Open System File Manager From The Terminal"
+  hashtag: ["#Arcolinux"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Previously, I used `nautilus .`, but it has a library dependency, `tracker-miner`, 
+          which uses a lot of resources from time to time to perform file scanning for better search results. \
+
+          Switched to `thunar .` as an alternative to avoid unnecessary resource usage.
+          ```
+          $ thunar .
+          ```
+
+- date: "22.03.2023"
+  title: "Gained more knowledge about useQuery in React"
+  hashtag: ["#React", "#JavaScript"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Usage of `useQuery` in React to fetch and handle data in components. \
+          *Example 1:* Using `useQuery` to fetch data:
+          ```javascript
+          const { data, status } = useQuery("users", fetchUsers);
+          ```
+          *Example 2:* Custom hook for fetching and parsing data:
+          ```javascript
+          const useParseData = () => {
+            const { data } = await useQuery('fetchMyData', async () => {
+              return await axios.get('https://fake-domain.com');
+            });
+
+            return parseData(data);  
+          }
+          const parsedData = useParseData();
+          ```
+
+- date: "20.03.2023"
+  title: "Learned New Shell Command 'xargs wc -l'"
+  hashtag: ["#Shell", "#Linux"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned a new shell command `xargs wc -l` to show files with the most number of lines. \
+          **Example:**
+          ```bash
+          find . -type f | xargs wc -l | sort -n | tail -5
+          ```
+          **Explanation:**
+          1. `find . -type f` gets the list of all files in the current directory and subdirectories recursively.
+          2. `xargs wc -l` takes the input and counts the number of lines in each file.
+          3. `sort -n` sorts the output numerically.
+          4. `tail -5` shows the top 5 files with the most lines.
+
+- date: "14.03.2023"
+  title: "Built Charts in Grafana and Worked with Prometheus Queries"
+  hashtag: ["#Grafana", "#Prometheus"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Gained experience in building charts in Grafana.
+          - Worked with Prometheus to query and retrieve request latency for specific endpoints.
+          - Prometheus Query Example:
+          ```prometheus
+          sum by (uri, method, status) (
+            rate (
+              http_server_requests_seconds_sum{job="$env-backend", method=~"POST|PATCH", 
+              uri=~"<PRIVATE_URI_1>|<PRIVATE_URI_2>"}[$__range]))
+          ) / 
+          sum by (uri, method, status) (
+            rate (
+              http_server_requests_seconds_count{job="$env-backend", method=~"POST|PATCH", 
+              uri=~"<PRIVATE_URI_1>|<PRIVATE_URI_2>"}[$__range]))
+          )
+          ```
+
+- date: "09.03.2023"
+  title: "Learned Trivy Tool and Kubernetes Scanning"
+  hashtag: ["#Kubernetes", "#Trivy"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Learned about the **Trivy** tool for scanning vulnerabilities in Docker images and Kubernetes clusters.
+          - Tested **Trivy-operator** to scan vulnerabilities in Kubernetes environments.
+          - Started using the terminal command `subl <FILE_NAME>` to open and edit files directly in Sublime Text.
+          ```
+            subl <FILE_NAME>
+          ```
+
+- date: "03.03.2023"
+  title: "Practiced with Kubernetes Commands"
+  hashtag: ["#Kubernetes", "#DevOps", "#CLI"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Practiced several Kubernetes commands to manage and scale deployments:
+          ```bash
+          # Expose a service:
+          kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+          
+          # Get replica sets:        
+          k get rs
+          
+          # Scale a deployment:
+          k scale deployment kubernetes-bootcamp --replicas 4
+          
+          # Update deployment image:
+          kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2
+          
+          # Check rollout status:
+          k rollout status deployment kubernetes-bootcamp
+          ```
+
+- date: "02.03.2023"
+  title: "Kubernetes Commands with Label Selectors"
+  hashtag: ["#Kubernetes", "#LabelSelectors", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Used Kubernetes label selectors to filter resources:
+          ```bash
+          # Get pods with label selectors:
+          kubectl -n dev-test get pods -l app.kubernetes.io/instance=instance-name,app.kubernetes.io/part-of=app-name
+          
+          # Get namespaces with label selectors:
+          kubectl get namespaces -l app.country.de/env=dev
+          
+          # Get Prometheus Operator kind: ServiceMonitor with label selectors:
+          kubectl -n dev-test get servicemonitors.monitoring.coreos.com -l app.country.de/env
+
+          # Show current branch:
+          git branch --show-current
+          ```
+
+- date: "01.03.2023"
+  title: "Familiarized with 'sed' shell command"
+  hashtag: ["#Linux"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Got familiar with the `sed` command to extract specific data. \
+          *Example:* Used `sed` to extract the version number from a text line:
+          ```bash
+          TEMP='"tag_name": "v0.38.0",'
+          echo $TEMP | sed -E 's/.+"v(.+)".+/\1/'
+          ```
+
+- date: "28.02.2023"
+  title: "Use 'jq' command with examples"
+  hashtag: ["#jq", "#Linux"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          ```shell
+          # Use this api to get the data: from here: https://coinmarketcap.com/api/documentation/v1/
+          curl -H "X-CMC_PRO_API_KEY: b54bcf4d-1bca-4e8e-9a24-22ff2c3d462c" \
+          -H "Accept: application/json" \
+          -d "start=1&limit=5000&convert=USD" \
+          -G https://sandbox-api.coinmarketcap.com/v1/cryptocurrency/listings/latest
+        
+          # Use `jq` to return multiple properties:
+          jq '.data[] | "\(.id) - \(.name)"'
+          
+          # Use `jq` to extract the first three indices from an array:
+          jq '.data | nth(0, range(2))'
+          
+          # Transform list of lines into an array:
+          jq '.data | map(.id) | nth(range(300))' | jq --slurp
+          
+          # Use `jq` to join all lines into one line with a comma:
+          jq '.data | map(.id) | nth(range(300))' | jq --slurp -r 'join(",")'
+          ```
+
+- date: "23.02.2023"
+  title: "New knowledge about: Peek programm and Grafana"
+  hashtag: ["#Grafana"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Used **Peek** to capture screen areas and reproduce user behavior. This tool helps to document UI issues
+
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In *Grafana*, used the `changes()` function to monitor when the garbage collector was executed:
+          ```PromQL
+          changes(flink_jobmanager_Status_JVM_GarbageCollector_G1_Young_Generation_Count{job='flink-job-name-jobmanager'}[1m])
+          ```
+
+- date: "22.02.2023"
+  title: "Started Working with JVM Profiles for Memory Inspection in Flink"
+  hashtag: ["#Flink", "#JVM"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Started working with **JVM profiles** to inspect memory usage in **Flink**.
+          - Resources:
+            - [Optimizing Apache Flink Applications - Tips](https://shopify.engineering/optimizing-apache-flink-applications-tips)
+          - Tools used:
+            1. **JProfiler**
+            2. **VisualVM 2.15**
+
+- date: "21.02.2023"
+  title: "Learned about Kubernetes Resource Limits and Requests"
+  hashtag: ["#Kubernetes"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Read an article about **Kubernetes Limits and Requests** for pod resources: [Kubernetes Limits & Requests - Sysdig](https://sysdig.com/blog/kubernetes-limits-requests/)
+          - Gained more knowledge about pod memory and observed the changes in Grafana.
+
+- date: "20.02.2023"
+  title: "Learned How to Retrieve Logs from a Crashed Container"
+  hashtag: ["#Kubernetes", "#Troubleshooting"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned how to retrieve logs from a **crashed container**:
+          ```bash
+          kubectl -n namespace-name logs flink-job-name-jobmanager-556b6459b8-lbvt2 --previous -c jobmanager > crashed_container_logs
+          ```
+
+- date: "17.02.2023"
+  title: "Built a Grafana Dashboard and Worked with Prometheus"
+  hashtag: ["#Grafana", "#Prometheus", "#Dashboard"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Built a docker-compose sandbox with Grafana and Prometheus to enhance my knowledge.
+
+- date: "15.02.2023"
+  title: "Started Reading 'The Art of Command Line' and Using Explainshell"
+  hashtag: ["#Linux", "#Learning"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Started reading and practicing **The Art of Command Line** for Linux: [The Art of Command Line](https://github.com/jlevy/the-art-of-command-line)
+          - Started using **Explainshell** to learn more about shell commands: [Explainshell](https://explainshell.com/)
+
+- date: "13.02.2023"
+  title: "Gained more knowledge about Arcolinux"
+  hashtag: ["#PostgreSQL", "#Linux"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Reinstalled **PostgreSQL** on **Arcolinux** and resolved various issues:
+            - Updated service configs and refreshed with `systemctl daemon-reload`.
+            - Tried different sql queries to create and change **roles** in Postgres.
+
+- date: "13.02.2023"
+  title: "Made Commit and Push via IntelliJ and Terminal"
+  hashtag: ["#Git", "#IntelliJ"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Made a *commit* and *push* via *IntelliJ* and terminal.
+
+
+- date: "05.02.2023"
+  title: "Jest for Testing"
+  hashtag: ["#Jest", "#JavaScript"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Practical Knowledge of Jest for Writing Unit Tests in JavaScript
+
+- date: "03.02.2023"
+  title: "Worked with Redux (Basics) and React Hooks"
+  hashtag: ["#Redux", "#React"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Practical Knowledge of Redux.
+          - Practical Knowledge of *useNavigate()*.
+
+- date: "01.02.2023"
+  title: "Learned About PrimeReact"
+  hashtag: ["#PrimeReact", "#React"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Worked with **PrimeReact**, a popular UI component library for React applications.
+
+- date: "31.01.2023"
+  title: "Worked with TypeScript"
+  hashtag: ["#TypeScript", "#JavaScript"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Familiarized with *TypeScript features* such as interfaces, generics, enums, and type aliases to write more robust and scalable code.
+
+- date: "30.01.2023"
+  title: "My learning journey"
+  hashtag: ["#Learning"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |          
+          I started documenting my learning journey to stay focused and motivated to keep learning new tools, frameworks, and technologies. This journal reflects my progress. \
+          The goal is to improve my programming skills and expand my knowledge in the field.
+          
+          This is my first record.
+
+          
+
+# - date: "12.04.2024"
+#   title: "Backward vs Forward Compatibility"
+#   hashtag:
+#     - "#Kafka"
+#     - "#Avro"
+#     - "#SchemaMigration"
+#   content:
+#     - type: "MARKDOWN"
+#       data:
+#         content: |
+#           ```java
+#           Java
+#           ```
+#           ```
+#           Empty Shell
+#           ```
+#           Here is a normal text
+#           `highlighted text` message

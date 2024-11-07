@@ -1,0 +1,26 @@
+{
+	"name": "render-dummy-server",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"dev": "tsx watch src/index.ts",
+		"build": "rimraf build && tsc",
+		"server:prod": "node build/index.js"
+	},
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"devDependencies": {
+		"@types/express": "5.0.0",
+		"@types/node": "22.8.7",
+		"rimraf": "6.0.1",
+		"tsx": "4.19.2",
+		"typescript": "5.6.3"
+	},
+	"dependencies": {
+		"axios": "1.7.9",
+		"cors": "2.8.5",
+		"dotenv": "16.3.1",
+		"express": "4.21.1"
+	}
+}
