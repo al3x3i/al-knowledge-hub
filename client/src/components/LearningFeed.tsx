@@ -13,12 +13,12 @@ const LearningFeed: React.FC<LearningFeedProps> = ({ learningData }) => {
         <div key={index} className="col-12 p-0" >
           <div className="card learning-item">
             <div className="card-body">
-              <div className="d-flex justify-content-between">
-                <span className="text-muted">{item.date}</span>
-                <span className="badge badge-primary">{item.technology}</span>
+              <div className="learning-item-header">
+                <span className="learning-item-date">{item.date}</span>
+                <span className="learning-item-tech">{item.technology}</span>
               </div>
-              <h5 className="card-title">{item.title}</h5>
-              <p className="card-text">{item.content}</p>
+              <h5 className="learning-item-title">{item.title}</h5>
+              <p className="learning-item-content">{item.content}</p>
             </div>
           </div>
         </div>
