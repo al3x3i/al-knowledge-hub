@@ -13,7 +13,7 @@ const DailyLearnings: React.FC = () => {
 		const fetchData = async () => {
 			console.log('Read data!');
 			try {
-				const response = await fetch('http://localhost:5000/api/learnings');
+				const response = await fetch('http://localhost:3000/api/learnings');
 				if (!response.ok) {
 					throw new Error('Network response error');
 				}

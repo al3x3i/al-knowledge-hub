@@ -4,20 +4,20 @@ Implementation steps:
 * create basic Client
 * Create basic Server
 * Server endpoint returns dummy data
-* Client displais the data from server
+* Client displays the data from server
 * Start using css to display the data
 * Create Git repository, push to github
 * Add Bootstrap library and use it.
 * Work on endpoint contract. Design response properties
-* Resaearch how to deploy client, server and database. Database: AtlasDB Mongo, Client: github page, Server: ''
-- Depoy server to the  'XXX', use free tier
+* Research how to deploy client, server and database. Database: AtlasDB Mongo, Client: github page, Server: ''
+- Deploy server to the  'XXX', use free tier
 - Connect Server to MongoDB
 - Create docker-compose file for a local development
 
 
 My website
 ==
-Ok, Already for long time I write down my new daily learnings. In this list I write down what I learned, example, and the date. All the data is saved in text document. I want to create a website. On this website I want to list my learnings, the learnings should be in scrolling list or something different. After I will add a seach by hashtag and technology Do you have maybe proposal for my website desing
+Ok, Already for long time I write down my new daily learnings. In this list I write down what I learned, example, and the date. All the data is saved in text document. I want to create a website. On this website I want to list my learnings, the learnings should be in scrolling list or something different. After I will add a search by hashtag and technology Do you have maybe proposal for my website desing
 ==
 
 Similar websites, ideas:

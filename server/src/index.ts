@@ -1,9 +1,13 @@
-import express from 'express'
-import cors from 'cors'
+import cors from 'cors';
+import express, { Request, Response } from 'express';
+import { LearningPayload } from 'model/learning';
 
-const app = express();
-const PORT = process.env.PORT || 5000
+import { Application } from 'express';
+import connectToDatabase from 'database/mongoClient';
+import Learning from 'database/model/ILearning';
 
+const app: Application = express();
+const PORT = process.env.PORT || 3000;
 
 // Access levels : L1 - public, L2 - restricted, L3 - full access
 // {
@@ -69,59 +73,82 @@ const PORT = process.env.PORT || 5000
 //     ]
 // }
 
-
-const learnings: Learning[] = [
-    {
-        date: '20.10.2024',
-        title: 'Efficiently converting multiple JPEG images into a single PDF file',
-        technology: '#Shell',
-        content: `Use this script to convert multiple JPEG images to one PDF file:\n\nsudo pacman -S img2pdf\n\nimg2pdf *.jpg -o image_%d.pdf`
-    },
-    {
-        date: '18.10.2024',
-        title: 'Finished "TypeScript Essential Training" LinkedIn course',
-        technology: '#TypeScript',
-        content: `In this course I enhanced my existing skills:\n\n- Integration: Learned to add TypeScript to my projects easily.\n- Type Safety: Improved my understanding of basic types, interfaces, and generics.\n- Advanced Types: Learned about union types and keyof/typeof operators.\n- Decorators: Discovered how to use method and class decorators.\n- Module Management: Enhanced my skills in importing/exporting code and using ambient modules.`
-    },
-    {
-        date: '15.10.2024',
-        title: 'Use shared_buffers to Enhance PostgreSQL Performance',
-        technology: '#PostgreSQL',
-        content: `One of our databases was having performance issues, and it was not clear at first why it was slow. We tried different steps to improve it, such as increasing memory and removing CPU limits in Kubernetes for the pod.\nOne big improvement was changing the shared_buffers setting from the default 128MB to 1GB. This change increased the cache hit ratio from about 56% to 92.77%. As a result, queries ran faster, and the system read less data from the disk.\n\nThis SQL query shows cache hit ratio:\n\nSELECT round(100.0 * sum(blks_hit) / (sum(blks_hit) + sum(blks_read)), 2) as cache_hit_ratio \nFROM pg_stat_database;`
-    },
-    {
-        date: '15.10.2024',
-        title: 'Use shared_buffers to Enhance PostgreSQL Performance',
-        technology: '#PostgreSQL',
-        content: `One of our databases was having performance issues, and it was not clear at first why it was slow. We tried different steps to improve it, such as increasing memory and removing CPU limits in Kubernetes for the pod.\nOne big improvement was changing the shared_buffers setting from the default 128MB to 1GB. This change increased the cache hit ratio from about 56% to 92.77%. As a result, queries ran faster, and the system read less data from the disk.\n\nThis SQL query shows cache hit ratio:\n\nSELECT round(100.0 * sum(blks_hit) / (sum(blks_hit) + sum(blks_read)), 2) as cache_hit_ratio \nFROM pg_stat_database;`
-    },
-    {
-        date: '15.10.2024',
-        title: 'Use shared_buffers to Enhance PostgreSQL Performance',
-        technology: '#PostgreSQL',
-        content: `One of our databases was having performance issues, and it was not clear at first why it was slow. We tried different steps to improve it, such as increasing memory and removing CPU limits in Kubernetes for the pod.\nOne big improvement was changing the shared_buffers setting from the default 128MB to 1GB. This change increased the cache hit ratio from about 56% to 92.77%. As a result, queries ran faster, and the system read less data from the disk.\n\nThis SQL query shows cache hit ratio:\n\nSELECT round(100.0 * sum(blks_hit) / (sum(blks_hit) + sum(blks_read)), 2) as cache_hit_ratio \nFROM pg_stat_database;`
-    },
-    {
-        date: '15.10.2024',
-        title: 'Use shared_buffers to Enhance PostgreSQL Performance',
-        technology: '#PostgreSQL',
-        content: `One of our databases was having performance issues, and it was not clear at first why it was slow. We tried different steps to improve it, such as increasing memory and removing CPU limits in Kubernetes for the pod.\nOne big improvement was changing the shared_buffers setting from the default 128MB to 1GB. This change increased the cache hit ratio from about 56% to 92.77%. As a result, queries ran faster, and the system read less data from the disk.\n\nThis SQL query shows cache hit ratio:\n\nSELECT round(100.0 * sum(blks_hit) / (sum(blks_hit) + sum(blks_read)), 2) as cache_hit_ratio \nFROM pg_stat_database;`
-    },
-]
+const learnings: LearningPayload[] = [
+	{
+		date: '20.10.2024',
+		title: 'Efficiently converting multiple JPEG images into a single PDF file',
+		technology: '#Shell',
+		content: `Use this script to convert multiple JPEG images to one PDF file:\n\nsudo pacman -S img2pdf\n\nimg2pdf *.jpg -o image_%d.pdf`,
+	},
+	{
+		date: '18.10.2024',
+		title: 'Finished "TypeScript Essential Training" LinkedIn course',
+		technology: '#TypeScript',
+		content: `In this course I enhanced my existing skills:\n\n- Integration: Learned to add TypeScript to my projects easily.\n- Type Safety: Improved my understanding of basic types, interfaces, and generics.\n- Advanced Types: Learned about union types and keyof/typeof operators.\n- Decorators: Discovered how to use method and class decorators.\n- Module Management: Enhanced my skills in importing/exporting code and using ambient modules.`,
+	},
+	{
+		date: '15.10.2024',
+		title: 'Use shared_buffers to Enhance PostgreSQL Performance',
+		technology: '#PostgreSQL',
+		content: `One of our databases was having performance issues, and it was not clear at first why it was slow. We tried different steps to improve it, such as increasing memory and removing CPU limits in Kubernetes for the pod.\nOne big improvement was changing the shared_buffers setting from the default 128MB to 1GB. This change increased the cache hit ratio from about 56% to 92.77%. As a result, queries ran faster, and the system read less data from the disk.\n\nThis SQL query shows cache hit ratio:\n\nSELECT round(100.0 * sum(blks_hit) / (sum(blks_hit) + sum(blks_read)), 2) as cache_hit_ratio \nFROM pg_stat_database;`,
+	},
+	{
+		date: '15.10.2024',
+		title: 'Use shared_buffers to Enhance PostgreSQL Performance',
+		technology: '#PostgreSQL',
+		content: `One of our databases was having performance issues, and it was not clear at first why it was slow. We tried different steps to improve it, such as increasing memory and removing CPU limits in Kubernetes for the pod.\nOne big improvement was changing the shared_buffers setting from the default 128MB to 1GB. This change increased the cache hit ratio from about 56% to 92.77%. As a result, queries ran faster, and the system read less data from the disk.\n\nThis SQL query shows cache hit ratio:\n\nSELECT round(100.0 * sum(blks_hit) / (sum(blks_hit) + sum(blks_read)), 2) as cache_hit_ratio \nFROM pg_stat_database;`,
+	},
+	{
+		date: '15.10.2024',
+		title: 'Use shared_buffers to Enhance PostgreSQL Performance',
+		technology: '#PostgreSQL',
+		content: `One of our databases was having performance issues, and it was not clear at first why it was slow. We tried different steps to improve it, such as increasing memory and removing CPU limits in Kubernetes for the pod.\nOne big improvement was changing the shared_buffers setting from the default 128MB to 1GB. This change increased the cache hit ratio from about 56% to 92.77%. As a result, queries ran faster, and the system read less data from the disk.\n\nThis SQL query shows cache hit ratio:\n\nSELECT round(100.0 * sum(blks_hit) / (sum(blks_hit) + sum(blks_read)), 2) as cache_hit_ratio \nFROM pg_stat_database;`,
+	},
+	{
+		date: '15.10.2024',
+		title: 'Use shared_buffers to Enhance PostgreSQL Performance',
+		technology: '#PostgreSQL',
+		content: `One of our databases was having performance issues, and it was not clear at first why it was slow. We tried different steps to improve it, such as increasing memory and removing CPU limits in Kubernetes for the pod.\nOne big improvement was changing the shared_buffers setting from the default 128MB to 1GB. This change increased the cache hit ratio from about 56% to 92.77%. As a result, queries ran faster, and the system read less data from the disk.\n\nThis SQL query shows cache hit ratio:\n\nSELECT round(100.0 * sum(blks_hit) / (sum(blks_hit) + sum(blks_read)), 2) as cache_hit_ratio \nFROM pg_stat_database;`,
+	},
+];
 
 // (Cross-Origin Resource Sharing)
-app.use(cors()) 
-app.use(express.json())
+app.use(cors());
+app.use(express.json());
 
-let counter = 0
-app.get('/api/learnings', (req,res) => {
-    counter ++
-    console.log('learnings request!' + counter)
-    res.status(200).json(learnings)
-    
-})
+connectToDatabase();
 
+let counter = 0;
+app.get('/api/learnings', (req: Request, res: Response) => {
+	counter++;
+	console.log('learnings request!' + counter);
+	res.status(200).json(learnings);
+});
 
-app.listen(PORT, ()=> {
-    console.log(`Server is running on http://localhost:${PORT} `)
-})
+app.post('/api/learnings', async (req: Request, res: Response) => {
+	try {
+		const { date, title, technology, content } = req.body;
+
+		if (!date || !title || !technology || !content) {
+			res.status(400).json({ error: 'Not all data are provided' });
+			return;
+		}
+
+		const newLearning = new Learning({
+			date,
+			title,
+			technology,
+			content,
+		});
+
+		const savedLearning = await newLearning.save();
+
+		res.status(200).json({ message: 'Created' });
+	} catch (error) {
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+});
+
+app.listen(PORT, () => {
+	console.log(`Server is running on http://localhost:${PORT} `);
+});
