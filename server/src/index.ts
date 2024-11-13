@@ -63,7 +63,7 @@ app.post('/api/learnings', async (req: Request, res: Response) => {
 
 		const savedLearning = await newLearning.save();
 
-		res.status(200).json(savedLearning);
+		res.status(201).json(savedLearning);
 	} catch (error) {
 		res.status(500).json({ error: 'Internal Server Error' });
 	}

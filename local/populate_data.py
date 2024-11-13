@@ -1,5 +1,6 @@
 import json
 import logging
+import http.client
 import os
 
 logging.basicConfig(
@@ -8,15 +9,42 @@ logging.basicConfig(
     handlers=[logging.StreamHandler()]
 )
 
+
+url = 'localhost:3000/api/learnings'
+
 def populate_data(data):
     logging.info("Start populating data.")
     req_counter = 0
     req_counter +=1
     for entry in data:
-        
-        logging.info("Sending request `%s` to the API", req_counter)
-        req_counter +=1
 
+        payload  = json.dumps({
+            "date": entry['date'],
+            'title': entry['title'],
+            'hashtag': entry['hashtag'],
+            'content': entry['content']
+        })
+        
+        con = http.client.HTTPConnection(url)
+        headers = {'Content-Type': 'application/json'}
+        try:
+            logging.info("Sending request `%s` to the API", req_counter)
+            req_counter +=1
+
+            conn.request('POST', payload, headers)
+            response = conn.getresponse()
+            res_data = response.read().decode('utf-8')
+
+            if (res_data.status == '201'):
+                logging.info("Successfully api request for: %s", entry['title'])
+            else:
+                logging.error("Failed api status %s request for %s", entry['title'], response.status)    
+
+
+        except Exception as e:
+            logging.error('Error while sending api request, payload: %s', payload)
+        finally:
+            conn.close()
 
     logging.info("Data population complete.")
 
