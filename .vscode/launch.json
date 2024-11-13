@@ -20,6 +20,13 @@
 				"webpack:///./*": "${webRoot}/*"
 			},
 			"sourceMaps": true
+		},
+		{
+			"type": "debugpy",
+			"request": "launch",
+			"name": "Run current python file",
+			"program": "${file}",
+			"console": "integratedTerminal"
 		}
 	]
 }
