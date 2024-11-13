@@ -13,7 +13,7 @@ curl -X POST http://localhost:3000/api/learnings \
 -d '{
     "date": "2024-11-07",
     "title": "Example of Mixed Content Types",
-    "technology": "API, YAML, SQL, Bash, Images",
+    "hashtag": ["API, YAML, SQL, Bash, Images"],
     "content": [
         {
             "type": "yaml",

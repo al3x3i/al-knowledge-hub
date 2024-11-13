@@ -1,6 +1,6 @@
 export interface LearningPayload {
     date: string,
     title: string,
-    technology: string,
+    hashtag: string[],
     content: string
 }

@@ -1,27 +1,19 @@
 import mongoose from 'mongoose';
 import { DB } from 'secrets';
 
-
-// const dbUri = process.env.MONGODB_URI || `mongodb://localhost:27017`;
-
-// const dbURI = `mongodb://${DB.USER}:${encodeURIComponent(DB.PASS)}@${DB.HOST}:${DB.PORT}/${DB.NAME}`;
-// const dbUri = `mongodb://${DB.USER}:${encodeURIComponent(DB.PASS)}@${DB.HOST}:${DB.PORT}/${DB.NAME}`;
-
-// const dbUri = `mongodb://${DB.USER}:${DB.PASS}@${DB.HOST}:${DB.PORT}/${DB.NAME}`
-const dbUri = `mongodb://${DB.USER}:${DB.PASS}@${DB.HOST}:${DB.PORT}/${DB.NAME}?authSource=admin`
-
+const dbURI = `mongodb://${DB.USER}:${encodeURIComponent(DB.PASS)}@${DB.HOST}:${DB.PORT}/${DB.NAME}?authSource=admin`;
 
 const connectToDatabase = () => {
 	mongoose
-		.connect(dbUri)
+		.connect(dbURI)
 		.then(() => console.log('Connected to Database'))
 		.catch((error) => {
 			console.log('Error while connecting to the Database');
-			process.exit(-1)
+			process.exit(-1);
 		});
 
 	mongoose.connection.on('connected', () => {
-		console.log('Database connection is open to: ', dbUri);
+		console.log('Database connection is open to: ', dbURI);
 	});
 
 	mongoose.connection.on('error', (err) => {

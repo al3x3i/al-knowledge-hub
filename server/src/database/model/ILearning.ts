@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 interface ILearning extends Document {
 	date: Date;
 	title: string;
-	technology: string;
+	hashtag: string[];
 	content: Array<{
 		type: string;
 		access_level: string;
@@ -18,7 +18,7 @@ interface ILearning extends Document {
 const LearningSchema = new Schema<ILearning>({
 	date: { type: Date, required: true },
 	title: { type: String, required: true },
-	technology: { type: String, required: true },
+	hashtag: { type: [String], required: true },
 	content: [
 		{
 			type: { type: String, required: true },
