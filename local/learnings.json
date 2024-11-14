@@ -1,1 +1,22 @@
-{}
+{
+    "date": "14.11.2024",
+    "title": "Learning MongoDB and Mongoose",
+    "hashtag": ["#MongoDB", "#Mongoose"],
+    "content": [
+        {
+            "access_level": "L1",
+            "data": {
+                "content": "It is my personal project using MongoDB database with Mongoose. It was a great chance to gain practical experience working with this technology stack.",
+                "type": "string"
+            }
+        },
+        {
+            "access_level": "L1",
+            "data": {
+                "content": "```javascript\n\nimport mongoose from 'mongoose';\n\nconst LearningSchema = new mongoose.Schema({\n    date: { type: Date, required: true },\n    title: { type: String, required: true, default: 'No Title' },\n    hashtag: { type: [String], required: true },\n    content: [\n        {\n            type: { type: String, required: true },\n            access_level: { type: String, required: true },\n            data: {\n                content: { type: String, required: true },\n                language: { type: String, required: true },\n                description: { type: String, required: true },\n            },\n        },\n    ],\n});\n\nconst Learning = mongoose.model('Learning', LearningSchema);\n```",
+                "type": "javascript",
+                "description": ""
+            }
+        }
+    ]
+}

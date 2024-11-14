@@ -87,7 +87,7 @@ curl -X POST http://localhost:3000/api/learnings \
             "access_level": "L1",
             "data": {
                 "content": "Data",
-                "language": "yaml",
+                "language": " string | shell | image | yaml",
                 "description": "Docker Compose configuration for HBase and AKHQ services"
             }
         }
@@ -96,8 +96,81 @@ curl -X POST http://localhost:3000/api/learnings \
 
 ```
 
+===
+OK, I will start to give you text and please only correct typos.
+Do not add your text, fix only typos.
+From this text generate json based on given json template
+
+===
+Example:
+===
+
+14.11.2024
+* Learning MongoDB and Mongoose
+**#MongoDB, #Mongoose**
+
+It is my personal project using MongoDB database with Mongoose. It was a great chance to gain practical experience working with this technology stack.
+
+I want to live an example how I generated MongoDB schema
+In MongoDB, which is a NoSQL database, the data is stored in a flexible, JSON-like format.
+```javascript
+
+import mongoose from 'mongoose';
+
+const LearningSchema = new mongoose.Schema({
+    date: { type: Date, required: true },
+    title: { type: String, required: true, default: 'No Title' },
+    hashtag: { type: [String], required: true },
+    content: [
+        {
+            type: { type: String, required: true },
+            access_level: { type: String, required: true },
+            data: {
+                content: { type: String, required: true },
+                language: { type: String, required: true },
+                description: { type: String, required: true },
+            },
+        },
+    ],
+});
+
+const Learning = mongoose.model('Learning', LearningSchema);
+
+```
+===
+
+You need to generate similar JSON OUTPUT
 
 
+{
+    "date": "14.11.2024",
+    "title": "Learning MongoDB and Mongoose",
+    "hashtag": ["#MongoDB", "#Mongoose"],
+    "content": [
+        {
+            "access_level": "L1",
+            "data": {
+                "content": "It is my personal project using MongoDB database with Mongoose. It was a great chance to gain practical experience working with this technology stack.",
+                "type": "string"
+            }
+        },
+        {
+            "access_level": "L1",
+            "data": {
+                "content": "I want to live an example of how I generated the MongoDB schema.\n In MongoDB, which is a NoSQL database, the data is stored in a flexible, JSON-like format.",
+                "type": "string"
+            }
+        },
+        {
+            "access_level": "L1",
+            "data": {
+                "content": "import mongoose from 'mongoose';\n\nconst LearningSchema = new mongoose.Schema({\n    date: { type: Date, required: true },\n    title: { type: String, required: true, default: 'No Title' },\n    hashtag: { type: [String], required: true },\n    content: [\n        {\n            type: { type: String, required: true },\n            access_level: { type: String, required: true },\n            data: {\n                content: { type: String, required: true },\n                language: { type: String, required: true },\n                description: { type: String, required: true },\n            },\n        },\n    ],\n});\n\nconst Learning = mongoose.model('Learning', LearningSchema);\n",
+                "type": "javascript",
+                "description": "MongoDB schema example using Mongoose"
+            }
+        }
+    ]
+}
 
-Better name for the repository: alex-journey-docs | al-journey-docs
+
 
