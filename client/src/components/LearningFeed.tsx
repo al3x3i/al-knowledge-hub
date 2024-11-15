@@ -1,18 +1,19 @@
-import React, { ClassAttributes, useState } from 'react';
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import '../styles/LearningFeed.css';
 import { LearningItem } from '../types/LearningItem';
-import ReactMarkdown from 'react-markdown';
+// import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import CodeBlock from './CodeBlock';
 
 interface LearningFeedProps {
 	learningData: LearningItem[];
 }
 
-interface CodeProps  {
-	inline?: boolean; 
+interface CodeProps {
+	inline?: boolean;
 	className?: string;
-	children?: React.ReactNode; 
-  }
+	children?: React.ReactNode;
+}
 
 const LearningFeed: React.FC<LearningFeedProps> = ({ learningData }) => {
 	return (
@@ -28,16 +29,19 @@ const LearningFeed: React.FC<LearningFeedProps> = ({ learningData }) => {
 							<h5 className="learning-item-title">{item.title}</h5>
 							<ReactMarkdown
 								components={{
-									code({ inline, className, children, ...props }: CodeProps) {
-										const match = /language-(\w+)/.exec(className || '');
-										return !inline && match ? (
+									code(props) {
+										const { children, className, node, ...rest } = props;
+										const match = /language-(\w+)/.exec(className || ''); // trails all empty lines at the end of the string 
+										const formattedChildren = String(children).replace(/\n+$/,'',);
+										return match ? (
 											<CodeBlock language={match[1]}>
-												{String(children).replace(/\n$/, '')}
+												{formattedChildren}
 											</CodeBlock>
 										) : (
-											<code className={className} {...props}>
-												{children}
-											</code>
+											// Use `shell` code style language if code backticks misses language type, ex ``` console.log('') ```
+											<CodeBlock language={'shell'}>
+												{formattedChildren}
+											</CodeBlock>
 										);
 									},
 								}}
