@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import '../styles/LearningFeed.css';
-// import { ContentItem, LearningItem, TextContent , MarkdownContent , ImageContent } from '../types/LearningItem';
-// import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import {
 	ContentItem,
 	LearningItem,
@@ -58,7 +56,7 @@ const LearningFeed: React.FC<LearningFeedProps> = ({ learningData }) => {
 											key={idx}
 											components={{
 												code(props) {
-													const { children, className, node, ...rest } = props;
+													const { children, className } = props;
 													const match = /language-(\w+)/.exec(className || ''); // trails all empty lines at the end of the string
 													const formattedChildren = String(children).replace(
 														/\n+$/,

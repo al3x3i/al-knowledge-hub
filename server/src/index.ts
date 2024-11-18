@@ -1,84 +1,15 @@
 import cors from 'cors';
 import express, { Request, Response } from 'express';
-import { LearningPayload } from 'model/learning';
+
+import { dummyLearning } from 'dummyData';
 
 import Learning from 'database/model/ILearning';
 import connectToDatabase from 'database/mongoClient';
 import { Application } from 'express';
+import { LearningPayload } from 'model/learning';
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
-
-const learnings: LearningPayload[] = [
-	{
-		date: '14.11.2024',
-		title: 'Learning MongoDB and Mongoose',
-		hashtag: ['#MongoDB', '#Mongoose'],
-		content: [
-			{
-				type: 'MARKDOWN',
-				data: {
-					content: `
-  It is my personal project using MongoDB database with Mongoose. It was a great chance to gain practical experience working with this technology stack.  
-  
-  I want to leave an example of how I generated the MongoDB schema.  
-  In MongoDB, which is a NoSQL database, the data is stored in a flexible, JSON-like format.  
-  
-  \`\`\`javascript
-  import mongoose from 'mongoose';
-  
-  const LearningSchema = new mongoose.Schema({
-	date: { type: Date, required: true },
-	title: { type: String, required: true, default: 'No Title' },
-	hashtag: { type: [String], required: true },
-	content: [
-	  {
-		type: { type: String, required: true },
-		access_level: { type: String, required: true },
-		data: {
-		  content: { type: String, required: true },
-		  language: { type: String, required: true },
-		  description: { type: String, required: true },
-		},
-	  },
-	],
-  });
-  
-  const Learning = mongoose.model('Learning', LearningSchema);
-  \`\`\`
-		  `,
-				},
-			},
-		],
-	},
-	{
-		date: '12.04.2024',
-		title: 'Backward vs Forward Compatibility',
-		hashtag: ['#Kafka', '#Avro', '#SchemaMigration'],
-		content: [
-			{
-				type: 'TEXT',
-				data: {
-					content: `
-  I used to understand this clearly when I did Avro schema migration in Kafka.
-  
-  Important understanding of what the difference is:
-  
-  **Forward compatibility** - old code can read records that were written by new code.
-  **Backward compatibility** - new code can read records that were written by old code.
-		  `,
-				},
-			},
-			{
-				type: 'TEXT',
-				data: {
-					content: "My second text"
-				},
-			},
-		],
-	},
-	
-];
 
 // (Cross-Origin Resource Sharing)
 app.use(cors());
@@ -88,8 +19,13 @@ connectToDatabase();
 
 let counter = 0;
 app.get('/api/learnings', async (req: Request, res: Response) => {
-	// const learnings = await Learning.find();
+	const debug = false;
+	let learnings: LearningPayload[] | null = null;
+	if (debug) {
+		learnings = dummyLearning;
+	}
 
+	learnings = await Learning.find();
 	counter++;
 	console.log('learnings request!' + counter);
 	res.status(200).json(learnings);
@@ -104,8 +40,15 @@ app.post('/api/learnings', async (req: Request, res: Response) => {
 			return;
 		}
 
+		const [day, month, year] = date.split('.').map(Number);
+		const parsedDate = new Date(day, month - 1, year);
+		if (isNaN(parsedDate.getTime())) {
+			res.status(400).json({ error: 'Invalid Date format' });
+			return;
+		}
+
 		const newLearning = new Learning({
-			date,
+			date: parsedDate,
 			title,
 			hashtag,
 			content,

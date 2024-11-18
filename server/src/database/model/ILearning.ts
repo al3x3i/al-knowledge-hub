@@ -45,6 +45,7 @@ const LearningSchema = new Schema<ILearning>({
 				type: String,
 				required: true,
 				enum: ['L1', 'L2', 'L3'],
+				default: "L1"
 			},
 			data: {
 				type: Schema.Types.Mixed,

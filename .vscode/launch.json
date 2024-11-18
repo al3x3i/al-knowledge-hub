@@ -24,8 +24,9 @@
 		{
 			"type": "debugpy",
 			"request": "launch",
-			"name": "Run current python file",
-			"program": "${file}",
+			"name": "Run `populate_data` python script",
+			// "program": "${file}",
+			"program": "./local/populate_data.py",
 			"console": "integratedTerminal"
 		}
 	]
