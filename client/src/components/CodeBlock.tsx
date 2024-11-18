@@ -10,7 +10,6 @@ interface CodeBlockProps {
 const CodeBlock: React.FC<CodeBlockProps> = ({ language, children }) => {
   const handleCopy = () => {
     navigator.clipboard.writeText(children);
-    alert('Code copied to clipboard');
   };
 
   return (
