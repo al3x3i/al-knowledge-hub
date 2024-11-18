@@ -87,7 +87,7 @@ curl -X POST http://localhost:3000/api/learnings \
             "access_level": "L1",
             "data": {
                 "content": "Data",
-                "language": " string | shell | image | yaml",
+                "language": "string | shell | image | yaml",
                 "description": "Docker Compose configuration for HBase and AKHQ services"
             }
         }

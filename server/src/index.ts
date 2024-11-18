@@ -9,62 +9,75 @@ import { Application } from 'express';
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
 
-// const learnings: LearningPayload[] = [
-// 	{
-// 		date: '20.10.2024',
-// 		title: 'Efficiently converting multiple JPEG images into a single PDF file',
-// 		hashtag: ['#Shell'],
-// 		content: `Use this script to convert multiple JPEG images to one PDF file:\n\nsudo pacman -S img2pdf\n\nimg2pdf *.jpg -o image_%d.pdf`,
-// 	},
-// 	{
-// 		date: '18.10.2024',
-// 		title: 'Finished "TypeScript Essential Training" LinkedIn course',
-// 		hashtag: ['#TypeScript'],
-// 		content: `In this course I enhanced my existing skills:\n\n- Integration: Learned to add TypeScript to my projects easily.\n- Type Safety: Improved my understanding of basic types, interfaces, and generics.\n- Advanced Types: Learned about union types and keyof/typeof operators.\n- Decorators: Discovered how to use method and class decorators.\n- Module Management: Enhanced my skills in importing/exporting code and using ambient modules.`,
-// 	},
-// 	{
-// 		date: '15.10.2024',
-// 		title: 'Use shared_buffers to Enhance PostgreSQL Performance',
-// 		hashtag: ['#PostgreSQL'],
-// 		content: `One of our databases was having performance issues, and it was not clear at first why it was slow. We tried different steps to improve it, such as increasing memory and removing CPU limits in Kubernetes for the pod.\nOne big improvement was changing the shared_buffers setting from the default 128MB to 1GB. This change increased the cache hit ratio from about 56% to 92.77%. As a result, queries ran faster, and the system read less data from the disk.\n\nThis SQL query shows cache hit ratio:\n\nSELECT round(100.0 * sum(blks_hit) / (sum(blks_hit) + sum(blks_read)), 2) as cache_hit_ratio \nFROM pg_stat_database;`,
-// 	},
-// ];
-
 const learnings: LearningPayload[] = [
 	{
 		date: '14.11.2024',
 		title: 'Learning MongoDB and Mongoose',
 		hashtag: ['#MongoDB', '#Mongoose'],
-		content: `
-It is my personal project using MongoDB database with Mongoose. It was a great chance to gain practical experience working with this technology stack.  
-
-I want to leave an example of how I generated the MongoDB schema.  
-In MongoDB, which is a NoSQL database, the data is stored in a flexible, JSON-like format.  
-
-\`\`\`javascript
-import mongoose from 'mongoose';
-
-const LearningSchema = new mongoose.Schema({
-date: { type: Date, required: true },
-title: { type: String, required: true, default: 'No Title' },
-hashtag: { type: [String], required: true },
-content: [
-	{
+		content: [
+			{
+				type: 'MARKDOWN',
+				data: {
+					content: `
+  It is my personal project using MongoDB database with Mongoose. It was a great chance to gain practical experience working with this technology stack.  
+  
+  I want to leave an example of how I generated the MongoDB schema.  
+  In MongoDB, which is a NoSQL database, the data is stored in a flexible, JSON-like format.  
+  
+  \`\`\`javascript
+  import mongoose from 'mongoose';
+  
+  const LearningSchema = new mongoose.Schema({
+	date: { type: Date, required: true },
+	title: { type: String, required: true, default: 'No Title' },
+	hashtag: { type: [String], required: true },
+	content: [
+	  {
 		type: { type: String, required: true },
 		access_level: { type: String, required: true },
 		data: {
-			content: { type: String, required: true },
-			language: { type: String, required: true },
-			description: { type: String, required: true },
+		  content: { type: String, required: true },
+		  language: { type: String, required: true },
+		  description: { type: String, required: true },
 		},
+	  },
+	],
+  });
+  
+  const Learning = mongoose.model('Learning', LearningSchema);
+  \`\`\`
+		  `,
+				},
+			},
+		],
 	},
-],
-});
-
-const Learning = mongoose.model('Learning', LearningSchema);
-\`\`\`
-`,
+	{
+		date: '12.04.2024',
+		title: 'Backward vs Forward Compatibility',
+		hashtag: ['#Kafka', '#Avro', '#SchemaMigration'],
+		content: [
+			{
+				type: 'TEXT',
+				data: {
+					content: `
+  I used to understand this clearly when I did Avro schema migration in Kafka.
+  
+  Important understanding of what the difference is:
+  
+  **Forward compatibility** - old code can read records that were written by new code.
+  **Backward compatibility** - new code can read records that were written by old code.
+		  `,
+				},
+			},
+			{
+				type: 'TEXT',
+				data: {
+					content: "My second text"
+				},
+			},
+		],
 	},
+	
 ];
 
 // (Cross-Origin Resource Sharing)

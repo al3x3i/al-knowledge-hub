@@ -1,18 +1,33 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+export type AccessLevel = 'L1' | 'L2' | 'L3';
+export type ContentType = 'TEXT' | 'MARKDOWN' | 'IMAGE';
+
 interface ILearning extends Document {
 	date: Date;
 	title: string;
 	hashtag: string[];
-	content: Array<{
-		type: string;
-		access_level: string;
-		data: {
-			content: string;
-			language: string;
-			description: string;
-		};
-	}>;
+	content: Array<
+		| {
+				type: Extract<ContentType, 'TEXT' | 'MARKDOWN'>;
+				accessLevel: AccessLevel;
+				data: {
+					content: string;
+				};
+		  }
+		| {
+				type: Extract<ContentType, 'IMAGE'>;
+				accessLevel: AccessLevel;
+				data: {
+					url: string;
+					alt_text?: string;
+					width?: number;
+					height?: number;
+					mime_type?: string;
+					description?: string;
+				};
+		  }
+	>;
 }
 
 const LearningSchema = new Schema<ILearning>({
@@ -21,17 +36,24 @@ const LearningSchema = new Schema<ILearning>({
 	hashtag: { type: [String], required: true },
 	content: [
 		{
-			type: { type: String, required: true },
-			access_level: { type: String, required: true },
+			type: {
+				type: String,
+				required: true,
+				enum: ['TEXT', 'MARKDOWN', 'IMAGE'],
+			},
+			accessLevel: {
+				type: String,
+				required: true,
+				enum: ['L1', 'L2', 'L3'],
+			},
 			data: {
-				content: { type: String, required: true },
-				language: { type: String, required: true },
-				description: { type: String, required: true },
+				type: Schema.Types.Mixed,
+				required: true
 			},
 		},
 	],
 });
 
-const Learning = mongoose.model<ILearning>('Learning', LearningSchema)
+const Learning = mongoose.model<ILearning>('Learning', LearningSchema);
 
-export default Learning
+export default Learning;

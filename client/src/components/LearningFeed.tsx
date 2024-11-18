@@ -1,18 +1,26 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import '../styles/LearningFeed.css';
-import { LearningItem } from '../types/LearningItem';
+// import { ContentItem, LearningItem, TextContent , MarkdownContent , ImageContent } from '../types/LearningItem';
 // import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import {
+	ContentItem,
+	LearningItem,
+	MarkdownContent,
+	TextContent,
+} from '../types/LearningItem';
 import CodeBlock from './CodeBlock';
 
 interface LearningFeedProps {
 	learningData: LearningItem[];
 }
 
-interface CodeProps {
-	inline?: boolean;
-	className?: string;
-	children?: React.ReactNode;
+function isMarkdownContent(item: ContentItem): item is MarkdownContent {
+	return item.type === 'MARKDOWN';
+}
+
+function isTextContent(item: ContentItem): item is TextContent {
+	return item.type === 'TEXT';
 }
 
 const LearningFeed: React.FC<LearningFeedProps> = ({ learningData }) => {
@@ -24,31 +32,60 @@ const LearningFeed: React.FC<LearningFeedProps> = ({ learningData }) => {
 						<div className="card-body">
 							<div className="learning-item-header">
 								<span className="learning-item-date">{item.date}</span>
-								<span className="learning-item-tech">{item.hashtag}</span>
+								<span className="learning-item-tech">
+									{item.hashtag.join(' ')}
+								</span>
 							</div>
 							<h5 className="learning-item-title">{item.title}</h5>
-							<ReactMarkdown
-								components={{
-									code(props) {
-										const { children, className, node, ...rest } = props;
-										const match = /language-(\w+)/.exec(className || ''); // trails all empty lines at the end of the string 
-										const formattedChildren = String(children).replace(/\n+$/,'',);
-										return match ? (
-											<CodeBlock language={match[1]}>
-												{formattedChildren}
-											</CodeBlock>
-										) : (
-											// Use `shell` code style language if code backticks misses language type, ex ``` console.log('') ```
-											<CodeBlock language={'shell'}>
-												{formattedChildren}
-											</CodeBlock>
-										);
-									},
-								}}
-							>
-								{item.content}
-							</ReactMarkdown>
-							{/* <p className="learning-item-content">{item.content}</p> */}
+							{item.content.map((contentItem, idx) => {
+								const isLastContent = idx == item.content.length - 1;
+
+								if (isTextContent(contentItem)) {
+									return (
+										<div key={idx}>
+											{contentItem.data.content}{' '}
+											{!isLastContent && (
+												<>
+													<br />
+													<br />
+												</>
+											)}
+										</div>
+									);
+								} else if (isMarkdownContent(contentItem)) {
+									return (
+										<ReactMarkdown
+											key={idx}
+											components={{
+												code(props) {
+													const { children, className, node, ...rest } = props;
+													const match = /language-(\w+)/.exec(className || ''); // trails all empty lines at the end of the string
+													const formattedChildren = String(children).replace(
+														/\n+$/,
+														'',
+													);
+													return match ? (
+														<CodeBlock language={match[1]}>
+															{formattedChildren}
+														</CodeBlock>
+													) : (
+														// Use `shell` code style language if code backticks misses language type, ex ``` console.log('') ```
+														<CodeBlock language={'shell'}>
+															{formattedChildren}
+														</CodeBlock>
+													);
+												},
+											}}
+										>
+											{contentItem.data.content}
+										</ReactMarkdown>
+									);
+								}
+								if (!isLastContent) {
+									return <br />;
+								}
+								// {isLastContent && <br/>}
+							})}
 						</div>
 					</div>
 				</div>
