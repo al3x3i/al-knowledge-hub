@@ -71,10 +71,9 @@ const LearningFeed: React.FC<LearningFeedProps> = ({ learningData }) => {
 															{formattedChildren}
 														</CodeBlock>
 													) : (
-														// Use `shell` code style language if code backticks misses language type, ex ``` console.log('') ```
-														<CodeBlock language={'shell'}>
+														<code className="inline-code">
 															{formattedChildren}
-														</CodeBlock>
+														</code>
 													);
 												},
 											}}

@@ -1,3 +1,19 @@
+- date: "17.11.2024"
+  title: "Tool to merge multiple PDFs into one PDF"
+  hashtag:
+    - "#Shell"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I had split PDF documents and wanted to combine them into one.
+          This shell script show an efficient way to do it:
+          ```shell
+            sudo pacman -S poppler
+
+            pdfunite 3_0.pdf 3_1.pdf translated_3.pdf
+          ```
+
 - date: "14.11.2024"
   title: "Learning MongoDB and Mongoose"
   hashtag:
@@ -7,10 +23,871 @@
     - type: "MARKDOWN"
       data:
         content: |
-          It is my personal project using MongoDB database with Mongoose. It was a great chance to gain practical experience working with this technology stack.
-          
-          I want to leave an example of how I generated the MongoDB schema.
+          It is my personal project using the MongoDB database with Mongoose. It was a great chance to gain practical experience working with this technology stack.
+
+          I want to give an example of how I generated a MongoDB schema.  
           In MongoDB, which is a NoSQL database, the data is stored in a flexible, JSON-like format.
+          ```javascript
+          import mongoose from 'mongoose';
+
+          const LearningSchema = new mongoose.Schema({
+              date: { type: Date, required: true },
+              title: { type: String, required: true, default: 'No Title' },
+              hashtag: { type: [String], required: true },
+              content: [
+                  {
+                      type: { type: String, required: true },
+                      access_level: { type: String, required: true },
+                      data: {
+                          content: { type: String, required: true },
+                          language: { type: String, required: true },
+                          description: { type: String, required: true },
+                      },
+                  },
+              ],
+          });
+
+          const Learning = mongoose.model('Learning', LearningSchema);
+          ```
+
+- date: "01.11.2024"
+  title: "I have completed a LinkedIn course on AWS S3."
+  hashtag:
+    - "#AWS SDK"
+    - "#S3"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In this course, I learned about the AWS CLI and how to use the SDK in Python and Java.  
+          Git repository with files: [https://github.com/al3x3i/aws-s3-management-sandbox](https://github.com/al3x3i/aws-s3-management-sandbox)
+
+- date: "27.08.2024"
+  title: "How to measure the total number of Kafka messages consumed by a Flink cluster."
+  hashtag:
+    - "#Prometheus"
+    - "#Kafka"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In my work, I needed to find out the total number of messages consumed by Flink.  
+          I am already familiar with two Prometheus queries that can be used for this purpose. To reinforce my understanding, I decided to write a brief overview of them.
+
+          (1) This query computes the average rate of messages consumed per second over the last hour, providing insights into message consumption trends.
+          ```prometheus
+            sum(rate(flink_taskmanager_job_task_operator_KafkaSourceReader_topic_partition_committedOffset{topic="AdvertisersPerPartnershipData"}[1h]))
+          ```
+          Output: 24205
+
+          (2) This query calculates the total number of messages consumed from the Kafka topic over the last hour.
+          ```prometheus
+            sum(increase(flink_taskmanager_job_task_operator_KafkaSourceReader_topic_partition_committedOffset{topic="AdvertisersPerPartnershipData"}[1h]))
+          ```
+          Output: 87140662
+
+          87140662 / 3600 = 24205 messages per second
+
+- date: "23.10.2024"
+  title: "Retrieved Logs from All Running Docker Containers"
+  hashtag:
+    - "#Docker"
+    - "#Shell"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I had trouble running my Docker containers because they stopped very quickly, and I couldn’t get logs from them to fix the issues. 
+
+          The following command returns all logs from all running Docker containers. I ran this command many times to get the logs from the crashing containers.
+
+          ```shell
+          docker ps -q | xargs -I {} docker logs {}
+          ```
+
+- date: "23.10.2024"
+  title: "Configured ulimits for Docker Containers in Testcontainers"
+  hashtag:
+    - "#Kafka"
+    - "#Testcontainers"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I had a memory error while running tests with a Kafka container.  
+          This happened because the number of allowed file connections was too low. I fixed it by increasing the nofile limit to 65536, which solved the problem.
+
+          ```java
+            public static final KafkaContainer KAFKA_CONTAINER = new KafkaContainer(
+                DockerImageName.parse("confluentinc/cp-kafka").withTag(CONFLUENT_VERSION))
+                .withEmbeddedZookeeper()
+                .withReuse(true)
+                .withCreateContainerCmdModifier(cmd -> {
+                    // Set ulimits for nofile
+                    cmd.getHostConfig().withUlimits(
+                        List.of(new Ulimit("nofile", 65536, 65536))
+                    );
+                });
+          ```
+
+- date: "20.10.2024"
+  title: "Efficiently converting multiple JPEG images into a single PDF file"
+  hashtag:
+    - "#Shell"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Use this script to convert multiple JPEG images to one PDF file:
+
+          ```shell
+            sudo pacman -S img2pdf      
+
+            img2pdf *.jpg -o image_%d.pdf
+          ```
+
+- date: "18.10.2024"
+  title: "Finished 'TypeScript Essential Training' LinkedIn course."
+  hashtag:
+    - "#TypeScript"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In this course, I enhanced my existing skills:
+
+          - Integration: Learned to add TypeScript to my projects easily.
+          - Type Safety: Improved my understanding of basic types, interfaces, and generics.
+          - Advanced Types: Learned about union types and `keyof`/`typeof` operators.
+          - Decorators: Discovered how to use method and class decorators.
+          - Module Management: Enhanced my skills in importing/exporting code and using ambient modules.
+
+- date: "15.10.2024"
+  title: "Use `shared_buffers` to Enhance PostgreSQL Performance."
+  hashtag:
+    - "#PostgreSQL"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          One of our databases was having performance issues, and it was not clear at first why it was slow. We tried different steps to improve it, such as increasing memory and removing CPU limits in Kubernetes for the pod.
+          One big improvement was changing the `shared_buffers` setting from the default 128MB to 1GB. This change increased the cache hit ratio from about 56% to 92.77%. As a result, queries ran faster, and the system read less data from the disk.
+
+          This SQL query shows the cache hit ratio:
+
+          ```sql
+          SELECT round(100.0 * sum(blks_hit) / (sum(blks_hit) + sum(blks_read)), 2) as cache_hit_ratio 
+          FROM pg_stat_database;
+          ```
+
+- date: "30.08.2024"
+  title: "Optimized Git repository management on my computer"
+  hashtag:
+    - "#GIT"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          One way to improve Git performance for operations is to compress the database. After compression, Git operations may become faster, especially for large repositories, and use less disk space.
+
+          I needed this because, in one of my projects, the Git Graph VC extension was very slow.
+
+          ```sh
+          # Show memory usage, before
+            du -sh .git
+
+          # Compress the git database
+            git gc
+
+          # Show memory usage, after
+            du -sh .git
+          ```
+
+- date: "29.08.2024"
+  title: "Use profiles in docker-compose"
+  hashtag:
+    - "#Docker"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In my team, we use various operating systems, and not all Docker images are compatible with every OS.  
+          I added a profile to the Docker Compose file to manage the execution of specific services based on the operating system by passing a designated parameter.
+
+          Example:
+          ```yaml
+            version: "3.8"
+
+            services:
+              hbase:
+                image: harisekhon/hbase:1
+                hostname: hbase-master
+                container_name: hbase-master
+                ports:
+                - "16000:16000"
+                - "16010:16010"
+                - "16020:16020"
+                - "16030:16030"
+                volumes:
+                - hbase-data:/hbase-data
+                network_mode: host
+                ulimits:
+                  nofile:
+                    soft: 65536
+                    hard: 65536
+                depends_on:
+                - zookeeper
+                profiles:
+                - linux
+
+              akhq:
+                image: tchiotludo/akhq:0.25.1
+                container_name: job-akhq
+                environment:
+                  AKHQ_CONFIGURATION: |
+                    akhq:
+                      connections:
+                        mykafka:
+                          properties:
+                            bootstrap.servers: "kafka:19092"
+                          schema-registry:
+                            url: "http://schema-registry:8082"
+                ports:
+                - "8000:8080"
+
+            volumes:
+              hbase-data:
+          ```
+
+          Command:
+          `docker-compose --profile linux up`
+
+- date: "20.08.2024"
+  title: "Mastered JPA primary key generation strategies. GenerationType.IDENTITY vs GenerationType.SEQUENCE"
+  hashtag:
+    - "#Hibernate"
+    - "#database"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I learned the difference between key generation strategies and explored the difference between `GenerationType.IDENTITY` and `GenerationType.SEQUENCE`.
+
+          `GenerationType.IDENTITY`: Uses database auto-increment for ID generation after each insert, which can lead to performance issues with batch inserts, limited caching, and potential database locking in high-concurrency environments.
+
+          `GenerationType.SEQUENCE`: Utilizes a pre-defined sequence to generate IDs before the insert, supporting efficient batch operations, better caching, and reducing locking issues, with greater flexibility and control over ID generation.
+
+          The official documentation is here:
+          [Hibernate User Guide](https://docs.jboss.org/hibernate/orm/5.6/userguide/html_single/Hibernate_User_Guide.html#identifiers-generators-identity)
+
+          Example:
+
+          ```java
+            # Create key in database
+            CREATE SEQUENCE custom_seq INCREMENT BY 1;
+
+            # Use in the code
+            @Id
+            @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_seq_generator")
+            @SequenceGenerator(name = "custom_seq_generator", sequenceName = "custom_seq", allocationSize = 1)
+            private Long id;   
+          ```
+
+- date: "12.08.2024"
+  title: "Create custom plugin for Kubernetes to format JSON logs"
+  hashtag:
+    - "#kubernetes"
+    - "#shell"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I learned from a colleague how to create a Kubernetes plugin to structure logs from running pods.  
+          This solution works well for logs with a predefined JSON structure. However, it can be applied to different log formats by updating the parser script.
+
+          Given (log example):
+          ```json
+            {"@timestamp":"2024-08-12T10:11:44.61+02:00","message":"middleware-republish: partitions assigned: []","log":{"level":"INFO","logger":"org.springframework.kafka.listener.KafkaMessageListenerContainer"},"process":{"thread":{"name":"org.springframework.kafka.KafkaListenerEndpointContainer#1-1-C-1"}},"error":{"root_cause":{}}}
+          ```
+
+          Script (`kubelogjq.sh`):
+          `chmod +x kubelogjq.sh`
+          ```sh
+            #!/bin/bash
+
+            jq -rR '
+                . as $json |
+                try (fromjson | "\u001b[34m\(.["@timestamp"]) \u001b[32m\(.log.level)\u001b[0m \(.message)")
+                catch ($json)
+            '
+          ```
+
+          -> Parse logs:
+          ```sh
+            k -n stage-namespace logs stage-pod-5f5858dd77-kcq2k | ./kubelogjq.sh
+          ```
+
+          -> Add this parser in Kubernetes as a plugin:
+          - Copy the file `kubelogjq.sh` to `~/.bin`
+          - Create a new file `kubectl-jq` in `~/.bin` with the following code:
+          ```sh
+            #!/usr/bin/env bash
+            kubectl logs -f -n $1 $2 | ./kubelogjq.sh
+          ```
+          - Make the script executable:
+          `chmod +x ~/bin/kubectl-jq`
+          - Use the script:
+          `k jq stage-namespace stage-pod-5f5858dd77-kcq2k`
+
+          -> Add the plugin to `k9s`:
+          In `~/.config/k9s`, create a `~/.config/k9s/plugins.yaml`:
+          ```yaml
+            plugins:
+              jqlogs:
+                shortCut: Ctrl-J
+                confirm: false
+                description: "Logs (jq)"
+                scopes:
+                  - po
+                command: sh
+                background: false
+                args:
+                  - -c
+                  - "kubectl jq $NAMESPACE $NAME"
+          ```
+
+          In k9s, navigate to the pod view and press "Ctrl-J". You should see formatted logs.
+
+- date: "05.08.2024"
+  title: "Proxy Middleware in a Node.js Express Application"
+  hashtag:
+    - "#front-end"
+    - "#node.js"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Recently, I worked on a project to migrate PHP middleware to Node.js. The task was to implement the initial setup with all required dependencies, configurations, and Docker build.
+          I prepared scripts for running the server in development mode alongside the front-end to automate the development process using Visual Studio Code or IntelliJ.
+
+          After working on this task, I can say that I gained a good understanding of integrating TypeScript with Node.js and Express.js, effectively managing middleware and sessions, handling HTTP requests with axios, and configuring environment variables and HTTP proxies.
+
+          Some code snippets from the basic implementation included:
+
+          1. **User Authentication:**
+          ```ts
+          app.post('/login', (req: Request, res: Response, next) => {
+              passport.authenticate('local', {
+                  successRedirect: '/dashboard',
+                  failureRedirect: '/',
+                  failureFlash: true
+              })(req, res, next);
+          });
+          ```
+
+          2. **Protected Routes:**
+          ```ts
+          const secure = (req: Request, res: Response, next: NextFunction) => {
+              if (!req.isAuthenticated()) {
+                  // Redirect to the login page if not authenticated
+                  res.redirect('/');
+              } else {
+                  // Proceed to the requested route if authenticated
+                  next();
+              }
+          };
+
+          // Apply the secure access to all routes
+          app.all('*', secure);
+          ```
+
+          3. **Dynamic Asset Management:**
+          ```ts
+          if (buildAssetsDir) {
+              app.use(staticFiles(buildAssetsDir, {
+                  setHeaders: (res, path) => {
+                      const cacheLongRegex = new RegExp(`^${buildAssetsDir}/(images|static)`);
+                      if (cacheLongRegex.test(path)) {
+                          res.setHeader('cache-control', 'public, max-age=31536000');
+                      }
+                  }
+              }));
+          }
+          ```
+
+          4. **API Integration:**
+          ```ts
+          const setAuthHeader = (proxyReq: ClientRequest, req: Request) => {
+              const token = req.session.passport?.user.token;
+              if (token) {
+                  proxyReq.setHeader('X-Auth-Token', token);
+              }
+              proxyReq.setHeader('X-SECRET-HEADER', 'SECRET');
+          };
+
+          app.use('/api', createProxyMiddleware({
+              target: process.env.ENV_URL,
+              changeOrigin: true,
+              secure: false,
+              logger: console,
+              on: { proxyReq: setAuthHeader }
+          }));
+          ```
+
+          5. **Configuration and Health Checks:**
+          ```ts
+          export const appPort = (): number | string => process.env.PORT || 3000;
+          export const buildAssetsDir = process.env.BUILD_ASSETS_DIR;
+
+          app.get('/healthz', (_, res: Response) => {
+              res.sendStatus(StatusCodes.OK);
+          });
+          ```
+
+          6. **Dynamic Content Delivery:**
+          ```ts
+          app.get('/language', (req: Request, res: Response) => {
+              const lang = req.query.lang as string;
+              const filePath = lang === 'de' ? deFilePath : enFilePath;
+              
+              if (fs.existsSync(filePath)) {
+                  fs.readFile(filePath, 'utf-8', (err, data) => {
+                      if (err) {
+                          res.status(500).send('Error reading the file.');
+                      } else {
+                          res.type('application/json').send(data);
+                      }
+                  });
+              } else {
+                  res.status(400).send('Invalid language parameter');
+              }
+          });
+          ```
+- date: "19.07.2024"
+  title: "Advanced AngularJS Techniques"
+  hashtag:
+    - "#front-end"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In our team, we work with an older application built using AngularJS (version 1.8) and PHP for proxying requests to REST services. While AngularJS is considered outdated by today's standards, it remains a crucial part of our application.
+
+          Here's a summary of what I have learned and applied while working on this project:
+
+          - **Services vs. Factories:** Understanding the differences and use cases for services and factories in AngularJS.
+          
+          - - Services - Are constructor functions that are instantiated once and used throughout the application. They are singleton objects that provide a way to share data and methods across controllers.
+          
+          - - Factories - Are functions that return an object or function. Factories allow more flexibility in creating and configuring instances, as they can return different types of objects or even functions.
+          
+          - **Service Initialization**
+          - **Shared Services:** Creating and managing shared services for inter-controller communication.
+          - **Dynamic Method Invocation:** Using shared services to dynamically invoke methods across different controllers.
+
+          Example of a shared service:
+          ```js
+            function ReportsFilterSharedService() {
+                'ngInject';
+
+                const availableMethodNames = Object.freeze({
+                    METHOD_UPDATE: 'update',
+                    METHOD_GET_FILTERED_DATE: 'getFilteredData',
+                });
+
+                const methodRegistry = {};
+                const methodNames = new Set();
+
+                return {
+                    getAvailableNames: () => availableMethodNames,
+                    registerMethod: (controllerName, methodName, callBackFn) => {
+                        if (methodNames.has(methodName)) {
+                            return;
+                        }
+                        methodRegistry[controllerName] = {};
+                        methodRegistry[controllerName][methodName] = callBackFn;
+                        methodNames.add(methodName);
+                    },
+                    hasMethod: (methodName) => {
+                        return methodNames.has(methodName);
+                    },
+                    callMethod: (methodName, args) => {
+                        for (const controllerName in methodRegistry) {
+                            if (methodRegistry[controllerName] && methodRegistry[controllerName][methodName]) {
+                                return methodRegistry[controllerName][methodName](args);
+                            }
+                        }
+                        return null;
+                    },
+                    init: ($scope, controllerName) => {
+                        $scope.$on('$destroy', () => {
+                            Object.keys(methodRegistry[controllerName]).forEach(methodName => methodNames.delete(methodName));
+                            delete methodRegistry[controllerName];
+                        });
+                    },
+                };
+            }
+
+            export default ReportsFilterSharedService;
+          ```
+
+          - **Deep Watching with `$scope.$watch`:** Implementing deep watching to detect changes in nested objects and arrays.
+          - **Debouncing:** Applying debounce functionality to optimize performance and reduce unnecessary processing during rapid changes.
+          ```js
+            return {
+                  debounce: function(func, delay) {
+                    let timeout;
+
+                    return function(...args) {
+                      if (timeout) {
+                        $timeout.cancel(timeout);
+                      }
+                      timeout = $timeout(() => func.apply(this, args), delay);
+                    };
+                  }
+            }
+          ```
+
+          - **Using Decorators:** Enhancing service behavior, like intercepting function requests for adding logging without changing the service itself.
+
+- date: "10.07.2024"
+  title: "Resolving NTFS Mounting Issues on Arch Linux"
+  hashtag:
+    - "#linux"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I encountered an issue when mounting an NTFS external drive on Arch Linux. Although mounting the drive in Windows and repairing it initially worked, the problem recurred after the second mount on Linux.
+
+          **Mount External Drive:**
+          ```bash
+            sudo pacman -S ntfs-3g
+            sudo mkdir /mnt/temp-ntfs-drive
+            sudo ntfs-3g /dev/sda1 /mnt/temp-ntfs-drive
+            cd /mnt/temp-ntfs-drive
+          ```
+
+          **Unmount External Drive:**
+          ```bash
+            # If unable to unmount, this will terminate the process IDs (PIDs) of processes using the mount point
+            sudo umount /dev/sda1
+            sudo fuser -km /mnt/temp-ntfs-drive
+            sudo umount /dev/sda1
+          ```
+
+- date: "10.07.2024"
+  title: "Automatically Setting Java Version in IntelliJ Terminal"
+  hashtag:
+    - "#shell"
+    - "#automization"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I wanted to set the correct Java version automatically in IntelliJ. Here’s how to do it:
+
+          **Steps to Automatically Set Java Version in IntelliJ Terminal:**
+          ```bash
+            # 1. Create a .sdkmanrc file in the project directory. Specify the correct Java version in this file, e.g., java=21.0.3-tem
+            sdk env init
+
+            # 2. Add .sdkmanrc to the global .gitignore
+
+            # 3. Create a terminal environment variable in IntelliJ
+            INTELLIJ_SDK=true
+
+            # 4. Automatically set the Java version if the environment variable is set in IntelliJ Terminal
+            if [ -n "$INTELLIJ_SDK" ]; then
+                sdk env
+            fi
+          ```
+
+- date: "05.07.2024"
+  title: "Clean Docker Intermediate '<none>' Images"
+  hashtag:
+    - "#docker"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Sometimes `none` images appear in my Docker. It's a good practice to remove them with a short command:
+
+          **Option 1:**
+          ```bash
+            docker rmi $(docker images -f "dangling=true" -q)
+          ```
+
+          **Option 2:**
+          ```bash
+            docker rmi $(docker images | grep '<none>' | awk '{print $3}') -f
+          ```
+
+- date: "04.07.2024"
+  title: "Learning from Creating CronJob's using Kustomize"
+  hashtag:
+    - "#kubernetes"
+    - "#kustomize"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In my recent project, I worked on compacting HBase tables using cron jobs deployed on Kubernetes. I built a Jenkins CI pipeline, integrated it into ArgoCD, implemented part of the new application, and created Kubernetes deployments.
+
+          Here's a folder structure for organizing your Kustomize configuration and CronJobs:
+
+          **Folder Structure:**
+          ```plaintext
+            k8s/
+            ├── base/
+            │   ├── configmap-common-env.yaml
+            │   ├── cronjobs/
+            │   │   ├── example-cronjob.yaml
+            │   │   ├── ....
+            │   ├── cronjob-patch.yaml
+            │   ├── kustomization.yaml
+            ├── overlays/
+            │   ├── dev/
+            │   │   ├── kustomization.yaml
+            │   ├── prod/
+            │   │   ├── kustomization.yaml
+            ```
+
+            **dev kustomization.yaml**
+            ```yaml
+            apiVersion: kustomize.config.k8s.io/v1beta1
+            kind: Kustomization
+
+            namespace: hbase-work
+            namePrefix: dev-
+
+            commonLabels:
+              app.kubernetes.io/instance: dev-hbase-compaction-task
+              app.y6b.de/env: dev
+
+            resources:
+            - ../../base/
+
+            configMapGenerator:
+            - name: hbase-compaction-task-env
+              behavior: merge
+              literals:
+              - SPRING_PROFILES_ACTIVE=dev
+
+            patches:
+            - target:
+                group: batch
+                kind: CronJob
+              patch: |-
+                - op: replace
+                  path: /spec/suspend
+                  value: true
+          ```
+
+          **base kustomization.yaml**
+          ```yaml
+            apiVersion: kustomize.config.k8s.io/v1beta1
+            kind: Kustomization
+
+            commonLabels:
+              app.kubernetes.io/part-of: hbase-compaction-task
+
+            resources:
+            - configmap-common-env.yaml
+            - cronjobs/task-cronjob.yaml
+            # - cronjobs/.... many other Cron Jobs
+
+            patches:
+            - path: cronjob-patch.yaml
+              target:
+                kind: CronJob
+                name: ".*-task-cronjob$"
+          ```
+
+          **cronjob-patch.yaml**
+          ```yaml
+            apiVersion: batch/v1
+            kind: CronJob
+            metadata:
+              name: hbase-compaction-task
+              labels:
+                app.kubernetes.io/component: hbase-compaction-task
+                app.kubernetes.io/part-of: hbase-compaction-task
+              annotations:
+                argocd.argoproj.io/sync-wave: "1"
+            spec:
+              suspend: false
+              successfulJobsHistoryLimit: 1
+              failedJobsHistoryLimit: 2
+              concurrencyPolicy: Forbid
+              jobTemplate:
+                spec:
+                  backoffLimit: 0 # no retry in case of failure
+                  template:
+                    metadata:
+                      labels:
+                        app.kubernetes.io/component: hbase-compaction-task
+                        app.kubernetes.io/part-of: hbase-compaction-task
+                        app.kubernetes.io/name: hbase-compaction-task
+                        svc.y6b.de/hadoop-access: "true"
+                    spec:
+                      activeDeadlineSeconds: 600 # run should take longer than 10 minutes
+                      restartPolicy: Never
+                      imagePullSecrets:
+                      - name: # Secret
+                      containers:
+                      - name: hbase-compaction-task
+                        image: # Secret
+                        imagePullPolicy: IfNotPresent
+                        envFrom:
+                        - configMapRef:
+                            name: configmap-common-env
+                        resources:
+                          requests:
+                            cpu: '1'
+                            memory: 2Gi
+                          limits:
+                            memory: 2Gi
+          ```
+
+          **task-cronjob.yaml**
+          ```yaml
+            apiVersion: batch/v1
+            kind: CronJob
+            metadata:
+              name: example-task-cronjob
+            spec:
+              schedule: "0 2 * * SUN,TUE,THU,SAT"  # Run at 2:00 AM every Sunday, Tuesday, Thursday, and Saturday.
+              jobTemplate:
+                spec:
+                  template:
+                    spec:
+                      containers:
+                      - name: hbase-compaction-task
+                        args:
+                        - connections # Each CronJob is passing a job task argument
+          ```
+
+- date: "31.06.2024"
+  title: "Visited Spring IO conference"
+  hashtag:
+    - "#Conference"
+    - "#Spring IO"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I attended the Spring IO Conference in Barcelona. It was interesting to travel with my team. 
+          At the conference, I got an overview of the Spring ecosystem's current state and future.
+          I connected with other developers and shared my experience.
+          The conference had many interesting presentations, and I want to mention one of them
+          which impressed me the most. The presentation is about how to build 
+          a high-performance solution (~5k orders/second, single) in a Java application:
+          
+          [Watch the presentation](https://www.youtube.com/watch?v=BKVWr65z8dQ&t=125s&ab_channel=SpringI%2FO)
+
+- date: "27.06.2024"
+  title: "Useful Docker Commands for Managing Volumes"
+  hashtag:
+    - "#Docker"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I have learned and used for my work two docker commands:
+          
+          1) **Listing and Sorting Docker Volumes by Creation Date**
+          ```shell
+            docker volume ls --quiet | xargs docker volume inspect --format '{{ .CreatedAt }} {{ .Name }}' | sort
+          ```
+
+          2) **Removing Docker Volumes Associated with a Specific Pattern**
+          ```shell
+            docker volume rm $(docker volume ls | grep zookeeper | awk '{print $2}')
+          ```
+
+- date: "25.06.2024"
+  title: "Using `read` in Shell Script"
+  hashtag:
+    - "#Shell"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Use `read` command in my shell scripts to prompt input and assign it to a variable. 
+          It is a clear and user-friendly way to collect input in an interactive script.
+          Note: Does not work in 'zsh'
+          
+          **Explanation of flags:**
+          - `-r`: treats backslashes literally, rather than as escape characters. 
+          - `-p`: displays text before reading input.
+
+          **Example Script:**
+          ```shell
+              #!/bin/bash
+              # Prompt the user for Bitbucket user and repo information
+
+              # Read Bitbucket user
+              read -r -p 'Bitbucket user: ' BB_USER
+              # Read Bitbucket repo
+              read -r -p 'Bitbucket repo: ' BB_REPO
+
+              # Output the input values
+              echo -e "\n"
+              echo "Input user: $BB_USER"
+              echo "Input repo: $BB_REPO"
+
+          ```
+
+- date: "21.06.2024"
+  title: "Understanding @Commit and @Rollback(false) in Spring Boot Testing"
+  hashtag:
+  - "#Java"
+  - "#Spring Boot"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          By default, `@DataJpaTest` prevents data from being persisted to the database by rolling back transactions after each test. 
+          To override this behavior and commit data to the database, I used these annotations:
+          
+          - `@Commit`: commits the changes made during the test to the database.
+          - `@Rollback(false)`: prevents the default rollback behavior of tests.
+
+- date: "19.06.2024"
+  title: "Using Functions in PostgreSQL `CHECK` Constraints"
+  hashtag:
+    - "#PostgreSQL"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I learned how to use functions in PostgreSQL `CHECK` constraints for complex data validation. 
+          It's great to see a practical usage of SQL functions.
+
+          **Example:**
+          ```sql
+            -- How to use
+            CREATE TABLE IF NOT EXISTS public.demo
+            (
+                id bigint NOT NULL,
+                technology_validlist bigint[] NOT NULL DEFAULT '{}'::bigint[],
+                CONSTRAINT technologies_exist_constraint CHECK (techn_exist(technology_validlist))
+            )
+
+            -- Function
+            CREATE OR REPLACE FUNCTION public.techn_exist(tech_ids bigint[])
+                RETURNS boolean
+                LANGUAGE sql
+                COST 100
+                IMMUTABLE STRICT PARALLEL UNSAFE
+            AS $$
+            SELECT (SELECT count(id) FROM technology WHERE id = ANY(tech_ids)) = array_length(tech_ids, 1)
+            $$;
+          ```
+
+          The `techn_exist` function checks if all IDs in the given array exist in the `technology` table.
+
 
 # - date: "12.04.2024"
 #   title: "Backward vs Forward Compatibility"
@@ -19,15 +896,14 @@
 #     - "#Avro"
 #     - "#SchemaMigration"
 #   content:
-#     - type: "TEXT"
+#     - type: "MARKDOWN"
 #       data:
 #         content: |
-#           I used to understand this clearly when I did Avro schema migration in Kafka.
-          
-#           Important understanding of what the difference is:
-          
-#           **Forward compatibility** - old code can read records that were written by new code.
-#           **Backward compatibility** - new code can read records that were written by old code.
-#     - type: "TEXT"
-#       data:
-#         content: "My second text"
+#           ```java 
+#           Java
+#           ```
+#           ``` 
+#           Empty Shell
+#           ```
+#           Here is a normal text
+#           `highlighted text` message
