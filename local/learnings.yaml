@@ -888,6 +888,543 @@
 
           The `techn_exist` function checks if all IDs in the given array exist in the `technology` table.
 
+- date: "17.06.2024"
+  title: "Measure Command Execution Time"
+  hashtag:
+    - "#Shell"
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Sometimes when working on application optimization, I need to measure execution time precisely and in a well-formatted way. 
+          To address this, I created a small script that calculates and displays the exact execution time of a command in nanoseconds, seconds, and minutes.
+
+          **Script:**
+          ```bash
+            #!/bin/bash
+
+            run_command() {
+                # Place your command here:
+                curl -XPOST localhost:9876/actuator/autoconfigureAdslots/
+            }
+
+            print_execution_time() {
+                end_time=$(date +%s%N)
+                elapsed_time_ns=$((end_time - start_time))
+                elapsed_time_s=$(echo "scale=9; $elapsed_time_ns / 1000000000" | bc)
+                elapsed_time_m=$(echo "scale=9; $elapsed_time_s / 60" | bc)
+                
+                # Colors
+                RED='\033[0;31m'
+                GREEN='\033[0;32m'
+                YELLOW='\033[0;33m'
+                NC='\033[0m' # No Color
+
+                echo -e "${YELLOW}Elapsed time: ${RED}${elapsed_time_ns} ${GREEN}nanoseconds${NC}"
+                echo -e "${YELLOW}Elapsed time: ${RED}${elapsed_time_s} ${GREEN}seconds${NC}"
+                echo -e "${YELLOW}Elapsed time: ${RED}${elapsed_time_m} ${GREEN}minutes${NC}"
+            }
+
+            echo "Start time: $(date +"%T")"
+            start_time=$(date +%s%N)
+
+            echo -e "\nRunning command...\n"
+            run_command
+
+            echo -e "\n----------------------"
+            echo -e "End time: $(date +"%T")"
+
+            print_execution_time
+          ```
+
+          **Highlights:**
+          - Measures execution time in nanoseconds, seconds, and minutes.
+          - Displays output with clear formatting using color codes for better readability.
+          - Useful for debugging or optimizing scripts and commands.
+
+          **Example Usage:**
+          Replace the `run_command` function's content with the specific command you want to measure. 
+          The script provides a detailed breakdown of execution time after the command runs.
+
+- date: "10.06.2024"
+  title: "Hibernate Optimization in Spring Boot"
+  hashtag: ["#hibernate", "#spring-boot", "#optimization"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I discovered a powerful optimization technique for Hibernate in a Spring Boot application. 
+          By setting `hibernate.generate_statistics=true`, I was able to get detailed statistics about database operations.
+          Analyzing these statistics helped me understand why a certain operation was taking a lot of time.
+
+          **Before Optimization:**
+          ```plaintext
+            [i.StatisticalLoggingSessionEventListener] Session Metrics {
+                450301 nanoseconds spent acquiring 1 JDBC connections;
+                0 nanoseconds spent releasing 0 JDBC connections;
+                52360384 nanoseconds spent preparing 55086 JDBC statements;
+                19217696047 nanoseconds spent executing 55085 JDBC statements;
+                52564145 nanoseconds spent executing 6 JDBC batches;
+                0 nanoseconds spent performing 0 L2C puts;
+                0 nanoseconds spent performing 0 L2C hits;
+                0 nanoseconds spent performing 0 L2C misses;
+                2570444191 nanoseconds spent executing 1 flushes (flushing a total of 449389 entities and 728742 collections);
+                129757429146 nanoseconds spent executing 139 partial-flushes (flushing a total of 34949256 entities and 34949256 collections)
+            } 
+          ```
+
+          By strategically using `entityManager.setFlushMode(FlushModeType.COMMIT)`, I ensured that database writes occur only at transaction commit, reducing unnecessary database interactions and improving efficiency.
+
+          **After Improvement:**
+          ```plaintext
+            [i.StatisticalLoggingSessionEventListener] Session Metrics {
+                430015 nanoseconds spent acquiring 1 JDBC connections;
+                0 nanoseconds spent releasing 0 JDBC connections;
+                56092621 nanoseconds spent preparing 55085 JDBC statements;
+                19025018969 nanoseconds spent executing 55085 JDBC statements;
+                0 nanoseconds spent executing 0 JDBC batches;
+                0 nanoseconds spent performing 0 L2C puts;
+                0 nanoseconds spent performing 0 L2C hits;
+                0 nanoseconds spent performing 0 L2C misses;
+                0 nanoseconds spent executing 0 flushes (flushing a total of 0 entities and 0 collections);
+                456212 nanoseconds spent executing 139 partial-flushes (flushing a total of 0 entities and 0 collections)
+            }
+          ```
+
+          **Code Snapshot:**
+          ```java
+            wrapInTransaction(dryRun, () -> {
+                try {
+                    // Retrieving Data from a Database Using Batch Streaming
+                    // Run business logic code here
+                } finally {
+                    entityManager.setFlushMode(FlushModeType.AUTO);
+                    entityManager.clear();
+                }
+            }).run();
+
+            private Runnable wrapInTransaction(boolean dryRun, Runnable task) {
+                return () -> new TransactionTemplate(txManager).execute(tx -> {
+                    if (dryRun) {
+                        tx.setRollbackOnly();
+                    }
+                    task.run();
+                    return null;
+                });
+            }
+          ```
+
+          **Key Takeaways:**
+          - Using `hibernate.generate_statistics=true` for profiling Hibernate operations.
+          - Switching the flush mode to `FlushModeType.COMMIT` to optimize database interactions.
+          - The result was a noticeable reduction in time spent on database writes and more efficient database operations.
+
+- date: "04.06.2024"
+  title: "Short Command to Remove Untracked Changes"
+  hashtag: ["#git", "#version-control", "#cleaning"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          To quickly remove untracked files and directories from my working directory, I use the following Git command:
+          ```sh
+            git clean -fd
+          ```
+          This command removes all untracked files (`-f`), and directories (`-d`) in the current repository. It's useful for cleaning up your working directory from unnecessary files and directories that are not tracked by Git.
+
+- date: "28.05.2024"
+  title: "Presentation about Prometheus Adapter and HPA - A Win-Win!"
+  hashtag: ["#Prometheus", "#HPA", "#scaling", "#Kubernetes"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I gave a presentation on the Prometheus Adapter and Horizontal Pod Autoscaler (HPA), focusing on scaling issues in one of our applications. 
+          It was a complex topic, and the presentation was recorded, which added an extra layer of pressure to deliver effectively.
+          Throughout the presentation, I also worked on my soft skills in delivering technical concepts clearly to another team, ensuring everyone understood the importance of efficient scaling solutions.
+
+- date: "22.05.2024"
+  title: "Enhancing Soft Skills to Write GitHub Pull Request Comments"
+  hashtag: ["#soft-skills", "#github", "#pull-requests", "#communication"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Recently, I explored the [Conventional Comments website](https://conventionalcomments.org/) and started applying its suggestions to improve my feedback on GitHub pull requests. 
+          This has enhanced the quality of my comments, strengthened my communication skills, and fostered a more constructive feedback environment within my team.
+          
+          **Example Labels:**
+          - **Praise**: Highlights something positive.
+          - **Nitpick**: Trivial preference-based requests. Non-blocking.
+          - **Suggestion**: Proposes improvements to the current subject. Should be explicit and clear on the suggested improvement. Can be blocking or non-blocking.
+          - **Issue**: Highlights specific problems with the subject under review. Strongly recommended to pair with a suggestion. Can be user-facing or behind the scenes.
+          - **TODO**: Small, trivial, but necessary changes. Distinguished from issues or suggestions to direct attention to comments requiring more involvement.
+          - **Question**: Appropriate for potential concerns where certainty is lacking. Asking for clarification or investigation can lead to quick resolution.
+          - **Thought**: Represents ideas generated during review. Valuable but non-blocking. Can lead to more focused initiatives and mentoring opportunities.
+          - **Chore**: Simple tasks required before the subject can be officially accepted. References common processes. Links to process descriptions are encouraged.
+          - **Note**: Non-blocking comments highlighting something for the reader's attention.
+          - **Typo**: Comments on misspellings.
+          - **Polish**: Suggestions for immediate quality improvement.
+          - **Quibble**: Similar to nitpick, but without the negative connotation.
+
+          **Example Decorations:**
+          - **(non-blocking)**: Indicates comment should not prevent subject acceptance. Helpful for organizations considering comments as blocking by default.
+          - **(blocking)**: Indicates comment should prevent subject acceptance until resolved. Helpful for organizations considering comments as non-blocking by default.
+          - **(if-minor)**: Provides freedom to resolve the comment only if changes end up minor or trivial.
+
+- date: "14.05.2024"
+  title: "Mastering Spring Boot Unit Testing Beyond the Basics: RestTemplate Interception"
+  hashtag: ["#SpringBoot", "#unit-testing", "#RestTemplate", "#testing"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In Spring Boot, RestTemplate interception allows you to validate RESTful service interactions within unit tests by focusing on the request itself, 
+          without being concerned with the actual response payloads. 
+          This differs from using WireMock, which simulates external services and is beneficial when the response payloads also need to be controlled.
+          
+          **Example of RestTemplate Interception:**
+          ```java
+            eventLoggingService.getRestTemplate().getInterceptors().add(new RequestInterceptor(this));
+
+            private static class RequestInterceptor implements ClientHttpRequestInterceptor {
+                EventLoggingServiceTest parent;
+
+                RequestInterceptor(EventLoggingServiceTest parent) {
+                    this.parent = parent;
+                }
+
+                @Override
+                public ClientHttpResponse intercept(
+                    final HttpRequest request,
+                    final byte[] body,
+                    final ClientHttpRequestExecution execution
+                ) {
+                    parent.restTemplateRequestUrl = request.getURI().toString();
+                    parent.restTemplateRequestBody = new String(body, StandardCharsets.UTF_8);
+                    return new MockClientHttpResponse(new byte[] {}, HttpStatus.OK);
+                }
+            }
+          ```
+
+          This approach ensures precise testing and monitoring of HTTP requests while providing a clean testing strategy without needing to mock the responses.
+
+- date: "08.05.2024"
+  title: "JMX Client to Trigger Method"
+  hashtag: ["#JMX", "#Java", "#remotemethod", "#testing"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I developed a JMX client to remotely trigger a method (with the service port forwarded to localhost), 
+          and used it in a loop to perform operations with a timeout for testing purposes.
+
+          **Example Code:**
+          ```java
+            public static void main(String[] args) throws Exception {
+                String host = "localhost";
+                int port = 9001; // The port your application is listening on for JMX connections
+
+                JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/jmxrmi"); // Create JMX service URL
+
+                try (JMXConnector jmxc = JMXConnectorFactory.connect(url)) {    // Connect to the MBean server
+                    MBeanServerConnection mbsc = jmxc.getMBeanServerConnection();
+
+                    ObjectName mbeanName = new ObjectName("yieldlab:type=TaskBeans,name=UpdateRateTask"); // Define the MBean object name
+
+                    long timestamp = System.currentTimeMillis();
+                    Object[] params = new Object[] { timestamp };
+                    String[] signature = new String[] { "long" }; // The method signature
+
+                    Object result = mbsc.invoke(mbeanName, "process", params, signature);
+                }
+            }
+          ```
+
+- date: "02.05.2024"
+  title: "Kubernetes Job Creation from CronJob"
+  hashtag: ["#Kubernetes", "#CronJob", "#JobCreation", "#devops"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I used the following command to execute a one-time CronJob task in Kubernetes:
+
+          **Command:**
+          ```shell
+          kubectl create job --from=cronjob/dev-custom-cron-job dev-custom-cron-job-28575444 -n dev-namespace
+          ```
+
+- date: "24.04.2024"
+  title: "PromQL Expressions: (A) Extract Day of Week from Timestamp and (B) Find Matching Metric"
+  hashtag: ["#PromQL", "#Kubernetes", "#Metrics", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          **(A)** Extract Day of Week from Timestamp:
+          
+          This expression evaluates to either true or false for each time series based on whether the day of the week matches the current day.
+          I used the `on()` function to perform an operation without considering grouping labels, and the `by()` function to group using labels.
+
+          **Query:**
+          ```promql
+            day_of_week(task_last_completion_time{taskid="hello-world"}) == on() day_of_week()
+          ```
+
+          **(B)** Find Matching Metric:
+
+          In this query, I find the latest status of a metric with an update timestamp by matching it with another metric using the pod label. 
+          This helps me understand my operation's current status, even when different pods update it in varying orders.
+
+          **Query:**
+          ```promql
+            middleware_scheduling_last_execution_success{namespace="prod-gravity", taskid="exchange_rate"} 
+            and 
+            on(pod) 
+              topk(1, middleware_scheduling_last_completion_time{ namespace="prod-gravity", taskid="exchange_rate"}) 
+          ```
+          The "One-to-one vector matches" (`<vector expr> <bin-op> ignoring(<label list>) <vector expr>`) helps ensure that the right metric is matched and the latest value is fetched.
+
+- date: "23.04.2024"
+  title: "Actuator Micrometer Measurement Returns NaN Sometimes"
+  hashtag: ["#Micrometer", "#Prometheus", "#Java", "#Metrics", "#GarbageCollection"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          The issue stems from the fact that the **Gauge metric** doesn't maintain a strong reference to objects. 
+          After the **Garbage Collector** cleans up the objects, the **Gauge metric** can become `NaN`.
+
+          **Reference:** [Micrometer - Why is my gauge reporting NaN or disappearing?](https://micrometer.io/docs/concepts#_why_is_my_gauge_reporting_nan_or_disappearing)
+
+          **How to Fix it:**
+          ```java
+            private final Map<String, Long> successMap = new ConcurrentHashMap<>();
+            
+            public void countGauge(String metricsName, String keySuffix, Tags tags, long newValue) {
+                var fullKey = metricsName + "-" + keySuffix;
+                meterRegistry
+                    .gauge(TASK_METRICS_PREFIX + "." + metricsName, tags, successMap, g -> successMap.get(fullKey))
+                    .put(fullKey, newValue);
+            }
+          ```
+
+- date: "22.04.2024"
+  title: "Prometheus Expression Knowledge"
+  hashtag: ["#PromQL", "#Prometheus", "#Metrics", "#DevOps", "#Monitoring"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I expanded my knowledge of **PromQL** with this expression. 
+          
+          This **PromQL** expression combines two checks:
+          
+          1. It verifies the absence or non-existence of the metric `yl_exchange_rate_next_day_available` with a value of `1` using `absent(yl_exchange_rate_next_day_available == 1)`.
+          
+          2. It compares the adjusted current hour (adding 2 for timezone offset with `hour() + 2`) to a specific value `18`. This checks whether the current time has passed after 18:00.
+
+          The entire expression will evaluate to **true** if `yl_exchange_rate_next_day_available` with a value of `1` is missing, and the current time is after 6 PM.
+
+          **Expression:**
+          ```promql
+            absent(yl_exchange_rate_next_day_available == 1) == (((hour() + 2) % 24) > bool 18)
+          ```
+
+- date: "18.04.2024"
+  title: "Prometheus JDBC Exporter in My Work"
+  hashtag: ["#Prometheus", "#JDBC", "#Metrics", "#DatabaseMonitoring", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Today, I used the **prometheus-jdbc-exporter** for one of my work tasks. 
+          I used it to fetch metrics from our database via SQL queries, which were then used for **Prometheus** alerts.
+
+          The idea behind the **Prometheus JDBC Exporter** is simple:
+          Prometheus JDBC Exporter is a tool that helps monitor databases using **Prometheus**. 
+          It connects to databases via **JDBC**, runs **SQL queries** to gather metrics, and then exposes those metrics in a format that Prometheus can understand and scrape.
+
+- date: "16.04.2024"
+  title: "Use a Simple Alias to Connect to Postgres Database"
+  hashtag: ["#Postgres", "#Database", "#DevOps", "#SQL", "#CLI"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I used to rely on **pgAdmin** to run my SQL queries. But why not automate this process and use a quicker approach?
+
+          **Create an alias:**
+          ```bash
+            alias postgres='psql -h 172.30.99.216 -U yieldlab -W'
+          ```
+
+          First command to list all tables:
+          ```
+            /dt
+          ```
+
+- date: "12.04.2024"
+  title: "Backward vs Forward Compatibility"
+  hashtag: ["#Kafka", "#Avro", "#SchemaMigration", "#SoftwareArchitecture", "#Compatibility"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I understood the concept of backward and forward compatibility clearly when I worked on **Avro schema migration** in **Kafka**.
+
+          Here's the important distinction:
+          
+          - **Forward compatibility**: Old code can read records that were written by new code.
+          - **Backward compatibility**: New code can read records that were written by old code.
+
+- date: "09.04.2024"
+  title: "Using 'extra_hosts' Property in Docker Compose File"
+  hashtag: ["#Docker", "#DockerCompose", "#DevOps", "#Containers", "#Networking"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Instead of directly sharing the host's network stack, `extra_hosts` allows me to specify a specific URI for access from the Docker container to host services.
+
+          Adding `"host.docker.internal:host-gateway"` to **extra_hosts** in the **Docker Compose** file lets containers access host services through **host.docker.internal**. 
+          After starting the Docker container, the **host.docker.internal** entry will be defined in the Docker container's `/etc/hosts` file.
+
+          Example Docker Compose snippet:
+          ```yaml
+          chrome:
+            image: selenium/node-chrome:4.11.0-20230801
+            extra_hosts:
+              - "host.docker.internal:host-gateway"
+          ```
+
+- date: "05.04.2024"
+  title: "Querying Custom Metrics in Kubernetes with kubectl"
+  hashtag: ["#Kubernetes", "#kubectl", "#Metrics", "#DevOps", "#CloudNative"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I've gained expertise in using the **kubectl** command and the **Kubernetes API** to retrieve metrics efficiently. 
+          Through my exploration, I've learned how to interact effectively with Kubernetes clusters using **kubectl get** commands. 
+          I applied this knowledge for Kubernetes administration, especially for monitoring the **autoscaling process**.
+
+          The `--raw` flag allows me to fetch raw responses directly from the server without parsing.
+
+          Examples:
+
+          - Fetch specific custom metrics for a pod:
+            ```bash
+              kubectl get --raw /apis/custom.k8s.io/v1beta1/namespaces/default/pods/sample-app-7fbb577cd5-f6jtk/http_requests | jq .
+            ```
+
+          - Get metrics from all pods:
+            ```bash
+              kubectl get --raw /apis/custom.k8s.io/v1beta1/namespaces/default/pods/*/http_requests | jq .
+            ```
+
+          - Use an external metric:
+            ```bash
+              kubectl get --raw "/apis/external.metrics.k8s.io/v1beta1/namespaces/prod-app/app_queue_size" | jq .
+            ```
+
+          **`kubectl get`**: Command-line tool for interacting with Kubernetes clusters.
+
+          **`--raw`**: Flag that retrieves the raw response from the server without attempting to parse it. This is useful when working with APIs directly.
+
+- date: "03.04.2024"
+  title: "Implementing Kubernetes Horizontal Pod Autoscaling (HPA)"
+  hashtag: ["#Kubernetes", "#HPA", "#Prometheus", "#CloudNative", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I achieved a significant milestone by integrating **Kubernetes Prometheus Adapter** external metrics into our system. 
+          Alongside this, I accurately configured **Kubernetes APIService**, **ClusterRole**, and **ClusterRoleBinding** for the "horizontal-pod-autoscaler".
+
+          Here's a draft version of my **Pod Autoscaler** configuration:
+
+          ```yaml
+            apiVersion: v1
+            kind: ConfigMap
+            metadata:
+              name: my-release-prometheus-adapter
+              namespace: default
+            data:
+              config.yaml: |
+                externalRules:
+                  - seriesQuery: service_request_count{namespace!=""}
+                    resources:
+                      overrides:
+                        namespace:
+                          resource: namespace
+                    name:
+                      matches: "^(.*)"
+                      as: "requested_sessions_count"
+                    metricsQuery: |
+                      sum by (<<.GroupBy>>) (
+                        floor(
+                          increase (
+                            <<.Series>>{<<.LabelMatchers>>, component="product", method="POST", status="200", uri="/product/{uuid}"}[5m]
+                          )
+                        )
+                      ) / count(kube_pod_info{<<.LabelMatchers>>, pod=~"product-mng-service-.*"})
+
+            ---
+            kind: HorizontalPodAutoscaler
+            apiVersion: autoscaling/v2
+            metadata:
+              name: product-mng-service
+            spec:
+              scaleTargetRef:
+                apiVersion: apps/v1
+                kind: Deployment
+                name: product-mng-service
+              minReplicas: 1
+              maxReplicas: 5
+              metrics:
+              - type: External
+                external:
+                  metric:
+                    name: requested_sessions_count
+                  target:
+                    type: Value
+                    value: 300
+              behavior:
+                scaleDown:
+                  stabilizationWindowSeconds: 60
+                  policies:
+                  - type: Pods
+                    value: 1
+                    periodSeconds: 15
+                scaleUp:
+                  stabilizationWindowSeconds: 0
+                  policies:
+                  - type: Pods
+                    value: 1
+                    periodSeconds: 15
+          ```
+
+- date: "28.03.2024"
+  title: "Diving into Database Diversity: Relational, Document, and Graph Databases Explained"
+  hashtag: ["#RelationalDatabases", "#DocumentDatabases", "#GraphDatabases", "#Elasticsearch", "#TechExploration"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I have read about three different types of databases: relational, document, and graph databases, and their differences.
+
+          - **Relational databases**, like PostgreSQL and MySQL, organize data into neat tables. They are suitable for structured data with well-defined schemas and complex transactions.
+
+          - **Document databases**, like MongoDB and Couchbase, store data in flexible documents. They are ideal for semi-structured or unstructured data with flexible schemas and scalable architectures.
+
+          - **Graph databases**, like Neo4j and Amazon Neptune, focus on relationships between data points. This type of database is great for handling data that's highly connected, like social networks or recommendation systems.
+
+          A few words about **Elasticsearch**.
+          In Elasticsearch, data is stored and indexed as JSON documents, similar to how document databases store data. It is primarily focused on searching and analyzing data rather than general-purpose document storage. So, while Elasticsearch shares some similarities with document databases, it is more accurately described as a distributed search and analytics engine that happens to use a document-oriented data model for storing and indexing data.
+
+
 
 # - date: "12.04.2024"
 #   title: "Backward vs Forward Compatibility"

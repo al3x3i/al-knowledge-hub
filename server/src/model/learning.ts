@@ -1,7 +1,7 @@
 import { ContentType } from 'database/model/ILearning';
 
 export interface LearningPayload {
-	date: string;
+	date: Date;
 	title: string;
 	hashtag: string[];
 	content: Array<{

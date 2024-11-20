@@ -25,7 +25,7 @@ app.get('/api/learnings', async (req: Request, res: Response) => {
 		learnings = dummyLearning;
 	}
 
-	learnings = await Learning.find();
+	learnings = await Learning.find().sort({ date: 1 });
 	counter++;
 	console.log('learnings request!' + counter);
 	res.status(200).json(learnings);
@@ -41,7 +41,7 @@ app.post('/api/learnings', async (req: Request, res: Response) => {
 		}
 
 		const [day, month, year] = date.split('.').map(Number);
-		const parsedDate = new Date(Date.UTC(year,month - 1, day));
+		const parsedDate = new Date(Date.UTC(year, month - 1, day));
 		if (isNaN(parsedDate.getTime())) {
 			res.status(400).json({ error: 'Invalid Date format' });
 			return;
