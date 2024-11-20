@@ -1421,7 +1421,7 @@
 
           - **Graph databases**, like Neo4j and Amazon Neptune, focus on relationships between data points. This type of database is great for handling data that's highly connected, like social networks or recommendation systems.
 
-          A few words about **Elasticsearch**.
+          A few words about **Elasticsearch**. \
           In Elasticsearch, data is stored and indexed as JSON documents, similar to how document databases store data. It is primarily focused on searching and analyzing data rather than general-purpose document storage. So, while Elasticsearch shares some similarities with document databases, it is more accurately described as a distributed search and analytics engine that happens to use a document-oriented data model for storing and indexing data.
 
 

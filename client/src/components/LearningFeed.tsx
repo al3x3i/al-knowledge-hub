@@ -21,7 +21,7 @@ function isTextContent(item: ContentItem): item is TextContent {
 	return item.type === 'TEXT';
 }
 
-function getDateString (date: string): string {
+function getDateString(date: string): string {
 	return new Date(date).toISOString().split('T')[0];
 }
 
@@ -33,7 +33,9 @@ const LearningFeed: React.FC<LearningFeedProps> = ({ learningData }) => {
 					<div className="card learning-item">
 						<div className="card-body">
 							<div className="learning-item-header">
-								<span className="learning-item-date">{getDateString(item.date)}</span>
+								<span className="learning-item-date">
+									{getDateString(item.date)}
+								</span>
 								<span className="learning-item-tech">
 									{item.hashtag.join(' ')}
 								</span>
@@ -45,13 +47,18 @@ const LearningFeed: React.FC<LearningFeedProps> = ({ learningData }) => {
 								if (isTextContent(contentItem)) {
 									return (
 										<div key={idx}>
-											{contentItem.data.content}{' '}
-											{!isLastContent && (
-												<>
-													<br />
-													<br />
-												</>
-											)}
+											<pre
+												// Try to keep the css style as in the Markdown
+												style={{
+													whiteSpace: 'pre-line',
+													fontSize: '1rem',
+													fontFamily: 'inherit',
+													lineHeight: '1.5',
+													overflowX: 'auto',
+												}}
+											>
+												{contentItem.data.content}
+											</pre>
 										</div>
 									);
 								} else if (isMarkdownContent(contentItem)) {
