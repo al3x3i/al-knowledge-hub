@@ -1424,6 +1424,162 @@
           A few words about **Elasticsearch**. \
           In Elasticsearch, data is stored and indexed as JSON documents, similar to how document databases store data. It is primarily focused on searching and analyzing data rather than general-purpose document storage. So, while Elasticsearch shares some similarities with document databases, it is more accurately described as a distributed search and analytics engine that happens to use a document-oriented data model for storing and indexing data.
 
+- date: "21.03.2024"
+  title: "Copy Docker Image from Local Computer to Minikube Docker Registry"
+  hashtag: ["#Docker", "#Kubernetes", "#Minikube"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          The scenario is useful when a Docker image is located in a private repository, and Minikube does not have permission to read from it. In my case, I needed it to test my application locally within a Kubernetes environment.
+
+          ```
+            1. Build Docker image
+            2. docker save -o yams_minikube.tar yams:minikube
+            3. sudo scp -i $(minikube ssh-key) yams_minikube.tar docker@$(minikube ip):/tmp
+            4. minikube ssh
+            5. docker load -i /tmp/yams_minikube.tar
+            6. docker images
+            7. imagePullPolicy: IfNotPresent
+          ```
+
+- date: "21.03.2024"
+  title: "Find Kubernetes Pods by Selector"
+  hashtag: ["#Kubernetes", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Use this to find or delete pods by selector
+          ```shell
+            kubectl get pods --selector=app.kubernetes.io/component=metrics
+            <!-- Delete all pods by selector -->
+            kubectl delete pods --selector=app.kubernetes.io/component=metrics
+          ```
+
+- date: "17.03.2024"
+  title: "Understanding Reliability, Scalability, and Maintainability"
+  hashtag: ["#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I want to make a short note about these three important terms:
+
+          **Reliability** means making systems work correctly, even when faults occur. Faults can be in hardware, software, or human errors.
+
+          **Scalability** means having strategies for maintaining good performance, even as the load increases.
+
+          **Maintainability** has many facets, but at its core, it’s about improving the experience for engineering and operations teams working with the system. 
+          Good abstractions can help reduce complexity and make the system easier to modify and adapt for new use cases. 
+          Good operability means having clear visibility into the system’s health and effective ways to manage it.
+
+- date: "15.03.2024"
+  title: "Exploring @NamedEntityGraph in JPA"
+  hashtag: ["#JPA", "#EntityGraph", "#Performance"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Today, I learned and applied `@NamedEntityGraph` in my programming code. It helped me fetch related data more efficiently.
+          I made interactions with the database more efficient, reducing unnecessary queries and boosting performance.
+
+- date: "12.03.2024"
+  title: "Understanding the N+1 SQL Query Problem"
+  hashtag: ["#SQL", "#NPlusOneProblem", "#Performance", ]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I discovered this issue while analyzing and optimizing SQL queries. \
+          The term "N plus 1" signifies there are N iterations of the loop, plus an additional query for each iteration.
+
+          **Example:** \
+          For each website, fetching dimensions in separate queries causes this problem. \
+          To solve the issue, fetch all data in one query.
+
+- date: "05.03.2024"
+  title: "Finished Reading 'Understanding Distributed Systems' Book"
+  hashtag: ["#Books", "#SystemDesign", "#DataIntensiveApplications"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I finished reading *Understanding Distributed Systems* to understand important concepts about how computer systems work together, communicate, and handle issues. 
+          
+          I like it because I can use this knowledge when reading the second book, *Designing Data-Intensive Applications*, which is more about building applications that handle a lot of data. 
+
+          In other words, I expanded my knowledge of distributed systems, and now this knowledge will help me understand the second book more easily. 
+
+- date: "29.02.2024"
+  title: "Resolving Conflicting Routes for the Same IP Range Using `ip route show`"
+  hashtag: ["#Networking", "#Docker", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I learned how to use the `ip route show` command to fix a network problem with duplicate routes.
+          The issue was caused by Docker. Through this experience, I deepened my understanding of Docker networking intricacies and enhanced my ability to effectively manage and optimize network configurations.
+
+          Example Output of `ip route show`:
+          ```
+            172.25.0.0/16 dev br-4acb700c7808 proto kernel scope link src 172.25.0.1 linkdown 
+            172.25.0.0/16 dev al-vpn-network proto static scope link metric 50 
+          ```
+
+- date: "19.02.2024"
+  title: "JMeter for API Testing"
+  hashtag: ["#JMeter", "#APITesting", "#StressTesting", "#QA"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          While exploring JMeter for API testing, I found it very useful, especially for creating tests with high traffic, including performance and stress testing. 
+          Its versatility is invaluable for QA tasks, making it a universal tool for testing scenarios across different domains.
+
+          JMeter stands out for its efficiency in developing various test cases, performing performance testing, and analyzing results through thorough test cases.
+
+- date: "15.02.2024"
+  title: "Knowledge Sharing Session"
+  hashtag: ["#S3", "#AWSCLI"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Shared personal knowledge on how to configure access to S3 buckets within a Ceph environment using tools like `s3cmd` and `aws cli`.
+
+- date: "08.02.2024"
+  title: "Grafana Alerts and Opsgenie"
+  hashtag: ["#Grafana",  "#Monitoring"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I have configured Grafana alerts for S3 buckets. These alerts are designed to trigger when the maximum usage limit of a bucket is exceeded in various environments. 
+          The integration with Opsgenie ensures that the alerts seamlessly transition into the incident management process.
+
+- date: "07.02.2024"
+  title: "Query and List the Contents of an S3 Bucket on a Specific S3-Compatible Storage Service"
+  hashtag: ["#S3", "#AWSCLI", "#s3cmd"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Query and list the contents of an S3 bucket on a specific S3-compatible storage service using the following methods:
+
+          1. **Using `s3cmd`:**
+          ```shell
+            s3cmd --host='<HOST>' --access_key='<ACCESS_KEY>' --secret_key='<SECRET_KEY>' ls
+          ```
+
+          2. **Using AWS CLI:**
+          Specify a custom endpoint when working with S3-compatible services:
+          ```shell
+            export AWS_ACCESS_KEY_ID=<KEY>
+            export AWS_SECRET_ACCESS_KEY=<SECRET>
+
+            aws s3 ls --endpoint-url="<URL>"
+          ```
 
 
 # - date: "12.04.2024"
