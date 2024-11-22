@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 
 import { dummyLearning } from 'dummyData';
 
@@ -18,20 +18,32 @@ app.use(express.json());
 connectToDatabase();
 
 let counter = 0;
-app.get('/api/learnings', async (req: Request, res: Response) => {
+
+app.get('/api/health', async (req: Request, res: Response) => {
+	res.status(200).send('OK');
+});
+
+app.get('/api/learnings', async (req: Request, res: Response, next) => {
 	const debug = false;
 	let learnings: LearningPayload[] | null = null;
 	if (debug) {
 		learnings = dummyLearning;
 	}
-
-	learnings = await Learning.find().sort({ date: 1 });
 	counter++;
 	console.log('learnings request!' + counter);
-	res.status(200).json(learnings);
+	Learning.find()
+		.sort({ date: 1 })
+		.then((learnings) => {
+			if (!learnings) {
+				res.status(401);
+			} else {
+				res.status(200).json(learnings);
+			}
+		})
+		.catch(next);
 });
 
-app.post('/api/learnings', async (req: Request, res: Response) => {
+app.post('/api/learnings', async (req: Request, res: Response, next) => {
 	try {
 		const { date, title, hashtag, content } = req.body;
 
@@ -58,19 +70,34 @@ app.post('/api/learnings', async (req: Request, res: Response) => {
 
 		res.status(201).json(savedLearning);
 	} catch (error) {
-		res.status(500).json({ error: 'Internal Server Error' });
+		next(error);
 	}
 });
 
 // TODO, use this endpoint clean data in database during development
-app.delete('/api/learnings', async (req: Request, res: Response) => {
-	const result = await Learning.deleteMany({});
-	res.status(200).json({
-		message: 'All records `learning` records deleted successfully',
-		deletedCount: result.deletedCount,
+app.delete('/api/learnings', (req: Request, res: Response, next) => {
+	Learning.deleteMany({})
+		.then((result) => {
+			res.status(200).json({
+				message: 'All records `learning` records deleted successfully',
+				deletedCount: result.deletedCount,
+			});
+		})
+		.catch(next);
+});
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+	console.log(err.stack);
+
+	res.status(err.status || 500).json({
+		message: 'Internal Server Error',
 	});
 });
 
-app.listen(PORT, () => {
-	console.log(`Server is running on http://localhost:${PORT} `);
-});
+app
+	.listen(PORT, () => {
+		console.log(`Server is running on http://localhost:${PORT}`);
+	})
+	.on('error', (e) => {
+		console.error('Server error: ', e);
+	});

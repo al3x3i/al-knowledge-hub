@@ -23,6 +23,14 @@ const connectToDatabase = () => {
 		console.log('Database connection disconnected');
 	});
 
+	mongoose.connection.on('reconnectFailed', () => {
+		console.error('MongoDB Reconnection Failed');
+	});
+
+	mongoose.connection.on('reconnect', () => {
+		console.log('MongoDB Reconnected');
+	});
+
 	process.on('SIGINT', () => {
 		mongoose.connection.close();
 		console.log('Database connection closed');
