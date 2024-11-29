@@ -1,3 +1,19 @@
+- date: "25.11.2024"
+  title: "Setting Up and Using Sentry"
+  hashtag: ["#Sentry", "#ErrorTracking", "#Monitoring", "#AngularJS", "#NodeJS", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Successfully ran Sentry locally for the first time.  
+            - Running it locally needed a lot of computer resources. It probably wouldn't work with less than 32GB of RAM.  
+          - Got more familiar with the Sentry UI, making it easier to use for monitoring projects.  
+          - Fixed an issue where extra permissions were needed during installation.
+          - Read about different Sentry configurations.  
+          - Learned how to create a new project in Sentry and adapt an existing one for it.  
+          - Learned how to resolve issues in Sentry, including fixing permission problems.  
+          - Added Sentry to an **AngularJS** project and a **Node.js** project to track and monitor errors. 
+
 - date: "17.11.2024"
   title: "Tool to merge multiple PDFs into one PDF"
   hashtag:
@@ -1580,6 +1596,371 @@
 
             aws s3 ls --endpoint-url="<URL>"
           ```
+
+- date: "05.02.2024"
+  title: "Learned new tools for work. IntelliJ plugins: AppMaps, Bito"
+  hashtag: ["#IntelliJ"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - **AppMaps Plugin** helps to understand how the code works. 
+            It collects information about the code and presents interactive diagrams such as: `Dependency Map, Sequence Diagram, Trace View, Flame Graph, SQL Performance Analysis`
+          - **Bito AI Plugin** is an AI assistant integrated into IntelliJ, similar to ChatGPT.
+        
+- date: "30.01.2024"
+  title: "Exploring Hibernate Envers and Spring Data JPA Audit Annotations"
+  hashtag: ["#JPA", "#Java"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Explored Hibernate Envers and Spring Data JPA audit annotations, focusing on standard annotations such as: `@Audited, @CreatedBy, @LastModifiedBy` 
+            
+            The @CreatedBy automatically populated by Spring Data JPA, but @CreatedBy and @LastModifiedBy require additional configuration. 
+        
+- date: "19.01.2024"
+  title: "Finished Reading 'Grokking Algorithms'"
+  hashtag: ["#Algorithms", "#BigO"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Finished reading the book *Grokking Algorithms: An Illustrated Guide for Programmers.*  
+            This is my next step in improving my programming skills and deepening my understanding of fundamental algorithms. 
+            I believe this accomplishment reflects my dedication to continious learning, problem-solving and readiness to take complex challenges. 
+
+          The fundamental skill of understanding Big O is always worth refreshing from time to time:  
+          - **O(log n):**  
+            - Also known as logarithmic time. Example: Binary search.  
+            - Uses a divide-and-conquer strategy and works only with sorted arrays.  
+          - **O(n):**  
+            - Also known as linear time. Example: Simple search.  
+            - Checks each element in the list until it finds the target element.  
+          - **O(n * log n):**  
+            - Example: Fast sorting algorithms, like quicksort.  
+            - The input list is divided into two sub-lists using a pivot element. One sub-list contains elements less than the pivot, and the other contains elements greater than the pivot. This process repeats for each sub-list.  
+          - **O(n²):**  
+            - Example: Slow sorting algorithms, like selection sort.  
+            - Selection sort has a time complexity of O(n²) due to nested loops.  
+          - **O(n!):**  
+            - Example: A very slow algorithm, like the traveling salesperson problem.  
+            - The number of possible routes grows factorially with the number of cities.
+                 
+- date: "16.01.2024"
+  title: "Familiarized with Prometheus Metrics and PostgreSQL Database Management"
+  hashtag: ["#Prometheus", "#PostgreSQL", "#Kubernetes", "#Monitoring"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Familiarized with the Prometheus metrics provided by the Zalando PostgreSQL Exporter to monitor active database connections in percentage.  
+            This query can be used in Prometheus alerts:  
+            ```shell  
+              sum(pg_stat_activity_count{pod=~"your-label."}) by (pod) / 
+              sum(pg_settings_max_connections{pod=~"your-label-."}) by (pod) * 100
+            ```  
+
+          - Learned how to analyze and manage PostgreSQL database connections using the terminal and SQL queries:  
+            ```shell  
+              psql -U DBNAME DBUSER  
+
+              SELECT datname, pid, usename, application_name, client_addr, state, left(query, 40) FROM pg_stat_activity;  
+
+              SELECT pg_terminate_backend(pid);
+            ```  
+
+          - Learned a great query for calculating the percentage of used storage (PVC = Persistent Volume Claim). These metrics are provided by the `kubelet` component in a Kubernetes cluster:  
+            ```shell
+              kubelet_volume_stats_used_bytes{persistentvolumeclaim=~"your-database-."} / 
+              kubelet_volume_stats_capacity_bytes{persistentvolumeclaim=~"your-database-."} * 100
+            ```
+            
+- date: "29.12.2023"
+  title: "Learning to Secure Applications Using Keycloak with Spring Boot"
+  hashtag: ["#Keycloak", "#SpringBoot", "#Security",]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          As the last thing I worked on in the year, I took on a project to learn more about securing applications using Keycloak with Spring Boot.  
+          This new practice gave me insights into building secure applications.  
+          During this exploration, I practiced configuring Spring Security for role-based access control and got into Docker for deploying Keycloak in a containerized environment.  
+          Additionally, I configured Spring Security for both client and resource server applications.  
+
+- date: "20.12.2023"
+  title: "Great Script for Reading Kafka Messages and Deserializing them into Avro Format"
+  hashtag: ["#Kafka", "#Avro", "#Confluent", "#BigData"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Great script for reading Kafka messages and deserializing them into Avro format:  
+          ```shell  
+            BOOSTRAP_URL=localhost:9092  
+            ./confluent-4.1.3/bin/kafka-avro-console-consumer \  
+              --from-beginning \  
+              --topic AdvertisersPerPartnershipData \  
+              --bootstrap-server $BOOSTRAP_URL \  
+              --group al_group_1 \  
+              --property schema.registry.url=http://localhost:8082  
+          ```
+
+- date: "13.12.2023"
+  title: "Exploring Kubernetes Pods: Optimizing Performance with VisualVM"
+  hashtag: ["#Kubernetes", "#Flink", "#Java", "#Performance"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I used the VisualVM profiling tool to analyze a Flink program. I monitored CPU usage and memory consumption in real-time.  
+          This experience helped me optimize the performance of Java applications.
+
+- date: "12.12.2023"
+  title: "Applied in practice new shell commands to automate Kubernetes operations"
+  hashtag: ["#Kubernetes", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Delete more than one pod at a time:  
+            ```shell
+              POD="fermi1 fermi2 fermi3"  
+              echo $POD | xargs -n1 | xargs kubectl -n custom-namespace delete pod  
+            ```
+
+          - Get full information about the currently running processes:  
+            ```shell
+              ps auxww  
+            ```
+
+          - Execute a command inside a running container to display information about the top 1000 largest files in the system:  
+            ```shell
+              kubectl exec -it -n custom-namespace prd-fermi-jobmanager-775df75f99-pkk2x -- sh -c "find / -type f -exec du -h {} + | sort -rh | head -n 1000"  
+            ```  
+
+- date: "06.12.2023"
+  title: "Focusing on Organizing Scrum Weekly"
+  hashtag: ["#Scrum"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I focused on organizing Scrum Weekly as part of my personal skill development. Taking on the role of Scrum Master helps develop organizational, communication, and problem-solving skills.
+
+- date: "06.12.2023"
+  title: "Building a Monitoring System Using Docker, Prometheus, and Node.js"
+  hashtag: ["#Monitoring", "#QA"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In my recent practice, I learned how to build a monitoring system using some cool tools. First off, Docker Compose, Prometheus, Prometheus Alert Manager, and a Node.js Express server.
+
+          I built these tools to check Prometheus alerts for my recent QA ticket. Now, whenever there's an alert, the team can use this setup to quickly investigate and respond, making our QA process smoother and more efficient. These tools are a great aid in simulating various scenarios and use cases.
+
+          These tools helped me identify that something important was missing in the code—specifically, "regexMatch" wasn't defined in the Go templates. If we had merged the PR without fixing this, it could have disrupted the Prometheus alert system in Kubernetes.
+
+- date: "04.12.2023"
+  title: "Setting the 'Priority' Property in Prometheus Alerts for Opsgenie"
+  hashtag: ["#Prometheus", "#Opsgenie", "#Alerting", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned how to set a 'priority' property in Prometheus Alerts, which is needed for Opsgenie. \
+
+            `priority`: This annotation determines the priority level of the alert. The priority is assigned based on the value of the namespace label. The logic checks if the namespace is defined (if $labels.namespace -). 
+            If it is, it further checks whether the namespace is one of the specified values ("pr-builds," "pr-tools," "pr-ci-cd") or starts with "p1-" or "p2-". Depending on these conditions, it assigns a priority of either P5 or P4. If the namespace is not defined, it defaults to P4.
+
+            ```yaml
+              - alert: EndpointDown
+                annotations:
+                  message: 'http(s)://{{ $labels.host }}{{ $labels.path }} on {{ $labels.ingress_class_name }}'
+                  priority: >-
+                    {{- if $labels.namespace -}}
+                      {{- if or (eq $labels.namespace "pr-builds") (eq $labels.namespace "pr-tools") (eq $labels.namespace "pr-ci-cd") (eq $labels.namespace "pr-monitoring") (regexMatch "^(p1-|p2-)" $labels.namespace) -}}
+                        P5
+                      {{- else -}}
+                        P4
+                      {{- end -}}
+                    {{- else -}}
+                      P4
+                    {{- end -}}
+              ...
+            ```
+
+- date: "28.11.2023"
+  title: "Resolved Kafka Avro Schema Registration Issue"
+  hashtag: ["#Kafka", "#Avro"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - I successfully resolved a use case where I needed to register the Kafka Avro schema with a specific ID since the existing messages in the topic point to a different Avro schema. \
+            Becasue these messages were cloned from a different Kafka topic.
+
+            1. Set the topic mode to "IMPORT". The mode to IMPORT to ensure that the existing messages in the topic are properly aligned with the new schema. \
+            Note: Before changing, check the current mode. After updating, you will need to set it back. 
+            ```bash
+              curl --location --request PUT 'http://localhost:8083/mode/custom-topic-value' \
+              --header 'Content-Type: application/json' \
+              --data-raw '{
+                  "mode": "IMPORT"
+              }'
+            ```
+
+            2. Create Kafka topic schema with a specific Version and ID
+            ```bash
+              curl -X POST -H "Content-Type: application/json" \
+              --data '{"schemaType": "AVRO", "version":12, "id":24, "schema":"{\"type\":\"record\",\"name\":\"value_a1\",\"namespace\":\"com.mycorp.mynamespace\",\"fields\":[{\"name\":\"field1\",\"type\":\"string\"}]}" }' \
+              http://localhost:8083/subjects/custom-topic-value/versions
+            ```
+
+- date: "20.11.2023"
+  title: "Cleaning Up Untagged Docker Images"
+  hashtag: ["#Docker"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - When constructing a Docker image for a project, an issue arises wherein an anonymous Docker build image is generated without a name or tag. These nameless images occupy extra space on the hard drive and need to be deleted. This command deletes untagged Docker images:
+
+            ```bash
+              docker rmi $(docker images -q -f "dangling=true")
+            ```
+
+            This command uses the `-f` or `--filter` flag with the `dangling=true` filter to show only images that do not have a name or tag.
+
+            Or just simply 
+            ```
+              docker image prune
+            ```
+
+
+- date: "13.11.2023"
+  title: "Managing PostgreSQL with Docker and Kubernetes"
+  hashtag: ["#PostgreSQL", "#Docker", "#Kubernetes", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Gained more knowledge about managing PostgreSQL with Docker, performing database operations like exporting and importing data, 
+            creating and scheduling jobs in Kubernetes, handling secrets via ConfigMaps and Secrets, 
+            and running scripts within containers to interact with databases.
+
+            1. Run PostgreSQL database in Docker:
+            ```bash
+              docker run -d \
+              -e POSTGRES_PASSWORD=ada \
+              --network=host \
+              --name my-postgres \
+              postgres:15.4-alpine
+            ```
+
+            2. Script file exmaple to copy data from exteranl database to a file:
+            ```bash
+              export STAGE_DB_HOST=127.0.0.1
+              export STAGE_DB_PORT=5433
+
+              # Download data to file
+              psql -U ada -d ada -h $STAGE_DB_HOST -p $STAGE_DB_PORT -f ./scripts/dump.sql
+
+              # Import data from file to a database
+              psql -U ada -d ada -h $STAGE_DB_HOST -p $STAGE_DB_PORT -f ./scripts/import.sql 
+            ```
+
+            3. The script `./scripts/dump.sql ` file content:
+            ```sql
+              \COPY (SELECT * FROM advertiser) TO '~/advertiser.csv' delimiter ',' csv header;
+            ```
+
+            4. The script `./scripts/import.sql  ` file content:
+            ```sql
+              BEGIN;
+              \COPY advertiser FROM '~/advertiser.csv' csv header;
+              COMMIT;
+            ```
+
+            5. Automate Commands in Kubernetes Using a CronJob:\
+            Use kustomize (**draft version!**)
+
+            ```yaml 
+              # kustomization.yaml
+              resources:
+              - configmap-replicate-scripts.yaml
+              - replicate-data-job.yaml
+
+              configMapGenerator:
+              - name: ada-replicate-data-scripts
+                behavior: merge
+                files:
+                  - scripts/dump.sql
+                  - scripts/import.sql
+
+              # configmap-replicate-scripts.yaml
+              apiVersion: v1
+              kind: ConfigMap
+              metadata:
+                name: ada-replicate-data-scripts
+
+              # replicate-data-job.yaml
+              apiVersion: batch/v1beta1  
+              kind: CronJob  
+              metadata:  
+                name: ada-replicate-data  
+                labels:  
+                  app.kubernetes.io/component: test-data-job  
+                  app.kubernetes.io/part-of: test-name  
+                  app.kubernetes.io/name: postgres-client  
+              spec:  
+                schedule: "* 10 * * *"  
+                concurrencyPolicy: Forbid  
+                jobTemplate:  
+                  spec:  
+                    template:  
+                      metadata:  
+                        labels:  
+                          app.kubernetes.io/component: test-data-job  
+                          app.kubernetes.io/part-of: test-name  
+                          app.kubernetes.io/name: postgres-client  
+                      spec:  
+                        volumes:  
+                          - name: replicate-scripts  
+                            configMap:  
+                              name: "shared-volume-location"  # Updated to reflect proper description  
+                        containers:  
+                          - image: postgres:15-alpine  
+                            name: replicate  
+                            volumeMounts:  
+                              - mountPath: /opt/scripts  
+                                name: replicate-scripts  
+                            env:  
+                              - name: TEST_DB_HOST  
+                                value: "Database service URL"  # Updated for clarity  
+                              - name: PGPASSWORD  
+                                valueFrom:  
+                                  secretKeyRef:  
+                                    name: "custom-database-settings"  
+                                    key: DATABASE_PASSWORD  
+                              - name: TEST_DB_HOST  
+                                valueFrom:  
+                                  configMapKeyRef:  
+                                    name: "custom-database-settings"  
+                                    key: DB_HOSTNAME  
+                              - name: TEST_DB_PASSWORD  
+                                value: "test-psw"  
+                            command:  
+                              - sh  
+                              - -exc  
+                              - |  
+                                psql -U test -d test -h $TEST_DB_HOST -f /opt/scripts/dump.sql  
+                                export PGPASSWORD=$TEST_DB_PASSWORD  
+                                psql -U test -d test -h $TEST_DB_HOST -f /opt/scripts/import.sql  
+                        restartPolicy: Never  
+
+            ```
+
 
 
 # - date: "12.04.2024"

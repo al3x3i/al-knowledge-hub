@@ -13,7 +13,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language, children }) => {
 	};
 
 	return (
-		<div className="border rounded bg-dark text-light mb-3">
+		<div className="border rounded bg-dark text-light">
 			<div className="d-flex justify-content-between align-items-center p-2 bg-secondary">
 				<span className="text-light">{language || 'code'}</span>
 				<button className="btn btn-sm btn-outline-light" onClick={handleCopy}>

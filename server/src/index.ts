@@ -33,6 +33,7 @@ app.get('/api/learnings', async (req: Request, res: Response, next) => {
 	console.log('learnings request!' + counter);
 	Learning.find()
 		.sort({ date: 1 })
+		.limit(10)
 		.then((learnings) => {
 			if (!learnings) {
 				res.status(401);
