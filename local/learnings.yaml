@@ -1,3 +1,39 @@
+- date: "30.11.2024"
+  title: "Practical Knowledge in Troubleshooting Elasticsearch"
+  hashtag: ["#Elasticsearch", "#on-call"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Discovered that some nodes in Elasticsearch could not be created due to insufficient memory.
+          Realized that deleting large, outdated indices is a practical way to release memory and free up space for new indices.
+          During my on-call session, I focused on finding the most pragmatic approach to resolve the issue, understanding that the solution might change as I gained more insight into the situation.
+          Other possible solutions could be:
+          1. Optimize Shard Allocation Settings
+          2. Adjust Index Lifecycle Management (ILM)
+          3. Force Merge Indices
+          4. Increase the Shard Limit
+          5. Check for Disk Watermark Issues
+          6. Clear Cache
+
+          Few API request which I used for troubleshooting the problem
+          - Investigated and diagnosed issues with unassigned shards using the `_cat/shards` endpoint:
+            ```bash
+              curl -X GET 'http://localhost:9200/_cat/shards?v'
+            ```
+          - Identified the status and distribution of shards, pinpointing **UNASSIGNED** shards in the `jaeger-span` index.
+          - Used a command to sort shard information by index and shard number:
+            ```bash
+              curl -X GET 'http://localhost:9200/_cat/shards?v&s=index,shard'
+            ```
+          - Attempted to free up memory by deleting older indices (e.g., `jaeger-span-000561`):
+            ```bash
+              curl -X DELETE 'http://localhost:9200/jaeger-span-000561' \
+              -H 'Authorization: Basic <AUTH-TOKEN>'
+            ```
+          - Gained insights into Elasticsearch shard management and permissions.
+
+
 - date: "25.11.2024"
   title: "Setting Up and Using Sentry"
   hashtag: ["#Sentry", "#ErrorTracking", "#Monitoring", "#AngularJS", "#NodeJS", "#DevOps"]
@@ -1845,120 +1881,158 @@
     - type: "MARKDOWN"
       data:
         content: |
-          - Gained more knowledge about managing PostgreSQL with Docker, performing database operations like exporting and importing data, 
-            creating and scheduling jobs in Kubernetes, handling secrets via ConfigMaps and Secrets, 
-            and running scripts within containers to interact with databases.
+          Gained more knowledge about managing PostgreSQL with Docker, performing database operations like exporting and importing data, 
+          creating and scheduling jobs in Kubernetes, handling secrets via ConfigMaps and Secrets, 
+          and running scripts within containers to interact with databases.
 
-            1. Run PostgreSQL database in Docker:
-            ```bash
-              docker run -d \
-              -e POSTGRES_PASSWORD=ada \
-              --network=host \
-              --name my-postgres \
-              postgres:15.4-alpine
-            ```
+          1. Run PostgreSQL database in Docker:
+          ```bash
+            docker run -d \
+            -e POSTGRES_PASSWORD=ada \
+            --network=host \
+            --name my-postgres \
+            postgres:15.4-alpine
+          ```
 
-            2. Script file exmaple to copy data from exteranl database to a file:
-            ```bash
-              export STAGE_DB_HOST=127.0.0.1
-              export STAGE_DB_PORT=5433
+          2. Script file exmaple to copy data from exteranl database to a file:
+          ```bash
+            export STAGE_DB_HOST=127.0.0.1
+            export STAGE_DB_PORT=5433
 
-              # Download data to file
-              psql -U ada -d ada -h $STAGE_DB_HOST -p $STAGE_DB_PORT -f ./scripts/dump.sql
+            # Download data to file
+            psql -U ada -d ada -h $STAGE_DB_HOST -p $STAGE_DB_PORT -f ./scripts/dump.sql
 
-              # Import data from file to a database
-              psql -U ada -d ada -h $STAGE_DB_HOST -p $STAGE_DB_PORT -f ./scripts/import.sql 
-            ```
+            # Import data from file to a database
+            psql -U ada -d ada -h $STAGE_DB_HOST -p $STAGE_DB_PORT -f ./scripts/import.sql 
+          ```
 
-            3. The script `./scripts/dump.sql ` file content:
+          3. The script `./scripts/dump.sql ` file content:
+          ```sql
+            \COPY (SELECT * FROM advertiser) TO '~/advertiser.csv' delimiter ',' csv header;
+          ```
+
+          4. The script `./scripts/import.sql  ` file content:
+          ```sql
+            BEGIN;
+            \COPY advertiser FROM '~/advertiser.csv' csv header;
+            COMMIT;
+          ```
+
+          5. Automate Commands in Kubernetes Using a CronJob:\
+          Use kustomize (**draft version!**)
+
+          ```yaml 
+            # kustomization.yaml
+            resources:
+            - configmap-replicate-scripts.yaml
+            - replicate-data-job.yaml
+
+            configMapGenerator:
+            - name: ada-replicate-data-scripts
+              behavior: merge
+              files:
+                - scripts/dump.sql
+                - scripts/import.sql
+
+            # configmap-replicate-scripts.yaml
+            apiVersion: v1
+            kind: ConfigMap
+            metadata:
+              name: ada-replicate-data-scripts
+
+            # replicate-data-job.yaml
+            apiVersion: batch/v1beta1  
+            kind: CronJob  
+            metadata:  
+              name: ada-replicate-data  
+              labels:  
+                app.kubernetes.io/component: test-data-job  
+                app.kubernetes.io/part-of: test-name  
+                app.kubernetes.io/name: postgres-client  
+            spec:  
+              schedule: "* 10 * * *"  
+              concurrencyPolicy: Forbid  
+              jobTemplate:  
+                spec:  
+                  template:  
+                    metadata:  
+                      labels:  
+                        app.kubernetes.io/component: test-data-job  
+                        app.kubernetes.io/part-of: test-name  
+                        app.kubernetes.io/name: postgres-client  
+                    spec:  
+                      volumes:  
+                        - name: replicate-scripts  
+                          configMap:  
+                            name: "shared-volume-location"  # Updated to reflect proper description  
+                      containers:  
+                        - image: postgres:15-alpine  
+                          name: replicate  
+                          volumeMounts:  
+                            - mountPath: /opt/scripts  
+                              name: replicate-scripts  
+                          env:  
+                            - name: TEST_DB_HOST  
+                              value: "Database service URL"  # Updated for clarity  
+                            - name: PGPASSWORD  
+                              valueFrom:  
+                                secretKeyRef:  
+                                  name: "custom-database-settings"  
+                                  key: DATABASE_PASSWORD  
+                            - name: TEST_DB_HOST  
+                              valueFrom:  
+                                configMapKeyRef:  
+                                  name: "custom-database-settings"  
+                                  key: DB_HOSTNAME  
+                            - name: TEST_DB_PASSWORD  
+                              value: "test-psw"  
+                          command:  
+                            - sh  
+                            - -exc  
+                            - |  
+                              psql -U test -d test -h $TEST_DB_HOST -f /opt/scripts/dump.sql  
+                              export PGPASSWORD=$TEST_DB_PASSWORD  
+                              psql -U test -d test -h $TEST_DB_HOST -f /opt/scripts/import.sql  
+                      restartPolicy: Never  
+
+          ```
+
+- date: "09.11.2023"
+  title: "Understanding Timestamp Operations in PostgreSQL"
+  hashtag: ["#PostgreSQL", "#Timestamps", "#Database", "#SQL"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Extracting Epoch from a Date and Timestamp:
             ```sql
-              \COPY (SELECT * FROM advertiser) TO '~/advertiser.csv' delimiter ',' csv header;
+            SELECT 
+                EXTRACT(EPOCH FROM DATE '2023-11-01 12:43:44+00'),  -- 1698796800
+                EXTRACT(EPOCH FROM TIMESTAMP '2023-11-01 12:43:44+00'); -- 1698842624.000000
             ```
-
-            4. The script `./scripts/import.sql  ` file content:
+          - Epoch Extraction and Milliseconds Calculation:
             ```sql
-              BEGIN;
-              \COPY advertiser FROM '~/advertiser.csv' csv header;
-              COMMIT;
+              SELECT EXTRACT(EPOCH FROM TIMESTAMP '2023-11-01 12:43:44') * 1000 AS milliseconds; -- 1698842624000.000000
             ```
+          - Converting Unix Timestamp (ms) to Timestamp:
+            ```sql
+              SELECT to_timestamp(1421918155000 / 1000); -` 2015-01-22 09:15:55+00
 
-            5. Automate Commands in Kubernetes Using a CronJob:\
-            Use kustomize (**draft version!**)
+              SELECT to_timestamp(1421918155000 / 1000) AT TIME ZONE 'CET'; -- Germany Timezone
 
-            ```yaml 
-              # kustomization.yaml
-              resources:
-              - configmap-replicate-scripts.yaml
-              - replicate-data-job.yaml
-
-              configMapGenerator:
-              - name: ada-replicate-data-scripts
-                behavior: merge
-                files:
-                  - scripts/dump.sql
-                  - scripts/import.sql
-
-              # configmap-replicate-scripts.yaml
-              apiVersion: v1
-              kind: ConfigMap
-              metadata:
-                name: ada-replicate-data-scripts
-
-              # replicate-data-job.yaml
-              apiVersion: batch/v1beta1  
-              kind: CronJob  
-              metadata:  
-                name: ada-replicate-data  
-                labels:  
-                  app.kubernetes.io/component: test-data-job  
-                  app.kubernetes.io/part-of: test-name  
-                  app.kubernetes.io/name: postgres-client  
-              spec:  
-                schedule: "* 10 * * *"  
-                concurrencyPolicy: Forbid  
-                jobTemplate:  
-                  spec:  
-                    template:  
-                      metadata:  
-                        labels:  
-                          app.kubernetes.io/component: test-data-job  
-                          app.kubernetes.io/part-of: test-name  
-                          app.kubernetes.io/name: postgres-client  
-                      spec:  
-                        volumes:  
-                          - name: replicate-scripts  
-                            configMap:  
-                              name: "shared-volume-location"  # Updated to reflect proper description  
-                        containers:  
-                          - image: postgres:15-alpine  
-                            name: replicate  
-                            volumeMounts:  
-                              - mountPath: /opt/scripts  
-                                name: replicate-scripts  
-                            env:  
-                              - name: TEST_DB_HOST  
-                                value: "Database service URL"  # Updated for clarity  
-                              - name: PGPASSWORD  
-                                valueFrom:  
-                                  secretKeyRef:  
-                                    name: "custom-database-settings"  
-                                    key: DATABASE_PASSWORD  
-                              - name: TEST_DB_HOST  
-                                valueFrom:  
-                                  configMapKeyRef:  
-                                    name: "custom-database-settings"  
-                                    key: DB_HOSTNAME  
-                              - name: TEST_DB_PASSWORD  
-                                value: "test-psw"  
-                            command:  
-                              - sh  
-                              - -exc  
-                              - |  
-                                psql -U test -d test -h $TEST_DB_HOST -f /opt/scripts/dump.sql  
-                                export PGPASSWORD=$TEST_DB_PASSWORD  
-                                psql -U test -d test -h $TEST_DB_HOST -f /opt/scripts/import.sql  
-                        restartPolicy: Never  
-
+              # WHERE timestamp >= EXTRACT (EPOCH FROM TIMESTAMP '2023-11-01 12:43:44') * 1000
+            ```
+          - Casting Timestamp without Time Zone:
+            ```sql
+              SELECT '2023-11-01 12:43:44+00'::timestamp; -- 2023-11-01 12:43:44
+            ```
+          - Casting Timestamp with Time Zone:
+            ```sql
+              SELECT '2023-11-01 12:43:44+02'::timestamptz; -- 2023-11-01 10:43:44+00
+            ```
+          - Casting Timestamp to Date:
+            ```sql
+              SELECT '2023-11-01 12:43:44+00'::date; -- 2023-11-01
             ```
 
 
