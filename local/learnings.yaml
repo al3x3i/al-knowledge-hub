@@ -2035,7 +2035,1133 @@
               SELECT '2023-11-01 12:43:44+00'::date; -- 2023-11-01
             ```
 
+- date: "06.11.2023"
+  title: "Scaling Pods with kubectl Command"
+  hashtag: ["#Kubernetes"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Used a new `kubectl` command to scale the number of pods:
+            ```shell
+              kubectl -n test-namespace scale deployment test-app --replicas=1
+            ```
 
+- date: "25.10.2023"
+  title: "Software Migration and User Story Ownership"
+  hashtag: ["#Agile"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Took ownership of a new user story to migrate the old Jobber task application. 
+          Enhanced skills and knowledge in software migration, contributing to personal learning and growth.
+
+- date: "22.10.2023"
+  title: "Exploring WineHQ and Lutris"
+  hashtag: ["#Linux", "#WineHQ", "#Lutris", "#WindowsOnLinux"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          I've gained knowledge about WineHQ and Lutris. 
+          It has opened up new possibilities for running Windows application on my Linux
+
+- date: "17.10.2023"
+  title: "Understanding `volatile` and `static` in Multithreading"
+  hashtag: ["#Java", "#Multithreading"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          The `volatile` ensures thread-safe access with immediate visibility.
+          The`static` does not guarantee visibility in a multithreaded context.
+
+- date: "10.10.2023"
+  title: "Restoring a PostgreSQL Database"
+  hashtag: ["#PostgreSQL"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Enhanced practical database management skills to restore a PostgreSQL database quickly:
+            ```shell
+              REMOTE_DB=172.30.99.83
+              pg_dump -h $REMOTE_DB -U ada -d ada --data-only -f source_dump.sql
+              psql -h localhost -p 5432 -U ada -d ada -f source_dump.sql
+            ```
+
+- date: "05.10.2023"
+  title: "Building and Deploying with Kustomize"
+  hashtag: ["#Kustomize"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Used a shell command to build and deploy a Kustomize file to a specific namespace, one line of code:
+            ```shell
+              kustomize build . | kubectl apply -f - -n dev-gravity
+            ```
+
+- date: "04.10.2023"
+  title: "Exploring Playwright for E2E Testing"
+  hashtag: ["#Playwright", "#React", "#PrimeFaces"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Explored the **Playwright** open-source Node library to write end-to-end tests.
+          - Created my first tests for the **Backstage** application.
+          - Covered "creating a new domain" in the **React** "PrimeFaces" dialog component.
+
+- date: "03.10.2023"
+  title: "Using Optional Chaining in TypeScript"
+  hashtag: ["#TypeScript"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Wrote TypeScript code with **optional chaining**.
+          - Learned how the `?.` operator is used for optional chaining.
+          - If the left-hand side of the `?.` operator is `null` or `undefined`, the entire expression evaluates to `undefined` without throwing an error.
+
+- date: "02.10.2023"
+  title: "Reinforce knowledge of React useMutation Hook"
+  hashtag: ["#React"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Reinforced knowledge of the **React** `useMutation` hook for handling create, update, and delete operations.
+          - Reinforced knowledge of `useQuery` for read operations.
+
+- date: "25.09.2023"
+  title: "Learning Golang: Unit Testing and Mocking"
+  hashtag: ["#Golang"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Gained new knowledge of the **Golang** programming language.
+          - Wrote unit tests, created interfaces, and mocked them using the **Mockery** framework.
+
+- date: "20.09.2023"
+  title: "Implementing a Grafana Dashboard with Prometheus"
+  hashtag: ["#Grafana", "#Prometheus"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Implemented a **Grafana** dashboard to monitor system metrics.
+          - Reinforced knowledge of **Prometheus** and **Grafana**.
+          - Mastered working with Grafana version 9.4.3.
+          - Queries mastered:
+            - **Total increase in valid_purchase_request_total metric** (last hour, grouped by `status`):
+          ```shell
+          sum(increase(valid_purchase_request_total{k8s_cluster="$k8s_cluster"}[1h])) by (status)
+          ```
+            - **Batch size processing histograms**, grouped by `le` (selected time range from `$__range`):
+          ```shell
+          sum (increase(batch_size_to_process_bucket{k8s_cluster="$k8s_cluster"}[$__range])) by(le)
+          ```
+            - **Rate of change in batch processing time** (dynamic time from `$__interval`, grouped by `batch_trigger`):
+          ```shell
+          sum by(batch_trigger) (rate(time_to_process_batch_seconds_count{k8s_cluster="$k8s_cluster"}[$__interval]))
+          ```
+
+- date: "03.09.2023"
+  title: "Learning AWS S3 CLI Commands"
+  hashtag: ["#AWS", "#S3"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Learned and practiced **AWS S3 CLI commands**.
+          - Created a shell script to demonstrate basic S3 operations:
+            - Created an S3 bucket.
+            - Uploaded files to the S3 bucket.
+            - Synced a local folder with the S3 bucket (commented for demonstration purposes).
+            - Listed files in the S3 bucket.
+
+          ```bash
+          #!/bin/bash
+
+          # Create bucket
+          aws s3 mb s3://al3x3i0207
+
+          # Create dummy files
+          echo "Hello S3, first time" >> f1.txt
+          echo "Hello S3, second time" >> f2.txt
+
+          # Upload just created files to S3
+          aws s3 cp f1.txt s3://al3x3i0207
+          aws s3 cp f2.txt s3://al3x3i0207
+
+          # Sync all files in folder with the S3
+          # aws s3 sync ./ s3://al3x3i0207
+
+          # List S3 files
+          aws s3 ls s3://al3x3i0207
+          ```
+
+- date: "01.09.2023"
+  title: "Understanding Wrapped Error Handling in Golang"
+  hashtag: ["#Golang"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Gained a deeper understanding of **wrapped error handling** in **Golang**.
+          - Studied how to handle errors with wrapping and unwrapping using `fmt.Errorf`, type assertions, and `errors.As`.
+          - Example function demonstrating error wrapping and checking for timeout errors:
+
+          ```go
+          func checkWrappedError() error {
+            httpClient := &http.Client{Timeout: time.Second * 1}
+            resp, originalError := httpClient.Get("https://httpstat.us/504?sleep=60000")
+            fmt.Printf("RESPONSE: %v \n", resp)
+            if originalError != nil {
+              wrappedError := fmt.Errorf("wrapped error: %w", originalError)
+
+              if err, ok := wrappedError.(net.Error); ok && err.Timeout() {
+                fmt.Println("1 - Timeout error")
+              }
+
+              if err, ok := originalError.(net.Error); ok && err.Timeout() {
+                fmt.Println("2 - Timeout error")
+              }
+
+              var netError net.Error
+              if errors.As(wrappedError, &netError) && netError.Timeout() {
+                fmt.Println("3 - Timeout error")
+              }
+            } else {
+              defer resp.Body.Close()
+            }
+
+            return originalError
+          }
+          ```
+
+- date: "31.08.2023"
+  title: "Understanding Parallelism in Apache Flink"
+  hashtag: ["#ApacheFlink", "#BigData"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Gained a clearer understanding of how to use **parallelism in Apache Flink**.
+          - Learned strategies to optimize processing operations and avoid **backpressure** in data streams.
+
+- date: "30.08.2023"
+  title: "Enhancing Shell Script for Kafka Topic Management"
+  hashtag: ["#Shell", "#Kafka", "#DevOps", "#Automation"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Enhanced proficiency in **shell scripting** by improving a script for managing Kafka topics:
+            - Added functionality to delete a Kafka topic.
+            - Developed a method to remove all messages from a Kafka topic using `kafka-delete-records`.
+
+          ```bash
+          function delete_kafka_topic {
+              TOPIC_NAME=$1
+
+              if topic_exist $TOPIC_NAME; then
+                  docker exec ${KAFKA_BROKER_NAME} /usr/bin/kafka-topics --bootstrap-server ${BOOTSTRAP_SERVER} --delete --topic ${TOPIC_NAME}
+              fi
+          }
+
+          function delete_all_messages_from_topic {
+              TOPIC_NAME=$1
+              if ! topic_exist $TOPIC_NAME; then
+                  return
+              fi
+
+              echo "====="
+              JSON_FILE="records_to_delete.json"
+              JSON_CONTENT='{"partitions":[{"topic":"'"$TOPIC_NAME"'","partition":0,"offset":-1}],"version":1}'
+              
+              # Create config file in docker
+              echo "$JSON_CONTENT" | docker exec -i ${KAFKA_BROKER_NAME} sh -c "cat > ${JSON_FILE}"
+
+              docker exec ${KAFKA_BROKER_NAME} /usr/bin/kafka-delete-records --bootstrap-server ${BOOTSTRAP_SERVER} --offset-json-file /home/appuser/${JSON_FILE}
+
+              docker exec ${KAFKA_BROKER_NAME} rm /home/appuser/${JSON_FILE}
+              echo "====="
+          }
+          ```
+
+- date: "27.08.2023"
+  title: "Deploying AWS Serverless Java Applications"
+  hashtag: ["#AWS", "#Lambda"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Learned how to deploy an **AWS Serverless Java Application**.
+          - Key learnings included:
+            - Uploading and updating serverless applications.
+            - Deploying using a **SAM template**.
+            - Managing logging and monitoring with **X-Ray Traces**.
+            - Optimizing and debugging Lambda applications.
+            - Using the **X-Ray Service Map** for insights.
+            - Customizing request handlers for specific use cases.
+
+- date: "26.08.2023"
+  title: "Allowing Minikube to Access Docker Images Built on Host Machine"
+  hashtag: ["#Minikube", "#Docker", "#Kubernetes"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned how to configure Minikube to access Docker images built on the host machine. Explored three options for achieving this.
+
+          **Option 1:** Use Host Docker Daemon
+          ```bash 
+          # 1. Start Minikube with access to the host Docker daemon:
+          minikube start --driver=docker
+          
+          # 2. Switch to the Minikube shell session:
+          # A) Switch to Minikube:
+          
+          eval $(minikube docker-env)
+          ./gradlew docker   # OR build a Docker image
+          docker build -t my-image:latest .
+          docker images
+          
+          # B) Switch back to the local host session:
+
+          eval $(minikube docker-env -u)
+          ```
+
+          **Option 2:** Push Docker Image to Minikube Docker Registry
+          ```bash
+          # 1. Get information about the Minikube network configuration:
+          
+          docker network inspect minikube
+
+          # Example output:
+          # -> 192.168.49.0/24
+          
+          # 2. Edit the Docker daemon configuration file (`/etc/docker/daemon.json`) to add "insecure-registries":
+          
+          sudo vim /etc/docker/daemon.json
+          
+          # Add:
+
+          {
+              "insecure-registries" : ["docker-registry.yieldlab.lan:443", "192.168.49.0/24"]
+          }
+
+          # 3. Reload and restart Docker:
+          
+          sudo systemctl daemon-reload
+          sudo systemctl restart docker
+          
+          # 4. Delete the Minikube cluster:
+          
+          minikube delete
+          
+          # 5. Start Minikube with the insecure registry:
+          
+          minikube start --insecure-registry="192.168.49.0/24"
+          
+          # 6. Check Minikube IP:
+          
+          minikube ip
+          #-> 192.168.49.2
+          
+          # 7. Enable Minikube Addon - Registry:
+          
+          minikube addons enable registry
+          
+          # 8. Tag the Docker image:
+          
+          docker tag yams:latest $(minikube ip):5000/yams:latest
+          
+          # 9. Push the Docker image to the Minikube registry:
+          
+          docker push $(minikube ip):5000/yams:latest
+          
+          # 10. Pull the image in Minikube:
+          
+          minikube ssh
+          docker pull localhost:5000/yams
+          
+
+          # Note:
+          # Set `imagePullPolicy` to `IfNotPresent` or `Never` to prevent Kubernetes from pulling images from the network instead of using the locally built image.
+          ```
+
+          **Option 3:** Minikube Image Load
+          Use the following command to directly load a Docker image into Minikube:
+          ```bash
+          minikube image load yams:latest
+          ```
+
+- date: "24.08.2023"
+  title: "Using Mockery Tool for Generating Mock Objects in Golang"
+  hashtag: ["#Golang", "#Mockery"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Used the `mockery` tool for the first time to generate mock objects for testing purposes in Golang.
+
+- date: "21.08.2023"
+  title: "Completed 'The Pragmatic Programmer (2nd Edition)'"
+  hashtag: ["#Reading", "#SoftwareDevelopment", "#BestPractices"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Finished reading *The Pragmatic Programmer (2nd Edition)* book, gaining insights into programming principles and best practices.
+
+- date: "15.08.2023"
+  title: "Started Learning AWS CLI"
+  hashtag: ["#AWS", "#AWSCLI"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Began learning how to use the AWS CLI for managing AWS resources.
+
+- date: "14.08.2023"
+  title: "Designed Docker Compose for Kafka Topic Initialization"
+  hashtag: ["#DockerCompose", "#Kafka"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Designed and implemented a Docker Compose configuration to automate the process of initializing Kafka topics with data.
+          ```yaml
+          version: '3.8'
+
+          services:
+            init-helper:
+              container_name: init-helper
+              image: adex.registry.rz.adition.net/ci/golang:1.20
+              network_mode: host
+              working_dir: /app
+              volumes:
+              - ../init-kafka-topics:/app/
+              command:
+              - "sh"
+              - "-c"
+              - "cd /app && go run init.go"
+          ```
+
+- date: "12.08.2023"
+  title: "AWS Training on LinkedIn Learning"
+  hashtag: ["#AWS"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Watched AWS training courses on the LinkedIn Learning platform.
+
+- date: "08.08.2023"
+  title: "Redirecting Program Output to a file on Linux"
+  hashtag: ["#Golang", "#Logging"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned new commands for redirecting program output:
+          ```bash
+          # Redirecting stdout
+          go run ./main.go 1>&1 | tee output.log
+
+          # Redirecting stderr
+          go run ./main.go 2>&1 | tee output.log
+          ```
+
+- date: "04.08.2023"
+  title: "Understanding the Supervisor Process Control System"
+  hashtag: ["#Linux"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          It is a powerfull process control system for managing process on a Lynux system.
+          Supervisor is a process control system designed primarily for Unix-like operating systems, including Linux. 
+          It is a Python-based application that provides a client/server architecture for monitoring and controlling processes.
+          - Supervisor include:
+            - **Process Monitoring**: Supervisor monitors processes and restarts them if they crash or terminate unexpectedly.
+            - **Process Control**: Provides commands for starting, stopping, and restarting processes.
+            - **Configuration**: Configured via a file defining processes and settings.
+            - **Logging**: Maintains logs of process activity and status.
+
+- date: "27.08.2023"
+  title: "Attended IT Conference 'WeAreDevelopers 2023'"
+  hashtag: ["#WeAreDevelopers"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Attended the IT conference *WeAreDevelopers 2023* (27.08.2023 - 28.08.2023). \
+          [Link to event](https://worldcongress.app.swapcard.com/event/wearedevelopers-world-congress-2023)
+
+- date: "25.07.2023"
+  title: "Deployed App to Kubernetes and Configured Prometheus ServiceMonitor"
+  hashtag: ["#Kubernetes", "#Prometheus"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Practical Knowledge in deploying applications to the Kubernetes.
+          - Configured Prometheus ServiceMonitor to monitor the application.
+
+- date: "23.07.2023"
+  title: "Parsed JSON File and Retrieved Multiple Properties"
+  hashtag: ["#JSON", "#JQ"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Used `jq` to parse a JSON file and retrieve multiple properties:
+          ```bash
+          cat allservicemonitors.json | jq '.[].metadata | {labels, name}'
+          ```
+
+- date: "22.07.2023"
+  title: "Explored Docker Images Using 'Dive' Program"
+  hashtag: ["#Docker", "#Dive"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Used the `dive` program to explore and analyze Docker images.
+
+- date: "20.07.2023"
+  title: "Deleted Docker Images Without Tags"
+  hashtag: ["#Docker", "#DiskSpace", "#Cleanup"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          This shell script helps to delete dangling Docker images (images without tags):
+          ```bash
+          # List dangling images
+          docker images --filter "dangling=true" --format "{{.ID}}"
+
+          # Delete dangling images
+          docker rmi $(docker images --filter "dangling=true" --format "{{.ID}}") -f
+          ```
+
+- date: "19.07.2023"
+  title: "Used Git Tags for Branch Versioning"
+  hashtag: ["#Git", "#Versioning", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Used Git tags for versioning branches:
+          ```bash
+          TAG=v1.0.8
+          git tag $TAG
+          git push origin $TAG
+
+          # Delete all remote Git tags
+          git push origin -d $(git tag)
+
+          # Delete all local Git tags
+          git tag -d $(git tag)
+
+- date: "18.07.2023"
+  title: "Created GitLab CI/CD Pipeline"
+  hashtag: ["#GitLab", "#CI/CD"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Created a GitLab CI/CD pipeline that can:
+            - Build, test, and lint the code
+            - Perform security checks
+            - Upload the Docker image for the `offlinetracking-processor` project to a remote repository.
+
+- date: "13.07.2023"
+  title: "Used 'nolint:errcheck' to Omit Lint Errors"
+  hashtag: ["#Go", "#Linting", "#CodeQuality"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Used `// nolint:errcheck` to omit lint errors.
+          - Applied it in the test file to bypass specific lint checks.
+
+- date: "12.07.2023"
+  title: "Learned About Makefile for Project Automation"
+  hashtag: ["#Makefile"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned how to use `Makefile` for automating tasks in the project.
+
+- date: "11.07.2023"
+  title: "Read 'Go Style Best Practices' Article"
+  hashtag: ["#Go", "#BestPractices", "#Programming"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Read the article *Go Style Best Practices*: \
+          [Go Style Best Practices](https://google.github.io/styleguide/go/best-practices.html)
+
+- date: "22.06.2023"
+  title: "Learned How to Send Data via gRPC and Built Client-Server in Go"
+  hashtag: ["#Go", "#gRPC", "#ClientServer", "#Programming"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Learned and used gRPC in one of our projects, implementation was in Go.
+          - Build small project for practicing, GitHub: [go-grpc-playground](https://github.com/al3x3i/go-grpc-playground)
+
+- date: "21.06.2023"
+  title: "Learned to Restrict Outgoing Traffic to Specific IP Address"
+  hashtag: ["#Networking", "#iptables"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned how to restrict outgoing traffic to a specific IP address using `iptables`:
+          ```bash
+          # Block YAMS IP
+          # Get IP address
+          IP_ADDRESS=$(dig +short ams.stage-yams.svc.y6b.de)
+   
+          # Check whether the IP is empty or not
+          if [ -z "$IP_ADDRESS" ]; then echo "Variable is empty"; else echo IP Address is: $IP_ADDRESS; fi
+   
+          # Return REJECT for all requests to the $IP_ADDRESS
+          # Can be used "DROP" instead of "REJECT"
+          # REJECT sends an error response, DROP silently discards the packet
+          sudo iptables -A OUTPUT -p tcp -d $I
+          ```
+- date: "20.06.2023"
+  title: "Kafka Cleanup Policy Adjustment in Fermi Job"
+  hashtag: ["#Kafka", "#Flink", "#CleanupPolicy", "#Fermi"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Kafka `cleanup.policy=compact` requires messages with keys in the Fermi Job.
+          - In Fermi, I changed the `cleanup.policy` to `delete` for the `FermiError` topic because we publish messages without keys, and Flink fails to send messages if the `cleanup.policy` is set to `compact`.
+
+- date: "16.06.2023"
+  title: "How to Align JSON Text in IntelliJ"
+  hashtag: ["#IntelliJ", "#JSON", "#CodeFormatting"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          To align JSON text in IntelliJ:
+          ```json
+          {
+            "user_id": "undefined",  
+            "transaction_id": "unefined",  
+            "category_child_6": "undefined"
+          }
+          ```
+          1. Select the `:` symbol.
+          2. Press `ALT + J` (multiple times), then press `RIGHT`, followed by `TAB`.
+          3. Press `SHIFT + ALT + INSERT`, select multiple rows.
+          4. Press `SHIFT + CTRL + RIGHT`, adjust the number of spaces to delete and align all rows.
+          ```json
+          {
+            "user_id":            "undefined",
+            "transaction_id":     "undefined",
+            "category_child_6":   "undefined",
+          }
+          ```
+
+- date: "09.06.2023"
+  title: "Started Learning Golang"
+  hashtag: ["#Golang"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Started learning the Go (Golang) programming language.
+
+- date: "08.06.2023"
+  title: "Learned Kafka-UI for Visual Kafka Representation"
+  hashtag: ["#Kafka"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned how to use `Kafka-UI` to get a visual representation of installed Kafka locally and in the produ
+
+- date: "05.06.2023"
+  title: "Learned About JSON Schema"
+  hashtag: ["#JSON", "#Schema", "#Learning"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned about [JSON Schema](https://json-schema.org/learn/getting-started-step-by-step.html).
+
+- date: "30.05.2023"
+  title: "Started Using `btop` for PC Resource Monitoring"
+  hashtag: ["#btop", "#PCMonitoring", "#Resources"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Started using the `btop` application to monitor PC resources. This application offers many functionalities compared to `htop`.
+
+- date: "27.05.2023"
+  title: "Started Using Simple Screen Recorder"
+  hashtag: ["#ScreenRecording", "#Tools"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Started using Simple Screen Recorder to capture the monitor and save to a file. \
+          Configuration:
+            1. Record the entire screen.
+            2. Container: Matroska (MKV)
+            3. Codec: H.264
+            4. Constant rate factor: 30
+
+          To reduce video file size, compress into another format and convert to mp4:
+          ```bash
+          #!/bin/bash
+          if [ -z "$1" ]; then
+            echo "No screen recording was passed. Exiting."
+            exit 1
+          fi
+          
+          FULL_FILE_NAME=$1
+          FILE_NAME="${FULL_FILE_NAME%.*}"
+          
+          echo "Start compressing: $FULL_FILE_NAME"
+          
+          ffmpeg -i ${FULL_FILE_NAME} -vcodec libx265 -crf 28 ${FILE_NAME}.mp4
+          ```
+
+- date: "25.05.2023"
+  title: "Quick Way to Find Out Which Pods Are Associated with a Service"
+  hashtag: ["#Kubernetes"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Quick way to find out which pods are associated with a service:
+            1. *kubectl -n stage-gravity describe svc stage-ada | grep Endpoints:*
+            2. *kubectl -n stage-gravity get endpoints stage-ada*
+            3. *kubectl -n stage-gravity get endpoints | grep 10.248.152.151*
+
+- date: "19.05.2023"
+  title: "Learning Curve: How to Generate Base64-encoded SHA-256"
+  hashtag: ["#Java", "#Base64", "#SHA256"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learning curve on how to generate a "base64-encoded SHA-256":
+          ```java
+          byte[] data = "+61212345678".getBytes();
+          MessageDigest digester = MessageDigest.getInstance("SHA-256");
+          digester.update(data);
+          String result = Base64.getEncoder().encodeToString(digester.digest());
+          System.out.println("Encoded:");
+          System.out.println(result);
+          ```
+          ```bash
+          printf +61212345678 | openssl dgst -binary -sha256 | openssl base64 -A
+          ```
+
+- date: "05.04.2023"
+  title: "Started Using New Git Command to Remove Unwanted Files from Working Directory"
+  hashtag: ["#Git"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Started using a new git command to remove unwanted files from the working directory:
+          - `-x` removes ignored files, too
+          - `-d` removes whole directories
+          - `-f` forces the action
+          ```bash
+          git clean -xfd
+          ```
+
+- date: "02.04.2023"
+  title: "Used XOR Efficiently in Code"
+  hashtag: ["#XOR", "#Java"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Used XOR efficiently in code. Example: A car is either diesel or manual, but not both. \
+          **Before:**
+            ```java
+            boolean dieselXorManual = (car.isDiesel() && !car.isManual()) || (!car.isDiesel() && car.isManual());
+            ```
+          **Replace by:**
+            ```java
+            boolean dieselXorManual = car.isDiesel() ^ car.isManual();
+            ```
+
+- date: "29.03.2023"
+  title: "Learned About Firejail"
+  hashtag: ["#Firejail", "#Security", "#Linux"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Learned about [Firejail](https://firejail.wordpress.com/), a sandbox program that reduces the risk of security breaches by isolating applications from your system.
+          - **Examples:**
+            1. **Check processes inside bash:**
+               - *firejail bash*
+               - *htop*
+            2. **Run Chromium without internet access (can be any other application):**
+               - *firejail --net=none chromium*
+            3. **Isolate a program's temporary files:**
+               - *firejail --private bash*
+               - *> test.json*
+               - *exit*
+               - *ls -alh | grep test.json* (after exit, file is deleted)
+            4. **Join different Firejail programs with the same name:**
+               - *firejail --join="name of the key"*
+            5. **Give read-only access to a directory:**
+               - *--read-only=/home/user*
+            6. **Close the sandbox after a set time:**
+               - *firejail --timeout=0:0:5 bash*
+            7. **Emulate network with an inner IP address:**
+               - *firejail --net=docker0 --dns=8.8.8.8 --ip=172.17.1.1 --mtu=1492 bash*
+
+- date: "27.03.2023"
+  title: "Open System File Manager From The Terminal"
+  hashtag: ["#Arcolinux"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Previously, I used `nautilus .`, but it has a library dependency, `tracker-miner`, 
+          which uses a lot of resources from time to time to perform file scanning for better search results. \
+
+          Switched to `thunar .` as an alternative to avoid unnecessary resource usage.
+          ```
+          $ thunar .
+          ```
+
+- date: "22.03.2023"
+  title: "Gained more knowledge about useQuery in React"
+  hashtag: ["#React", "#JavaScript"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Usage of `useQuery` in React to fetch and handle data in components. \
+          *Example 1:* Using `useQuery` to fetch data:
+          ```javascript
+          const { data, status } = useQuery("users", fetchUsers);
+          ```
+          *Example 2:* Custom hook for fetching and parsing data:
+          ```javascript
+          const useParseData = () => {
+            const { data } = await useQuery('fetchMyData', async () => {
+              return await axios.get('https://fake-domain.com');
+            });
+
+            return parseData(data);  
+          }
+          const parsedData = useParseData();
+          ```
+
+- date: "20.03.2023"
+  title: "Learned New Shell Command 'xargs wc -l'"
+  hashtag: ["#Shell", "#Linux"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned a new shell command `xargs wc -l` to show files with the most number of lines. \
+          **Example:**
+          ```bash
+          find . -type f | xargs wc -l | sort -n | tail -5
+          ```
+          **Explanation:**
+          1. `find . -type f` gets the list of all files in the current directory and subdirectories recursively.
+          2. `xargs wc -l` takes the input and counts the number of lines in each file.
+          3. `sort -n` sorts the output numerically.
+          4. `tail -5` shows the top 5 files with the most lines.
+
+- date: "14.03.2023"
+  title: "Built Charts in Grafana and Worked with Prometheus Queries"
+  hashtag: ["#Grafana", "#Prometheus"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Gained experience in building charts in Grafana.
+          - Worked with Prometheus to query and retrieve request latency for specific endpoints.
+          - Prometheus Query Example:
+          ```prometheus
+          sum by (uri, method, status) (
+            rate (
+              http_server_requests_seconds_sum{job="$env-middleware", method=~"POST|PATCH", 
+              uri=~"/supply/v1/adslots|/supply/v1/adslotgroups/{id}/adslots/add|/supply/v1/partnerships|/supply/v1/partnerships"}[$__range]))
+          ) / 
+          sum by (uri, method, status) (
+            rate (
+              http_server_requests_seconds_count{job="$env-middleware", method=~"POST|PATCH", 
+              uri=~"/supply/v1/adslots|/supply/v1/adslotgroups/{id}/adslots/add|/supply/v1/partnerships|/supply/v1/partnerships"}[$__range]))
+          )
+          ```
+
+- date: "09.03.2023"
+  title: "Learned Trivy Tool and Kubernetes Scanning"
+  hashtag: ["#Kubernetes", "#Trivy"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Learned about the **Trivy** tool for scanning vulnerabilities in Docker images and Kubernetes clusters.
+          - Tested **Trivy-operator** to scan vulnerabilities in Kubernetes environments.
+          - Started using the terminal command `subl <FILE_NAME>` to open and edit files directly in Sublime Text.
+          ```
+            subl <FILE_NAME>
+          ```
+
+- date: "03.03.2023"
+  title: "Practiced with Kubernetes Commands"
+  hashtag: ["#Kubernetes", "#DevOps", "#CLI"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Practiced several Kubernetes commands to manage and scale deployments:
+          ```bash
+          # Expose a service:
+          kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+          
+          # Get replica sets:        
+          k get rs
+          
+          # Scale a deployment:
+          k scale deployment kubernetes-bootcamp --replicas 4
+          
+          # Update deployment image:
+          kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2
+          
+          # Check rollout status:
+          k rollout status deployment kubernetes-bootcamp
+          ```
+
+- date: "02.03.2023"
+  title: "Kubernetes Commands with Label Selectors"
+  hashtag: ["#Kubernetes", "#LabelSelectors", "#DevOps"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Used Kubernetes label selectors to filter resources:
+          ```bash
+          # Get pods with label selectors:
+          kubectl -n dev-test get pods -l app.kubernetes.io/instance=prod-yrd,app.kubernetes.io/part-of=yrd,app.country.de/env=prod
+          
+          # Get namespaces with label selectors:
+          kubectl get namespaces -l app.country.de/env=dev
+          
+          # Get Prometheus Operator kind: ServiceMonitor with label selectors:
+          kubectl -n dev-test get servicemonitors.monitoring.coreos.com -l app.country.de/env
+
+          # Show current branch:
+          git branch --show-current
+          ```
+
+- date: "01.03.2023"
+  title: "Familiarized with 'sed' shell command"
+  hashtag: ["#Linux"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Got familiar with the `sed` command to extract specific data. \
+          *Example:* Used `sed` to extract the version number from a text line:
+          ```bash
+          TEMP='"tag_name": "v0.38.0",'
+          echo $TEMP | sed -E 's/.+"v(.+)".+/\1/'
+          ```
+
+- date: "28.02.2023"
+  title: "Use 'jq' command with examples"
+  hashtag: ["#jq", "#Linux"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          ```shell
+          # Use this api to get the data: from here: https://coinmarketcap.com/api/documentation/v1/
+          curl -H "X-CMC_PRO_API_KEY: b54bcf4d-1bca-4e8e-9a24-22ff2c3d462c" \
+          -H "Accept: application/json" \
+          -d "start=1&limit=5000&convert=USD" \
+          -G https://sandbox-api.coinmarketcap.com/v1/cryptocurrency/listings/latest
+        
+          # Use `jq` to return multiple properties:
+          jq '.data[] | "\(.id) - \(.name)"'
+          
+          # Use `jq` to extract the first three indices from an array:
+          jq '.data | nth(0, range(2))'
+          
+          # Transform list of lines into an array:
+          jq '.data | map(.id) | nth(range(300))' | jq --slurp
+          
+          # Use `jq` to join all lines into one line with a comma:
+          jq '.data | map(.id) | nth(range(300))' | jq --slurp -r 'join(",")'
+          ```
+
+- date: "23.02.2023"
+  title: "New knowledge about: Peek programm and Grafana"
+  hashtag: ["#Grafana"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Used **Peek** to capture screen areas and reproduce user behavior. This tool helps to document UI issues
+
+    - type: "MARKDOWN"
+      data:
+        content: |
+          In *Grafana*, used the `changes()` function to monitor when the garbage collector was executed:
+          ```PromQL
+          changes(flink_jobmanager_Status_JVM_GarbageCollector_G1_Young_Generation_Count{job='stage-fermi-jobmanager'}[1m])
+          ```
+
+- date: "22.02.2023"
+  title: "Started Working with JVM Profiles for Memory Inspection in Flink"
+  hashtag: ["#Flink", "#JVM"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Started working with **JVM profiles** to inspect memory usage in **Flink**.
+          - Resources:
+            - [Optimizing Apache Flink Applications - Tips](https://shopify.engineering/optimizing-apache-flink-applications-tips)
+          - Tools used:
+            1. **JProfiler**
+            2. **VisualVM 2.15**
+
+- date: "21.02.2023"
+  title: "Learned about Kubernetes Resource Limits and Requests"
+  hashtag: ["#Kubernetes"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Read an article about **Kubernetes Limits and Requests** for pod resources: [Kubernetes Limits & Requests - Sysdig](https://sysdig.com/blog/kubernetes-limits-requests/)
+          - Gained more knowledge about pod memory and observed the changes in Grafana.
+
+- date: "20.02.2023"
+  title: "Learned How to Retrieve Logs from a Crashed Container"
+  hashtag: ["#Kubernetes", "#Troubleshooting"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Learned how to retrieve logs from a **crashed container**:
+          ```bash
+          kubectl -n stage-gravity logs stage-fermi-jobmanager-556b6459b8-lbvt2 --previous -c jobmanager > crashed_container_logs
+          ```
+
+- date: "17.02.2023"
+  title: "Built a Grafana Dashboard and Worked with Prometheus"
+  hashtag: ["#Grafana", "#Prometheus", "#Dashboard"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Built a docker-compose sandbox with Grafana and Prometheus to enhance my knowledge.
+
+- date: "15.02.2023"
+  title: "Started Reading 'The Art of Command Line' and Using Explainshell"
+  hashtag: ["#Linux", "#Learning"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Started reading and practicing **The Art of Command Line** for Linux: [The Art of Command Line](https://github.com/jlevy/the-art-of-command-line)
+          - Started using **Explainshell** to learn more about shell commands: [Explainshell](https://explainshell.com/)
+
+- date: "13.02.2023"
+  title: "Gained more knowledge about Arcolinux"
+  hashtag: ["#PostgreSQL", "#Linux"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Reinstalled **PostgreSQL** on **Arcolinux** and resolved various issues:
+            - Updated service configs and refreshed with `systemctl daemon-reload`.
+            - Tried different sql queries to create and change **roles** in Postgres.
+
+- date: "13.02.2023"
+  title: "Made Commit and Push via IntelliJ and Terminal"
+  hashtag: ["#Git", "#IntelliJ"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Made a *commit* and *push* via *IntelliJ* and terminal.
+
+
+- date: "05.02.2023"
+  title: "Jest for Testing"
+  hashtag: ["#Jest", "#JavaScript"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Practical Knowledge of Jest for Writing Unit Tests in JavaScript
+
+- date: "03.02.2023"
+  title: "Worked with Redux (Basics) and React Hooks"
+  hashtag: ["#Redux", "#React"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          - Practical Knowledge of Redux.
+          - Practical Knowledge of *useNavigate()*.
+
+- date: "01.02.2023"
+  title: "Learned About PrimeReact"
+  hashtag: ["#PrimeReact", "#React"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Worked with **PrimeReact**, a popular UI component library for React applications.
+
+- date: "31.01.2023"
+  title: "Worked with TypeScript"
+  hashtag: ["#TypeScript", "#JavaScript"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |
+          Familiarized with *TypeScript features* such as interfaces, generics, enums, and type aliases to write more robust and scalable code.
+
+- date: "30.01.2023"
+  title: "My learning journey"
+  hashtag: ["#Learning"]
+  content:
+    - type: "MARKDOWN"
+      data:
+        content: |          
+          I started documenting my learning journey to stay focused and motivated to keep learning new tools, frameworks, and technologies. This journal reflects my progress. \
+          The goal is to improve my programming skills and expand my knowledge in the field.
+          
+          This is my first record.
+
+          
 
 # - date: "12.04.2024"
 #   title: "Backward vs Forward Compatibility"
