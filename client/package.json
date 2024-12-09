@@ -7,7 +7,7 @@
     "dev": "NODE_ENV=development vite --port 8080",
     "build": "NODE_ENV=development tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
+    "preview": "npm run build && vite preview",
     "deploy": "NODE_ENV=development npm run build && npm run gh-pages -d dist"
   },
   "dependencies": {
