@@ -1,4 +1,4 @@
-import { LearningPayload } from 'model/learning';
+import { LearningPayload } from './model/learning';
 
 
 export const dummyLearning: LearningPayload[] = [

@@ -1,4 +1,4 @@
-import { ContentType } from 'database/model/ILearning';
+import { ContentType } from '../database/model/ILearning';
 
 export interface LearningPayload {
 	date: Date;

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { DB } from 'secrets';
+import { DB } from '../secrets';
 
 const dbURI = `mongodb://${DB.USER}:${encodeURIComponent(DB.PASS)}@${DB.HOST}:${DB.PORT}/${DB.NAME}?authSource=admin`;
 
