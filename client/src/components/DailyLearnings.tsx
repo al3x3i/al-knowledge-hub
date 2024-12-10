@@ -13,7 +13,8 @@ const DailyLearnings: React.FC = () => {
 		const fetchData = async () => {
 			console.log('Read data!');
 			try {
-				const response = await fetch('/api/learnings');
+				// const response = await fetch('/api/learnings');
+				const response = await fetch('https://al-knowledge-hub.onrender.com/api/learnings');
 				if (!response.ok) {
 					throw new Error('Network response error');
 				}

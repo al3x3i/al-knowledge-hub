@@ -2,6 +2,16 @@
 
 ## Project Structure
 
+
+## Deployment
+
+### Client
+
+### Server
+
+The server is deployed on the public free-tier server: render.com
+
+
 ### Leaning data model
 ```json
 Access levels : L1 - public, L2 - restricted, L3 - full access
