@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 
-import { dummyLearning } from 'dummyData';
+// import { dummyLearning } from 'dummyData';
 
 import Learning from 'database/model/ILearning';
 import connectToDatabase from 'database/mongoClient';
@@ -29,8 +29,8 @@ app.get('/api/health', async (req: Request, res: Response) => {
 app.get('/api/learnings', async (req: Request, res: Response, next) => {
 	let learnings: LearningPayload[] | null = null;
 	if (debug) {
-		learnings = dummyLearning;
-		res.status(200).json(learnings);
+		// learnings = dummyLearning;
+		// res.status(200).json(learnings);
 	} else {
 	counter++;
 	console.log('learnings request!' + counter);
