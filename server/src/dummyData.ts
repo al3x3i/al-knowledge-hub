@@ -3,7 +3,7 @@ import { LearningPayload } from 'model/learning';
 
 export const dummyLearning: LearningPayload[] = [
 	{
-		date: '14.11.2024',
+		date: '2023-03-05T00:00:00.000Z',
 		title: 'Learning MongoDB and Mongoose',
 		hashtag: ['#MongoDB', '#Mongoose'],
 		content: [
@@ -44,7 +44,7 @@ export const dummyLearning: LearningPayload[] = [
 		],
 	},
 	{
-		date: '12.04.2024',
+		date: '2023-02-05T00:00:00.000Z',
 		title: 'Backward vs Forward Compatibility',
 		hashtag: ['#Kafka', '#Avro', '#SchemaMigration'],
 		content: [

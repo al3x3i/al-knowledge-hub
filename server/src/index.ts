@@ -8,6 +8,7 @@ import connectToDatabase from 'database/mongoClient';
 import { Application } from 'express';
 import { LearningPayload } from 'model/learning';
 
+const debug = true;
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
 
@@ -15,7 +16,9 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-connectToDatabase();
+if (!debug) {
+	connectToDatabase();
+}
 
 let counter = 0;
 
@@ -24,11 +27,11 @@ app.get('/api/health', async (req: Request, res: Response) => {
 });
 
 app.get('/api/learnings', async (req: Request, res: Response, next) => {
-	const debug = false;
 	let learnings: LearningPayload[] | null = null;
 	if (debug) {
 		learnings = dummyLearning;
-	}
+		res.status(200).json(learnings);
+	} else {
 	counter++;
 	console.log('learnings request!' + counter);
 	Learning.find()
@@ -42,6 +45,7 @@ app.get('/api/learnings', async (req: Request, res: Response, next) => {
 			}
 		})
 		.catch(next);
+	}
 });
 
 app.post('/api/learnings', async (req: Request, res: Response, next) => {
