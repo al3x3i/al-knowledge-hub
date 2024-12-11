@@ -3,14 +3,17 @@ import express, { NextFunction, Request, Response } from 'express';
 
 import { dummyLearning } from './dummyData';
 
+import { Application } from 'express';
+import { appPort } from './common/environment';
 import Learning from './database/model/ILearning';
 import connectToDatabase from './database/mongoClient';
-import { Application } from 'express';
+import keepAlive from './keepAliveRender';
 import { LearningPayload } from './model/learning';
 
 const debug = true;
+const isKeepAlive = true;
 const app: Application = express();
-const PORT = process.env.PORT || 3000;
+const PORT = appPort();
 
 // (Cross-Origin Resource Sharing)
 app.use(cors());
@@ -22,7 +25,8 @@ if (!debug) {
 
 let counter = 0;
 
-app.get('/api/health', async (req: Request, res: Response) => {
+app.get('/healthz', async (req: Request, res: Response) => {
+	console.log('Health check request');
 	res.status(200).send('OK');
 });
 
@@ -32,19 +36,19 @@ app.get('/api/learnings', async (req: Request, res: Response, next) => {
 		learnings = dummyLearning;
 		res.status(200).json(learnings);
 	} else {
-	counter++;
-	console.log('learnings request!' + counter);
-	Learning.find()
-		// .sort({ date: 1 })
-		// .limit(10)
-		.then((learnings) => {
-			if (!learnings) {
-				res.status(401);
-			} else {
-				res.status(200).json(learnings);
-			}
-		})
-		.catch(next);
+		counter++;
+		console.log('learnings request!' + counter);
+		Learning.find()
+			// .sort({ date: 1 })
+			// .limit(10)
+			.then((learnings) => {
+				if (!learnings) {
+					res.status(401);
+				} else {
+					res.status(200).json(learnings);
+				}
+			})
+			.catch(next);
 	}
 });
 
@@ -102,6 +106,10 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 app
 	.listen(PORT, () => {
 		console.log(`Server is running on http://localhost:${PORT}`);
+
+		if (isKeepAlive) {
+			keepAlive();
+		}
 	})
 	.on('error', (e) => {
 		console.error('Server error: ', e);
