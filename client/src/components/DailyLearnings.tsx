@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../styles/DailyLearnings.css';
 import { LearningItem } from '../types/LearningItem';
 import LearningFeed from './LearningFeed';
+import { fetchLearnings } from '../services/api';
 
 
 const DailyLearnings: React.FC = () => {
@@ -14,11 +15,8 @@ const DailyLearnings: React.FC = () => {
 			console.log('Read data!');
 			try {
 				// const response = await fetch('/api/learnings');
-				const response = await fetch('https://al-knowledge-hub.onrender.com/api/learnings');
-				if (!response.ok) {
-					throw new Error('Network response error');
-				}
-				const result = (await response.json()) as LearningItem[];
+				const result = await fetchLearnings();
+				// const response = await fetch('https://al-knowledge-hub.onrender.com/api/learnings');
 
 				setData(result); // Update state with the parsed JSON
 			} catch (error: any) {
