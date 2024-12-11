@@ -1,186 +1,90 @@
-# Description
+# AL Knowledge Learnings
+This project is a personal knowledge sharing website where I list and manage my daily learnings. 
+The site is built with React, TypeScript, and Vite for the client side, and the server is a TypeScript-based Node.js 
+application that serves dummy data.
 
-## Project Structure
+## Getting Started
+These instructions will help you set up the project on your local machine for development and testing purposes.
 
+### Prerequisites
+- Node.js
+- npm
+
+## Installation
+Clone this repository and install the dependencies for both the client and server.
+```shell
+    npm install client
+    npm install server
+```
+
+## Usage
+To start the client and server, run the following commands in separate terminal windows.
+```shell
+    # Run mongo DB on your local machine
+    cd local && docker-compose up   
+    # Start client
+    npm run dev:client
+    
+    # Start server
+    npm run dev:server
+```
+## Development
+### VS Code Configuration
+This project includes configurations to enhance your development experience in Visual Studio Code:
+Launch Configurations: Available in .vscode/launch.json, which allow you to debug both the server and client efficiently.
+
+### Database Connection
+Database Connection: The project uses Mongoose, an ODM (Object Document Mapper) for MongoDB, to manage data in MongoDB. 
+The connection is made via a URI that includes the admin username and password.
+
+### Populate date to the database by script
+Details on populating data are documented in [how-to-insert-date.md](local/how-to-insert-date.md)
+
+### Populate date by running the following command
+How to create a learnings entry
+Note:
+- The date format is YYYY-MM-DD
+- The title is a string
+- The hashtag is an array of strings
+- The type specifies the content type: MARKDOWN, TEXT, IMAGE
+- The access_level specifies the level of access for the content: L1 public, L2 restricted, L3 private
+- The MARKDOWN and IMAGE type has 'content' as a key in the data object
+- The IMAGE type has 'url', 'alt_text', 'width', 'height', 'mime_type', and 'description' as keys in the data object
+
+```shell
+    curl -X POST http://localhost:3000/api/learnings \
+    -H "Content-Type: application/json" \
+    -d '{
+        "date": "2024-11-07",
+        "title": "Example of Mixed Content Types",
+        "hashtag": ["API, YAML, SQL, Bash, Images"],
+        "content": [
+            {
+                "type": "MARKDOWN | TEXT | IMAGE",
+                "access_level": "L1",
+                "data": {
+                    "content": "Write your content here",
+                    "url": "https://example.com/images/sample-image.png",
+                    "alt_text": "A sample image for display",
+                    "width": 800,
+                    "height": 600,
+                    "mime_type": "image/png",
+                    "description": "Sample image showcasing the API’s image support"
+                }
+            }
+        ]
+    }'
+```
 
 ## Deployment
-
-### Client
-
-### Server
-
-The server is deployed on the public free-tier server: render.com
-
-
-### Leaning data model
-```json
-Access levels : L1 - public, L2 - restricted, L3 - full access
-{
-    "date": "string",
-    "title": "string",
-    "hashtag": "string[]",
-    "content": "{ type: string | shell | image, access_level: L1 | L2 | l3 data: object }"
-}
-
-{
-    "date": "2024-11-07",
-    "title": "Example of Mixed Content Types",
-    "hashtag": ["API, YAML, SQL, Bash, Images"],
-    "content": [
-        {
-            "type": "yaml",
-            "access_level": "L1",
-            "data": {
-                "content": "version: \"3.8\"\n\nservices:\n  hbase:\n    image: harisekhon/hbase:1\n    hostname: hbase-master\n    container_name: hbase-master\n    ports:\n    - \"16000:16000\"\n    - \"16010:16010\"\n    - \"16020:16020\"\n    - \"16030:16030\"\n    volumes:\n    - hbase-data:/hbase-data\n    network_mode: host\n    ulimits:\n      nofile:\n        soft: 65536\n        hard: 65536\n    depends_on:\n    - zookeeper\n    profiles:\n    - linux\n\n  akhq:\n    image: tchiotludo/akhq:0.25.1\n    container_name: job-akhq\n    environment:\n      AKHQ_CONFIGURATION: |\n        akhq:\n          connections:\n            mykafka:\n              properties:\n                bootstrap.servers: \"kafka:19092\"\n              schema-registry:\n                url: \"http://schema-registry:8082\"\n    ports:\n    - \"8000:8080\"\n\nvolumes:\n  hbase-data:\n",
-                "language": "yaml",
-                "description": "Docker Compose configuration for HBase and AKHQ services"
-            }
-        },
-        {
-            "type": "shell",
-            "access_level": "L2",
-            "data": {
-                "content": "#!/bin/bash\n\njq -rR '\n    . as $json |\n    try (fromjson | \"\\u001b[34m\\(.['@timestamp']) \\u001b[32m\\(.log.level)\\u001b[0m \\(.message)\")\n    catch ($json)\n'\n",
-                "language": "bash",
-                "description": "A Bash script to format JSON logs for easy reading in the terminal"
-            }
-        },
-        {
-            "type": "sql",
-            "access_level": "L2",
-            "data": {
-                "content": "SELECT round(100.0 * sum(blks_hit) / (sum(blks_hit) + sum(blks_read)), 2) as cache_hit_ratio FROM pg_stat_database;",
-                "language": "sql",
-                "description": "SQL query to calculate PostgreSQL cache hit ratio"
-            }
-        },
-        {
-            "type": "json",
-            "access_level": "L1",
-            "data": {
-                "content": "{\"@timestamp\":\"2024-08-12T10:11:44.61+02:00\",\"message\":\"middleware-republish: partitions assigned: []\",\"log\":{\"level\":\"INFO\",\"logger\":\"org.springframework.kafka.listener.KafkaMessageListenerContainer\"},\"process\":{\"thread\":{\"name\":\"org.springframework.kafka.KafkaListenerEndpointContainer#1-1-C-1\"}},\"error\":{\"root_cause\":{}}}",
-                "language": "json",
-                "description": "Log entry in JSON format from a Kafka listener"
-            }
-        },
-        {
-            "type": "image",
-            "access_level": "L1",
-            "data": {
-                "url": "https://example.com/images/sample-image.png",
-                "alt_text": "A sample image for display",
-                "width": 800,
-                "height": 600,
-                "mime_type": "image/png",
-                "description": "Sample image showcasing the API’s image support"
-            }
-        }
-    ]
-}
+### Client deployment
+The client is deployed to GitHub Pages.
+The client deployment can be done without pushing the changes to the main branch.
+To deploy, use the following npm command:
+```shell
+    npm run deploy:client
 ```
 
-## Local development
-
-### Development 
-
-How to create a learnings entry 
-```sh
-curl -X POST http://localhost:3000/api/learnings \
--H "Content-Type: application/json" \
--d '{
-    "date": "2024-11-07",
-    "title": "Example of Mixed Content Types",
-    "hashtag": ["API, YAML, SQL, Bash, Images"],
-    "content": [
-        {
-            "type": "yaml",
-            "access_level": "L1",
-            "data": {
-                "content": "Data",
-                "language": "string | shell | image | yaml",
-                "description": "Docker Compose configuration for HBase and AKHQ services"
-            }
-        }
-    ]
-}'
-
-```
-
-===
-OK, I will start to give you text and please only correct typos.
-Do not add your text, fix only typos.
-From this text generate json based on given json template
-
-===
-Example:
-===
-
-14.11.2024
-* Learning MongoDB and Mongoose
-**#MongoDB, #Mongoose**
-
-It is my personal project using MongoDB database with Mongoose. It was a great chance to gain practical experience working with this technology stack.
-
-I want to live an example how I generated MongoDB schema
-In MongoDB, which is a NoSQL database, the data is stored in a flexible, JSON-like format.
-```javascript
-
-import mongoose from 'mongoose';
-
-const LearningSchema = new mongoose.Schema({
-    date: { type: Date, required: true },
-    title: { type: String, required: true, default: 'No Title' },
-    hashtag: { type: [String], required: true },
-    content: [
-        {
-            type: { type: String, required: true },
-            access_level: { type: String, required: true },
-            data: {
-                content: { type: String, required: true },
-                language: { type: String, required: true },
-                description: { type: String, required: true },
-            },
-        },
-    ],
-});
-
-const Learning = mongoose.model('Learning', LearningSchema);
-
-```
-===
-
-You need to generate similar JSON OUTPUT
-
-
-{
-    "date": "14.11.2024",
-    "title": "Learning MongoDB and Mongoose",
-    "hashtag": ["#MongoDB", "#Mongoose"],
-    "content": [
-        {
-            "access_level": "L1",
-            "data": {
-                "content": "It is my personal project using MongoDB database with Mongoose. It was a great chance to gain practical experience working with this technology stack.",
-                "type": "string"
-            }
-        },
-        {
-            "access_level": "L1",
-            "data": {
-                "content": "I want to live an example of how I generated the MongoDB schema.\n In MongoDB, which is a NoSQL database, the data is stored in a flexible, JSON-like format.",
-                "type": "string"
-            }
-        },
-        {
-            "access_level": "L1",
-            "data": {
-                "content": "import mongoose from 'mongoose';\n\nconst LearningSchema = new mongoose.Schema({\n    date: { type: Date, required: true },\n    title: { type: String, required: true, default: 'No Title' },\n    hashtag: { type: [String], required: true },\n    content: [\n        {\n            type: { type: String, required: true },\n            access_level: { type: String, required: true },\n            data: {\n                content: { type: String, required: true },\n                language: { type: String, required: true },\n                description: { type: String, required: true },\n            },\n        },\n    ],\n});\n\nconst Learning = mongoose.model('Learning', LearningSchema);\n",
-                "type": "javascript",
-                "description": "MongoDB schema example using Mongoose"
-            }
-        }
-    ]
-}
-
-
-
+### Server deployment
+The server is deployed manually on [Render.com](https://dashboard.render.com/).
+First push the changes to the main branch, and then deploy the server from the Render dashboard.
