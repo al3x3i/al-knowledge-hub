@@ -5,6 +5,7 @@
 	"scripts": {
 		"start": "concurrently npm:server npm:client",
 		"server": "cd server && npm run dev",
+		"server:prod": "cd server && npm run server:prod",
 		"client": "cd client && npm run dev",
 		"deploy:client": "cd client && npm run deploy",
 		"install:client": "cd client && npm install",
