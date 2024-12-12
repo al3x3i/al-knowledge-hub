@@ -10,7 +10,7 @@ import connectToDatabase from './database/mongoClient';
 import keepAlive from './keepAliveRender';
 import { LearningPayload } from './model/learning';
 
-const debug = true;
+const dummyDbData = process.env.DUMMY_DB_DATA;
 const isKeepAlive = true;
 const app: Application = express();
 const PORT = appPort();
@@ -19,7 +19,7 @@ const PORT = appPort();
 app.use(cors());
 app.use(express.json());
 
-if (!debug) {
+if (!dummyDbData) {
 	connectToDatabase();
 }
 
@@ -32,7 +32,7 @@ app.get('/healthz', async (req: Request, res: Response) => {
 
 app.get('/api/learnings', async (req: Request, res: Response, next) => {
 	let learnings: LearningPayload[] | null = null;
-	if (debug) {
+	if (dummyDbData) {
 		learnings = dummyLearning;
 		res.status(200).json(learnings);
 	} else {

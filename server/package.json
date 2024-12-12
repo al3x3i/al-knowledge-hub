@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "build": "rimraf build && tsc"
+    "dev": "tsx watch -r dotenv/config src/index.ts dotenv_config_path=.env.development",
+    "build": "rimraf build && tsc",
+    "start": "node -r dotenv/config build/index.js dotenv_config_path=.env.development"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,7 @@
   "dependencies": {
     "axios": "1.7.9",
     "cors": "2.8.5",
+    "dotenv": "16.3.1",
     "express": "4.21.1",
     "mongodb": "6.10.0",
     "mongoose": "8.8.1"

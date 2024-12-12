@@ -1,7 +1,14 @@
 import mongoose from 'mongoose';
 import { DB } from '../secrets';
 
-const dbURI = `mongodb://${DB.USER}:${encodeURIComponent(DB.PASS)}@${DB.HOST}:${DB.PORT}/${DB.NAME}?authSource=admin`;
+// const dbURI = `mongodb://${DB.USER}:${encodeURIComponent(DB.PASS)}@${DB.HOST}:${DB.PORT}/${DB.NAME}?authSource=admin`;
+
+const dbURI = process.env.MONGO_CONNECT_URI ?? '';
+
+if (!dbURI) {
+	console.error('Mongo DB URI is not provided');
+	process.exit(1);
+}
 
 const connectToDatabase = () => {
 	mongoose
