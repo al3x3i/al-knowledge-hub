@@ -38,7 +38,7 @@ Database Connection: The project uses Mongoose, an ODM (Object Document Mapper) 
 The connection is made via a URI that includes the admin username and password.
 
 ### Populate date to the database by script
-Details on populating data are documented in [how-to-insert-date.md](local/how-to-insert-date.md)
+Details on populating data are documented in [how-to-insert-data.md](local/how-to-insert-data.md)
 
 This script helps to restore records in database from file:
 `curl -X DELETE localhost:3000/api/learnings && python ./local/populate_data.py && npm run client`

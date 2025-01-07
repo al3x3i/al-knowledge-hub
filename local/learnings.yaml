@@ -1,3 +1,156 @@
+- date: "07.01.2025"
+  title: "Debugging Redis Connectivity in Kubernetes"
+  hashtag: ["#Kubernetes", "#Redis", "#DevOps", "#Networking"]
+  content:
+  - type: MARKDOWN
+    data:
+      content: |
+        I used Kubernetes and networking tools to debug Redis connectivity in a specific namespace or between different namespaces. \
+        Create a temporary pod with labels. Labels are needed for NetworkPolicy.
+
+        **Commands Used:**
+        1. **Create a Temporary Pod in Kubernetes:**
+        ```bash
+        kubectl run -i --tty --rm test-pod \
+          --image=busybox \
+          --labels="app.kubernetes.io/instance=mw-yl-6454-read-from-redis-ko4i56-middleware,app.kubernetes.io/part-of=middleware,app.y6b.de/env=dev" \
+          --namespace=dev-namespace \
+          --restart=Never -- /bin/sh
+        ```
+        - Created a temporary pod with the BusyBox image in the `dev-namespace` namespace.
+        - Added labels for better resource organization.
+        - Used an interactive shell for real-time debugging.
+
+        2. **Test Redis Connectivity with `nc`**
+        ```bash
+          nc -vz custom-redis-dragonfly.production-namespace 6379
+        ```
+        - Verified whether the Redis server was reachable from the Kubernetes pod.
+
+- date: "20.12.2024"
+  title: "Explored Redis: Commands, Concepts, and Tools"
+  hashtag: ["#Redis"]
+  content:
+  - type: MARKDOWN
+    data:
+      content: |
+        I completed a LinkedIn course on Redis and applied the knowledge in one of our projects. \
+        I used Redis CLI and Medis GUI for practice, setting up Redis locally via Docker Compose. \
+        Build locally Publisher/Subscriber model for message passing. 
+
+        **Key Learnings and Commands:**
+
+        **String Commands:**
+        - `GET`: Retrieves the value of a key.  
+          Example: `GET key` → Returns the value of key.  
+        - `SET`: Sets a key to hold a specific value.  
+          Example: `SET key value` → Stores value at key.  
+        - `INCR`: Increments the integer value of a key by 1.  
+          Example: `INCR key` → Adds 1 to the current value of key.  
+        - `DECR`: Decrements the integer value of a key by 1.  
+          Example: `DECR key` → Subtracts 1 from the current value of key.  
+        - `APPEND`: Appends a value to the end of the current value of a key.  
+          Example: `APPEND key value` → Adds value to the end of the existing value.  
+
+        **Hash Commands:**
+        - `HSET`: Sets a field in a hash to a specific value.  
+          Example: `HSET hash field value` → Stores value in field within hash.  
+        - `HGET`: Retrieves the value of a field in a hash.  
+          Example: `HGET hash field` → Returns the value of field in hash.  
+        - `HINCRBY`: Increments a hash field's integer value by a specific amount (also used to decrement).  
+          Example: `HINCRBY hash field -amount` → Subtracts amount from field.  
+        - `HGETALL`: Retrieves all fields and their values from a hash.  
+          Example: `HGETALL hash` → Returns all keys and values in hash.
+
+        **List Commands:**
+        - `LPUSH`: Adds an element to the head (left) of the list.  
+          Example: `LPUSH mylist "value"`  
+        - `RPUSH`: Adds an element to the tail (right) of the list.  
+          Example: `RPUSH mylist "value"`  
+        - `LPOP`: Removes and returns the first element (head) of the list.  
+          Example: `LPOP mylist`  
+        - `LRANGE`: Retrieves a range of elements from the list.  
+          Example: `LRANGE thequeue 0 -1` → Returns all elements.  
+
+        **Set Commands:**
+        - `SADD`: Adds elements to a set.  
+          Example: `SADD myset "value1" "value2"`  
+        - `SMEMBERS`: Retrieves all members of a set.  
+          Example: `SMEMBERS myset`  
+        - `SREM`: Removes a specific element from a set.  
+          Example: `SREM myset "value"`  
+
+        **Sorted Set Commands:**
+        - `ZADD`: Adds elements with a score to a sorted set.  
+          Example: `ZADD board score member`  
+        - `ZRANGE`: Retrieves elements in ascending order.  
+          Example: `ZRANGE board 0 -1`  
+        - `ZREVRANGE`: Retrieves elements in descending order.  
+          Example: `ZREVRANGE board 0 -1`  
+
+        **Redis Streams:**
+        - Explored Redis Streams for messaging and event streaming.  
+          Commands:  
+          - `XADD <key> <ID>`: Adds an entry to the stream.  
+          - `XREAD BLOCK 0 STREAMS myevents $`: Subscribes to the stream for new events.
+
+        **Glossary**
+        - FIFO (First In, First Out) and LIFO (Last In, First Out) patterns in Redis using lists.
+
+        **Tools and Setup:**
+        - Used Docker Compose to run Redis locally:  
+          Example: `docker exec -it redis-server redis-cli`.  
+        - Utilized redis-commander GUI for easier visualization and management.
+
+- date: "18.12.2024"
+  title: "Learned @StandardException in Lombok"
+  hashtag: ["#Lombok", "#StandardException"]
+  content:
+  - type: MARKDOWN
+    data:
+      content: |
+        While working on a Spring Boot project, I explored Lombok's `@StandardException` annotation, 
+        which helps reduce boilerplate code when throwing business exceptions. 
+        Although it is an experimental feature, it simplifies the creation of custom exceptions.
+
+        **Example:**
+
+        Traditional approach to defining a custom exception:
+        ```java
+        public class CustomNumberFormatException extends RuntimeException {
+            public CustomNumberFormatException() {
+                super();
+            }
+
+            public CustomNumberFormatException(String s) {
+                super(s);
+            }
+        }
+        ```
+
+        Using `@StandardException`:
+        ```java
+        @StandardException
+        public class CustomNumberFormatException extends RuntimeException {
+        }
+
+        // Compiler automatically generates the following code:
+        public class CustomNumberFormatException extends RuntimeException {
+            @Generated
+            public CustomNumberFormatException() {
+                this((String) null, (Throwable) null);
+            }
+
+            @Generated
+            public CustomNumberFormatException(final String message) {
+                this(message, (Throwable) null);
+            }
+            ...
+            ...
+        }
+        ```
+
+
 - date: "17.12.2024"
   title: "My \"al-knowledge-hub\""
   hashtag: ["#React", "#TypeScript", "#NodeJS", "#MongoDB", "#Vite"]
