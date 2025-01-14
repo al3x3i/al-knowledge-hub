@@ -10,7 +10,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ message = '' }) => {
 		<div className="spinner-overlay">
 			<img src={rocketSvg} className="loading-emoji" width={32} height={32} />
 			{message && <span>{message}</span>}{' '}
-			<span>Please be patient, the public services are starting up.(</span>
+			<span>Please be patient, the public services are starting up.</span>
 			<span>For the first time it can take up to 50 sec :(</span>
 		</div>
 	);

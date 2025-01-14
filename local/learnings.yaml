@@ -1,3 +1,152 @@
+- date: "14.01.2025"
+  title: "Troubleshooting Cron Job Failure with PSQL Commands"
+  hashtag: ["#PostgreSQL", "#Kubernetes", "#Networking"]
+  content:
+  - type: MARKDOWN
+    data:
+      content: |
+        I worked on resolving an issue with a cron job that was occasionally failing to execute `psql` commands 
+        for cleaning old data from a PostgreSQL database. The cron job ran a shell script with multiple 
+        `psql` queries, but the execution would unpredictably fail due to network connection issues.
+        
+        The shell script that was failing (it has commands for testing):        
+        ```shell
+        #!/usr/bin/env bash
+        sql_delete_table_a="test_table"
+        sql_vacuum_table_a="VACUUM test_table"
+
+        nc -vz $PGHOST 5432
+        pg_isready
+        echo "#1 Operation started at: $(date)"
+        echo "SQL: $sql_delete_table_a"
+        psql -c "$sql_delete_table_a"
+        echo "---------------------------------------"
+
+        nc -vz $PGHOST 5432
+        pg_isready
+        echo "#2 Operation started at: $(date)"
+        echo "SQL: $sql_vacuum_table_a"
+        psql -c "$sql_vacuum_table_a"
+        echo "---------------------------------------"
+
+        # and etc....
+        ```
+        The error messages looked something like:
+        ```shell
+        postgres (11.11.11.11:5432) open
+        postgres:5432 - accepting connections
+        #8 Operation started at: Mon Jan 13 16:10:03 UTC 2025
+        SQL: VACUUM test_table
+        psql: error: could not connect to server: Connection refused
+          Is the server running on host "postgres" (11.11.11.11) and accepting
+          TCP/IP connections on port 5432?
+        ```
+
+        I want to document a list of actions which I tried to find out the cause of the issue.
+
+        **Steps:**
+        1. **Network and Readiness Check:**
+          - I added network checks before each `psql` command using `nc -vz` and `pg_isready` to 
+          ensure that the database was accepting connections. In logs you can see that connection was working
+          before executing the SQL query.
+
+        2. **PostgreSQL Configuration Adjustment:**
+          - Edited the PostgreSQL configuration to enable additional logging by enabling `logging_collector` 
+          and setting the `log_directory` and `log_filename` for better insight into potential issues.
+          - - Configuration change:
+          ```plain
+          # Find Postgres config file path, sql
+          SHOW config_file; 
+
+          # Edit config file
+          $ vi /var/lib/postgresql/data/pgdata/postgresql.conf
+
+          # Enable logging properties
+          logging_collector = on
+          log_directory = 'log'
+          log_filename = 'postgresql-%Y-%m-%d_%H%M%S.log'
+
+          # Switch user
+          su - postgres
+
+          # Get Postgres data files path, sql
+          SHOW data_directory;
+
+          # Restart postgres server
+          pg_ctl restart -D /var/lib/postgresql/data/pgdata
+
+          # Apply changes without restarting the Database, (minor change: log directory path). 
+          # This does not help to start writing logs to files, it requires the DB restart. sql
+          SELECT pg_reload_conf(); 
+          ```
+
+        3. **Test Pod for SQL Execution:**
+          - Launched a test pod to replicate the issue and execute `psql` commands using a minimal PostgreSQL container to test code in the Kubernetes cluster.
+          - - Command to run the test pod (I used networkpolicy to grant access to DB pod with label 'test-cron-job' ):
+          ```shell
+          kubectl run -i --tty --rm postgres-test-pod \
+          --image=postgres:13.16-alpine \
+          --labels="app.kubernetes.io/component=test-cron-job" \
+          --namespace=dev-test \
+          --restart=Never -- /bin/sh
+
+          # <service name>.<namespace>.svc.main.y6b.de
+          export PGHOST=postgres.custom-namespace.svc.main.y6b.de
+          export PGDATABASE=
+          export PGPASSWORD=
+          export PGUSER=
+
+          psql
+          ```
+
+        4. **Updated CronJob deployment yaml file:**
+          - Added readinessProbe and request resources (minimum amount of CPU and RAM)
+          ```yaml
+          readinessProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - exec pg_isready
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+          ```
+
+        5. **Solution - Reduce Connection Overhead:**
+          - The root cause of the issue was that each `psql -c` command created a new connection.
+          Opening too many connections to the database too quickly might lead to unstable 
+          connections between the pod and the database.
+          I grouped all SQL queries into a single `psql` session.
+
+          - - Updated script (example):
+          ```shell
+          #!/usr/bin/env bash
+
+          echo -e "Script started at: $(date) \n"
+          echo "======================================="
+
+          sql_update=""
+
+          # Execute the SQL queries
+
+          echo "#1 Operation started at: $(date)"
+          echo "SQL: $sql_update"
+          psql -c "$sql_update"
+          echo "---------------------------------------"
+          ```
+
+        **Outcome:**
+        - By using a single `psql` session for all queries, the cron job now runs reliably without network connection failures.
+        - Improved system stability and reduced connection overhead.
+        - Enhanced my knowledge of PostgreSQL performance tuning, Kubernetes readiness probes, and shell scripting optimizations.
+
 - date: "07.01.2025"
   title: "Debugging Redis Connectivity in Kubernetes"
   hashtag: ["#Kubernetes", "#Redis", "#DevOps", "#Networking"]
@@ -13,7 +162,7 @@
         ```bash
         kubectl run -i --tty --rm test-pod \
           --image=busybox \
-          --labels="app.kubernetes.io/instance=mw-yl-6454-read-from-redis-ko4i56-middleware,app.kubernetes.io/part-of=middleware,app.y6b.de/env=dev" \
+          --labels="app.kubernetes.io/instance=read-from-redis-ko4i56" \
           --namespace=dev-namespace \
           --restart=Never -- /bin/sh
         ```
@@ -963,7 +1112,6 @@
                         app.kubernetes.io/component: hbase-compaction-task
                         app.kubernetes.io/part-of: hbase-compaction-task
                         app.kubernetes.io/name: hbase-compaction-task
-                        svc.y6b.de/hadoop-access: "true"
                     spec:
                       activeDeadlineSeconds: 600 # run should take longer than 10 minutes
                       restartPolicy: Never
@@ -2072,7 +2220,7 @@
           1. Run PostgreSQL database in Docker:
           ```bash
             docker run -d \
-            -e POSTGRES_PASSWORD=ada \
+            -e POSTGRES_PASSWORD= \
             --network=host \
             --name my-postgres \
             postgres:15.4-alpine
@@ -2084,10 +2232,10 @@
             export NAMESPACE_DB_PORT=5433
 
             # Download data to file
-            psql -U ada -d ada -h $NAMESPACE_DB_HOST -p $NAMESPACE_DB_PORT -f ./scripts/dump.sql
+            psql -U test -d test -h $NAMESPACE_DB_HOST -p $NAMESPACE_DB_PORT -f ./scripts/dump.sql
 
             # Import data from file to a database
-            psql -U ada -d ada -h $NAMESPACE_DB_HOST -p $NAMESPACE_DB_PORT -f ./scripts/import.sql 
+            psql -U test -d test -h $NAMESPACE_DB_HOST -p $NAMESPACE_DB_PORT -f ./scripts/import.sql 
           ```
 
           3. The script `./scripts/dump.sql ` file content:
@@ -2271,8 +2419,8 @@
           Enhanced practical database management skills to restore a PostgreSQL database quickly:
             ```shell
               REMOTE_DB=172.30.99.83
-              pg_dump -h $REMOTE_DB -U ada -d ada --data-only -f source_dump.sql
-              psql -h localhost -p 5432 -U ada -d ada -f source_dump.sql
+              pg_dump -h $REMOTE_DB -U test -d test --data-only -f source_dump.sql
+              psql -h localhost -p 5432 -U test -d test -f source_dump.sql
             ```
 
 - date: "05.10.2023"
