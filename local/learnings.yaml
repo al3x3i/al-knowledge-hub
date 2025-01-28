@@ -19,7 +19,7 @@
           environment: local
           description: |
             Local Kafka cluster.
-          region: myloc
+          region: test-region
         spec:
           bootstrapAddrs:
             - 192.168.178.40:9092
@@ -188,19 +188,25 @@
 
           - - Updated script (example):
           ```shell
-          #!/usr/bin/env bash
+          #!/bin/bash
 
-          echo -e "Script started at: $(date) \n"
-          echo "======================================="
+          echo "Script started at: $(date)"
+          echo -e "=======================================\n"
 
           sql_update=""
+          sql_create=""
 
           # Execute the SQL queries
 
-          echo "#1 Operation started at: $(date)"
-          echo "SQL: $sql_update"
-          psql -c "$sql_update"
-          echo "---------------------------------------"
+          psql --echo-all <<EOF
+          -- #1
+          $sql_update
+          -- #2
+          $sql_create
+          EOF
+          echo
+          echo "======================================="
+          echo "Script ended at: $(date)"
           ```
 
         **Outcome:**
