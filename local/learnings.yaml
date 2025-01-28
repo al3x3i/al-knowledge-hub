@@ -1,3 +1,64 @@
+- date: "28.01.2025"
+  title: "Learning Kafka Topic Management with topicctl"
+  hashtag: ["#Kafka", "#topicctl"]
+  content:
+  - type: MARKDOWN
+    data:
+      content: |
+        I have learned a new tool, [`topicctl`](https://github.com/segmentio/topicctl), for managing Kafka topics easily. 
+        This tool enables users to create topics, sync settings, rearrange partition leaders, and rebalance leaders efficiently.
+
+        **Example:**
+        Below is a small example demonstrating how to retrieve dynamic settings of a Kafka topic. 
+        Static settings are excluded by `topicctl`.
+
+        **Configuration File: `local.cluster.yaml`**
+        ```yaml
+        meta:
+          name: local
+          environment: local
+          description: |
+            Local Kafka cluster.
+          region: myloc
+        spec:
+          bootstrapAddrs:
+            - 192.168.178.40:9092
+        ```
+
+        **Shell Script to Collect Topic Settings:**
+        ```shell
+        #!/bin/sh
+
+        collect_topic_settings() {
+          TOPIC=$1
+          ./topicctl get config $TOPIC --cluster-config $ENV.cluster.yaml > ${ENV}/${TOPIC}_${ENV} 2>&1
+        }
+
+        # LOCAL
+
+        export ENV=local
+
+        echo "Collect '"$ENV"' topic configs"
+        rm -rf $ENV && mkdir $ENV
+
+        collect_topic_settings TestTopicName
+        ```
+
+         **Validate changes**
+        ```shell
+        ./topicctl --no-spinner check --validate-only --cluster-config local.cluster.yaml topics/*.yaml
+        ```
+
+        **Apply changes**
+        ```shell
+        ./topicctl --no-spinner apply --skip-confirm --cluster-config local.cluster.yaml topics/*.yaml
+        ```
+
+        **I have learned:**
+        - Learned how to use `topicctl` for Kafka topic management, including creating and syncing topic settings.
+        - Improved understanding of Kafka partition leader management and rebalancing.
+        - Enhanced knowledge of managing Kafka cluster configurations and dynamic topic settings.
+
 - date: "14.01.2025"
   title: "Troubleshooting Cron Job Failure with PSQL Commands"
   hashtag: ["#PostgreSQL", "#Kubernetes", "#Networking"]
